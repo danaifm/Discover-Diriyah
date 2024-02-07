@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "packages": {
+    "com.ptc.vuforia.engine": {
+      "tarball": {
+        "hash": "94809bee5171",
+        "mtime": 1707235325000,
+        "size": 140831232,
+        "localPath": "/Users/dana/Documents/GitHub/Discover-Diriyah/DiscoverDiriyah/Packages/com.ptc.vuforia.engine-10.21.3.tgz"
+      }
+    }
+  }
+}
