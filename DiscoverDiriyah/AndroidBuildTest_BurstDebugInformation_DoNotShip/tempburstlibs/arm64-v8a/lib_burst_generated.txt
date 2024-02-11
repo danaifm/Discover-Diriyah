@@ -6,6 +6,7 @@ Library: /Users/dana/Documents/GitHub/Discover-Diriyah/DiscoverDiriyah/Temp/Burs
 --meta-data-generation=False
 --dump=Function
 --float-precision=Standard
+--assembly-defines=Assembly-CSharp;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=Newtonsoft.Json;
