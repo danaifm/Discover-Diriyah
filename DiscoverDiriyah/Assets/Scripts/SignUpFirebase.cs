@@ -21,9 +21,9 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_InputField nameField;
     public TMP_InputField emailField;
     public TMP_InputField passwordField;
-    public TMP_Text nameError, emailError;
+    public TMP_Text nameError, emailError, passwordError;
     public TMP_Text nameCounter;
-    private bool nameValid, emailValid;
+    private bool nameValid, emailValid, passwordValid;
     FirebaseFirestore db;
 
     private void Start()
@@ -148,6 +148,20 @@ public class SignUpFirebase : MonoBehaviour
         AggregateQuery query = db.Collection("users").WhereEqualTo("email", email.ToLower()).Count;
         return query.ToString();
     }*/
+
+    public void validatePassword()
+    {
+        if(passwordField.text.Trim() == "")
+        {
+            passwordError.text = "Password cannot be empty.";
+            passwordValid = false;
+            passwordField.image.color = Color.red;
+            return;
+        }
+        passwordError.text = "";
+        passwordValid = true;
+        passwordField.image.color = Color.gray;
+    }
 
     private IEnumerator RegisterAsync(string name, string email, string password)
     {
