@@ -5,6 +5,8 @@ using Firebase.Auth;
 using System.Threading.Tasks;
 using TMPro;
 using System.Text.RegularExpressions;
+using Firebase.Firestore;
+using Firebase.Extensions;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -19,13 +21,15 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_InputField nameField;
     public TMP_InputField emailField;
     public TMP_InputField passwordField;
-    public TMP_Text nameError;
+    public TMP_Text nameError, emailError;
     public TMP_Text nameCounter;
-    private bool nameValid;
+    private bool nameValid, emailValid;
+    FirebaseFirestore db;
 
     private void Start()
     {
         nameField.characterLimit = 15;
+        //db = FirebaseFirestore.DefaultInstance;
     }
 
     void initializeFirebase()
@@ -105,6 +109,45 @@ public class SignUpFirebase : MonoBehaviour
         nameValid = true;
         nameField.image.color = Color.gray;
     }
+
+    public void validateEmail()
+    {
+        string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
+        Regex re = new Regex(strRegex);
+        if (emailField.text.Trim() == ""){
+            emailError.text = "Email cannot be empty.";
+            emailValid = false;
+            emailField.image.color = Color.red;
+            return;
+        }
+        else if (!re.IsMatch(emailField.text.Trim()))
+        {
+            emailError.text = "Please enter a valid email.";
+            emailValid = false;
+            emailField.image.color = Color.red;
+            return;
+        }
+        /* else if (uniqueEmail(emailField.text.Trim()))
+         {
+             emailError.text = "Email is already in use.";
+             emailValid = false;
+             emailField.image.color = Color.red;
+             return;
+         }*/
+       // Debug.Log(uniqueEmail(emailField.text.Trim()));
+        emailError.text = "";
+        emailValid = true;
+        emailField.image.color = Color.gray;
+    }
+
+    /*public string uniqueEmail(string email)
+    {
+        //DocumentReference docRef = db.Collection("users").Where("email", Equals: email.ToLower);
+        AggregateQuery query = db.Collection("users").WhereEqualTo("email", email.ToLower()).Count;
+        return query.ToString();
+    }*/
 
     private IEnumerator RegisterAsync(string name, string email, string password)
     {
