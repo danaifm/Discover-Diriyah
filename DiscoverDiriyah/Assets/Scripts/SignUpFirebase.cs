@@ -1,12 +1,10 @@
 using System.Collections;
-
 using UnityEngine;
-using UnityEngine.UI;
-
 using Firebase;
 using Firebase.Auth;
 using System.Threading.Tasks;
 using TMPro;
+using System.Text.RegularExpressions;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -17,11 +15,12 @@ public class SignUpFirebase : MonoBehaviour
     public FirebaseUser user;
     //registration variables
     [Space]
+    [Header("Registration fields")]
     public TMP_InputField nameField;
     public TMP_InputField emailField;
-    public TMP_InputField phoneField;
     public TMP_InputField passwordField;
-    string nameError, emailError, phoneError, passwordError;
+    public TMP_Text nameError;
+    private bool nameValid;
 
     void initializeFirebase()
     {
@@ -66,19 +65,46 @@ public class SignUpFirebase : MonoBehaviour
 
     public void Register()
     {
-        StartCoroutine(RegisterAsync(nameField.text, emailField.text, phoneField.text, passwordField.text));
+        StartCoroutine(RegisterAsync(nameField.text, emailField.text, passwordField.text));
     }
 
-    private IEnumerator RegisterAsync(string name, string email, string phone, string password)
+  
+
+    public void validateName()
     {
-        if (name == "")
-            Debug.LogError("name is empty");
-        else if (email == "")
-            Debug.LogError("email is empty");
-        else if (phone == "")
-            Debug.LogError("phone is empty");
-        else if (password == "")
-            Debug.LogError("password is empty");
+        Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
+        if (nameField.text.Trim() == "")
+        {
+            nameError.text = "Name cannot be empty.";
+            nameValid = false;
+            nameField.image.color = Color.red;
+            return;
+        }
+        else if (nameField.text.Trim().Length > 15)
+        {
+            nameError.text = "Name cannot be longer than 15 characters.";
+            nameValid = false;
+            nameField.image.color = Color.red;
+            return;
+        }
+        else if (!r.IsMatch(nameField.text.Trim()))
+        {
+            nameError.text = "Name must only contain alphabet, numbers, and spaces.";
+            nameValid = false;
+            nameField.image.color = Color.red;
+            return;
+        }
+        nameError.text = "";
+        nameValid = true;
+        nameField.image.color = Color.gray;
+    }
+
+    private IEnumerator RegisterAsync(string name, string email, string password)
+    {
+        validateName();
+        if (!nameValid){
+            Debug.LogError("Registration FAILED due to invalid inputs");
+        }
         else
         {
             Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
