@@ -20,7 +20,13 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_InputField emailField;
     public TMP_InputField passwordField;
     public TMP_Text nameError;
+    public TMP_Text nameCounter;
     private bool nameValid;
+
+    private void Start()
+    {
+        nameField.characterLimit = 15;
+    }
 
     void initializeFirebase()
     {
@@ -73,6 +79,7 @@ public class SignUpFirebase : MonoBehaviour
     public void validateName()
     {
         Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
+        nameCounter.text = nameField.text.Trim().Length + "/15";
         if (nameField.text.Trim() == "")
         {
             nameError.text = "Name cannot be empty.";
