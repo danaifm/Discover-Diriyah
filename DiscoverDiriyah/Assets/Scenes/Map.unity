@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b69ebfb857bdd3942b1e628a4104e38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: userDiscoverpage
+  SceneName: Map
 --- !u!4 &185778098
 Transform:
   m_ObjectHideFlags: 0
@@ -854,7 +854,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Discover
+  m_text: 'Map
+
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
   m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477,
@@ -1263,7 +1266,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 99f47cdc87fbd4c47bc20cd965bd0b36, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a72ecd9e782a2174fb7975139dd9a367, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1443,10 +1446,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618139956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 427383d7a1ab057418900d81068fa96f, type: 3}
+  m_Script: {fileID: 11500000, guid: f9d9d198ce3786548a706dc8907e61c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profile: {fileID: 894484057}
+  scanQR: {fileID: 2081873812}
 --- !u!114 &1618139964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1456,10 +1459,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1618139956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d9d198ce3786548a706dc8907e61c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 427383d7a1ab057418900d81068fa96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scanQR: {fileID: 2081873812}
+  profile: {fileID: 894484057}
 --- !u!114 &1618139965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1827,8 +1830,8 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 21300000, guid: ffa4e427eed9d3d40946a4ff2aa71463, type: 3}
+    m_SelectedSprite: {fileID: 21300000, guid: ffa4e427eed9d3d40946a4ff2aa71463, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -1841,9 +1844,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 657c602a5fe57e34a9dc716485e627a4, type: 3}
+      - m_Target: {fileID: 185778097}
         m_TargetAssemblyTypeName: PageManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: changeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1873,7 +1876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ffa4e427eed9d3d40946a4ff2aa71463, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 91d67d1a73a9ef84dad9e3b500793b81, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
