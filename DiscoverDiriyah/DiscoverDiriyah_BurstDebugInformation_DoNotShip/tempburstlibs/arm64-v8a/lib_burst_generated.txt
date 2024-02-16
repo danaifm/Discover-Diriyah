@@ -7,6 +7,9 @@ Library: /Users/dana/Documents/GitHub/Discover-Diriyah/DiscoverDiriyah/Temp/Burs
 --dump=Function
 --float-precision=Standard
 --assembly-defines=Assembly-CSharp;
+--assembly-defines=Firebase.App;
+--assembly-defines=Firebase.Auth;
+--assembly-defines=Firebase.Platform;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=Newtonsoft.Json;

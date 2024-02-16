@@ -7,6 +7,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using System.Linq;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -24,16 +25,28 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_Text nameError, emailError, passwordError;
     public TMP_Text nameCounter;
     private bool nameValid, emailValid, passwordValid;
-    FirebaseFirestore db;
+    private CollectionReference db;
 
     private void Start()
     {
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        {
+            dependencyStatus = task.Result;
+            if (dependencyStatus == DependencyStatus.Available)
+            {
+                initializeFirebase();
+            }
+            else
+            {
+                Debug.LogError("could not resolve firebase dependencies: " + dependencyStatus);
+            }
+        });
         nameField.characterLimit = 15;
-        //db = FirebaseFirestore.DefaultInstance;
+        db = FirebaseFirestore.DefaultInstance.Collection("users");
+       // no need to open/ close connection
     }
 
-    void initializeFirebase()
-    {
+    void initializeFirebase() { 
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
@@ -56,29 +69,27 @@ public class SignUpFirebase : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            dependencyStatus = task.Result;
-            if(dependencyStatus == DependencyStatus.Available)
-            {
-                initializeFirebase();
-            }
-            else
-            {
-                Debug.LogError("could not resolve firebase dependencies: " + dependencyStatus);
-            }
-        }
-            );
-    }
+    //private void Awake()
+    //{
+    //    FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+    //    {
+    //        dependencyStatus = task.Result;
+    //        if(dependencyStatus == DependencyStatus.Available)
+    //        {
+    //            initializeFirebase();
+    //        }
+    //        else
+    //        {
+    //            Debug.LogError("could not resolve firebase dependencies: " + dependencyStatus);
+    //        }
+    //    }
+    //        );
+    //}
 
     public void Register()
     {
-        StartCoroutine(RegisterAsync(nameField.text, emailField.text, passwordField.text));
+        StartCoroutine(RegisterAsync(nameField.text.Trim(), emailField.text.Trim().ToLower(), passwordField.text));
     }
-
-  
 
     public void validateName()
     {
@@ -115,8 +126,9 @@ public class SignUpFirebase : MonoBehaviour
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                 @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
-        Regex re = new Regex(strRegex);
-        if (emailField.text.Trim() == ""){
+        Regex re = new(strRegex);
+        if (emailField.text.Trim() == "")
+        {
             emailError.text = "Email cannot be empty.";
             emailValid = false;
             emailField.image.color = Color.red;
@@ -129,31 +141,69 @@ public class SignUpFirebase : MonoBehaviour
             emailField.image.color = Color.red;
             return;
         }
-        /* else if (uniqueEmail(emailField.text.Trim()))
-         {
-             emailError.text = "Email is already in use.";
-             emailValid = false;
-             emailField.image.color = Color.red;
-             return;
-         }*/
-       // Debug.Log(uniqueEmail(emailField.text.Trim()));
+        //else if (!(uniqueEmail(emailField.text.Trim().ToLower()) == 0))
+        //{
+        //    emailError.text = "Email is already in use.";
+        //    emailValid = false;
+        //    emailField.image.color = Color.red;
+        //    return;
+        //}
         emailError.text = "";
         emailValid = true;
         emailField.image.color = Color.gray;
+        uniqueEmail(emailField.text.Trim().ToLower());
     }
 
-    /*public string uniqueEmail(string email)
+    public async void uniqueEmail(string email)
     {
-        //DocumentReference docRef = db.Collection("users").Where("email", Equals: email.ToLower);
-        AggregateQuery query = db.Collection("users").WhereEqualTo("email", email.ToLower()).Count;
-        return query.ToString();
-    }*/
+        //int x = 0;
+        Query query = db.WhereEqualTo("email", email);
+        //query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshotTask =>
+        //{
+        //    Debug.Log(querySnapshotTask.Result.Documents.Count());
+        //    //x = querySnapshotTask.Result.Documents.Count();
+        //    if (!(query.GetSnapshotAsync().Result.Documents.Count() == 0)) //not unique
+        //    {
+        //        emailError.text = "Email is already in use.";
+        //        emailValid = false;
+        //        emailField.image.color = Color.red;
+        //        return;
+        //    }
+        //});
+        var qSnapshot = await query.GetSnapshotAsync();
+        if(qSnapshot.Count != 0)
+        {
+            emailError.text = "Email is already in use.";
+            emailValid = false;
+            emailField.image.color = Color.red;
+            return;
+        }
+        //return x;
+    }
+
 
     public void validatePassword()
     {
-        if(passwordField.text.Trim() == "")
+        var hasNumber = new Regex(@"[0-9]+");
+        var hasUpperChar = new Regex(@"[A-Z]+");
+        //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
+        if (passwordField.text.Trim() == "")
         {
             passwordError.text = "Password cannot be empty.";
+            passwordValid = false;
+            passwordField.image.color = Color.red;
+            return;
+        }
+        else if (passwordField.text.Length < 8)
+        {
+            passwordError.text = "Password must be at least 8 characters.";
+            passwordValid = false;
+            passwordField.image.color = Color.red;
+            return;
+        }
+        else if (!hasNumber.IsMatch(passwordField.text) || !hasUpperChar.IsMatch(passwordField.text))
+        {
+            passwordError.text = "Password must contain at least one digit and one uppercase letter.";
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -165,41 +215,51 @@ public class SignUpFirebase : MonoBehaviour
 
     private IEnumerator RegisterAsync(string name, string email, string password)
     {
-        validateName();
-        if (!nameValid){
+        if (!nameValid || !emailValid || !passwordValid)
+        {
             Debug.LogError("Registration FAILED due to invalid inputs");
         }
         else
         {
-            Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
-            yield return new WaitUntil(() => registerTask.IsCompleted);
-            if(registerTask.Exception != null)
+            validateName();
+            validateEmail();
+            validatePassword();
+            if (!nameValid || !emailValid || !passwordValid)
             {
-                Debug.LogError("exception while registering user: " + registerTask.Exception);
-                FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
-                AuthError authError = (AuthError)firebaseException.ErrorCode;
-                Debug.Log("Registration failed due to exception: " + authError);
-                
+                Debug.LogError("Registration FAILED due to invalid inputs");
             }
             else
             {
-                user = registerTask.Result.User;
-                if(user != null)
+                Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
+                yield return new WaitUntil(() => registerTask.IsCompleted);
+                if (registerTask.Exception != null)
                 {
-                    UserProfile userProfile = new UserProfile { DisplayName = name };
-                    Task profileTask = user.UpdateUserProfileAsync(userProfile);
-                    yield return new WaitUntil(() => profileTask.IsCompleted);
+                    Debug.LogError("exception while registering user: " + registerTask.Exception);
+                    FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
+                    AuthError authError = (AuthError)firebaseException.ErrorCode;
+                    Debug.Log("Registration failed due to exception: " + authError);
 
-                    if(profileTask.Exception != null) //setting username fails
+                }
+                else
+                {
+                    user = registerTask.Result.User;
+                    if (user != null)
                     {
-                        Debug.LogError(message: $"Failed to set username with exception: {profileTask.Exception}");
+                        UserProfile userProfile = new UserProfile { DisplayName = name };
+                        Task profileTask = user.UpdateUserProfileAsync(userProfile);
+                        yield return new WaitUntil(() => profileTask.IsCompleted);
+
+                        if (profileTask.Exception != null) //setting username fails
+                        {
+                            Debug.LogError(message: $"Failed to set username with exception: {profileTask.Exception}");
+
+                        }
+                        else //setting username success
+                        {
+                            Debug.Log("registration success!");
+                        }
 
                     }
-                    else //setting username success
-                    {
-                        Debug.LogAssertion("registration success!");
-                    }
-                     
                 }
             }
         }
