@@ -6,6 +6,11 @@ using Firebase.Auth;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine.UI;
+using Firebase.Database;
+using Firebase.Extensions;
+using Firebase.Firestore;
+using System;
+
 public class SigninFirebase1 : MonoBehaviour
 {
     //firebase variables
@@ -74,12 +79,17 @@ public class SigninFirebase1 : MonoBehaviour
 
         errormessag.text = "";
         Debug.Log(":emailField.text " + emailField.text);
-        Debug.Log("asswordField.text " + passwordField.text);
-        StartCoroutine(LoginAsync( emailField.text,passwordField.text));
+        Debug.Log("passwordField.text " + passwordField.text);
+     
+            Debug.Log("Try login with error ");
+            errormessag.text = "Wrong Email or password";
+            StartCoroutine(LoginAsync(emailField.text, passwordField.text));
+        
     }
 
     private IEnumerator LoginAsync(string email, string password)
     {
+        email = email.ToLower();
         int x = 0;
         if (email == "" || email == " ")
         {
@@ -104,6 +114,7 @@ public class SigninFirebase1 : MonoBehaviour
 
         if (loginTask.Exception != null)
         {
+                errormessag.text = "Login Failed!";
             Debug.LogError(loginTask.Exception);
 
             FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
@@ -139,15 +150,90 @@ public class SigninFirebase1 : MonoBehaviour
         }
         else
         {
-            AuthResult authResult = loginTask.Result;
-            user = authResult.User;
+                errormessag.text = "";
+                AuthResult authResult = loginTask.Result;
+                if(authResult != null)
+    {
+                    user = authResult.User;
 
-            Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
+                    Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
+                    CheckAdminStatus(user.UserId);
+                //    bool isAdmin = RetrieveAdminStatus(user.UserId);
 
-            Debug.LogFormat("{0} You Are Successfully Logged In", user);
-            // References.userName = user.DisplayName;
-            UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
-        }
+
+                //     //int isAdmin = 0;
+                //     if (isAdmin)
+                //     {
+                //         UnityEngine.SceneManagement.SceneManager.LoadScene("AdminScene");
+                //     } else
+                //     {
+                //         UnityEngine.SceneManagement.SceneManager.LoadScene("UserScene");
+                //     }
+
+                    
+                   
+                //     UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("WelcomeScreen");
+                }
+            }
     }
     }
+private void CheckAdminStatus(string userId)
+{
+    try
+    {
+        FirebaseFirestore db = FirebaseFirestore.GetInstance("default");
+
+        // if (db != null)
+        // {
+        //     CollectionReference usersCollection = db.Collection("users");
+
+        //     if (usersCollection != null)
+        //     {
+        //         // usersCollection.Document(userId).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        //         // {
+        //         //     if (task.IsCompleted)
+        //         //     {
+        //         //         DocumentSnapshot snapshot = task.Result;
+
+        //         //         if (snapshot.Exists)
+        //         //         {
+        //         //             object adminValue;
+        //         //             if (snapshot.TryGetValue("admin", out adminValue) && adminValue is bool)
+        //         //             {
+        //         //                 bool isAdmin = (bool)adminValue;
+
+        //         //                 if (isAdmin)
+        //         //                 {
+        //         //                     Debug.Log("User is an admin.");
+        //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("adminScene");
+        //         //                 }
+        //         //                 else
+        //         //                 {
+        //         //                     Debug.Log("User is not an admin.");
+        //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("userScene");
+        //         //                 }
+        //         //             }
+        //         //             else
+        //         //             {
+        //         //                 Debug.LogError("Failed to retrieve 'admin' field or it is not a boolean value.");
+        //         //             }
+        //         //         }
+        //         //     }
+        //         // });
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("usersCollection is null.");
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogError("Firestore db is null.");
+        // }
+    }
+    catch (Exception e)
+    {
+        Debug.LogError($"An error occurred: {e.Message}");
+    }
+}
 }

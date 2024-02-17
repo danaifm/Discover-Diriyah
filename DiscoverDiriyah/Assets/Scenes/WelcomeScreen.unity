@@ -1553,7 +1553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -227, y: 22}
+  m_AnchoredPosition: {x: -221, y: 56.54}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &566284639
@@ -5316,8 +5316,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dependencyStatus: 0
-  emailField: {fileID: 1954473524}
-  passwordField: {fileID: 1425692662}
+  emailField: {fileID: 0}
+  passwordField: {fileID: 0}
   errormessag: {fileID: 0}
   emailEmpty: {fileID: 0}
   passwordEmpty: {fileID: 0}
