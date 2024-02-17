@@ -9,6 +9,7 @@ Library: /Users/dana/Documents/GitHub/Discover-Diriyah/DiscoverDiriyah/Temp/Burs
 --assembly-defines=Assembly-CSharp;
 --assembly-defines=Firebase.App;
 --assembly-defines=Firebase.Auth;
+--assembly-defines=Firebase.Firestore;
 --assembly-defines=Firebase.Platform;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;

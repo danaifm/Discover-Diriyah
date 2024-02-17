@@ -26,9 +26,11 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_Text nameCounter;
     private bool nameValid, emailValid, passwordValid;
     private CollectionReference db;
+    private FirebaseApp app;
 
     private void Start()
     {
+        Debug.Log("STARTING APP");
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             dependencyStatus = task.Result;
@@ -46,7 +48,8 @@ public class SignUpFirebase : MonoBehaviour
        // no need to open/ close connection
     }
 
-    void initializeFirebase() { 
+    void initializeFirebase() {
+        app = FirebaseApp.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
@@ -71,10 +74,11 @@ public class SignUpFirebase : MonoBehaviour
 
     //private void Awake()
     //{
+    //    Debug.Log("IN AWAKE()");
     //    FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
     //    {
     //        dependencyStatus = task.Result;
-    //        if(dependencyStatus == DependencyStatus.Available)
+    //        if (dependencyStatus == DependencyStatus.Available)
     //        {
     //            initializeFirebase();
     //        }
@@ -85,6 +89,8 @@ public class SignUpFirebase : MonoBehaviour
     //    }
     //        );
     //}
+
+
 
     public void Register()
     {
@@ -151,35 +157,34 @@ public class SignUpFirebase : MonoBehaviour
         emailError.text = "";
         emailValid = true;
         emailField.image.color = Color.gray;
-        uniqueEmail(emailField.text.Trim().ToLower());
+        uniqueEmailAsync(emailField.text.Trim().ToLower());
     }
 
-    public async void uniqueEmail(string email)
+    public async void uniqueEmailAsync(string email)
     {
-        //int x = 0;
         Query query = db.WhereEqualTo("email", email);
-        //query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshotTask =>
-        //{
-        //    Debug.Log(querySnapshotTask.Result.Documents.Count());
-        //    //x = querySnapshotTask.Result.Documents.Count();
-        //    if (!(query.GetSnapshotAsync().Result.Documents.Count() == 0)) //not unique
-        //    {
-        //        emailError.text = "Email is already in use.";
-        //        emailValid = false;
-        //        emailField.image.color = Color.red;
-        //        return;
-        //    }
-        //});
+        //_ = query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshotTask =>
+        //  {
+        //      Debug.Log(querySnapshotTask.Result.Documents.Count());
+        //      //x = querySnapshotTask.Result.Documents.Count();
+        //      if (!(query.GetSnapshotAsync().Result.Documents.Count() == 0)) //not unique
+        //      {
+        //          emailError.text = "Email is already in use.";
+        //          emailValid = false;
+        //          emailField.image.color = Color.red;
+        //          return;
+        //      }
+        //  });
         var qSnapshot = await query.GetSnapshotAsync();
-        if(qSnapshot.Count != 0)
+        if (qSnapshot.Count != 0)
         {
             emailError.text = "Email is already in use.";
             emailValid = false;
             emailField.image.color = Color.red;
             return;
         }
-        //return x;
     }
+
 
 
     public void validatePassword()
@@ -215,21 +220,15 @@ public class SignUpFirebase : MonoBehaviour
 
     private IEnumerator RegisterAsync(string name, string email, string password)
     {
+        validateName();
+        validateEmail();
+        validatePassword();
         if (!nameValid || !emailValid || !passwordValid)
         {
-            Debug.LogError("Registration FAILED due to invalid inputs");
+            Debug.LogError("Registration FAILED due to invalid inputs 1");
         }
         else
-        {
-            validateName();
-            validateEmail();
-            validatePassword();
-            if (!nameValid || !emailValid || !passwordValid)
-            {
-                Debug.LogError("Registration FAILED due to invalid inputs");
-            }
-            else
-            {
+        { 
                 Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
                 yield return new WaitUntil(() => registerTask.IsCompleted);
                 if (registerTask.Exception != null)
@@ -243,23 +242,22 @@ public class SignUpFirebase : MonoBehaviour
                 else
                 {
                     user = registerTask.Result.User;
-                    if (user != null)
+                if (user != null)
+                {
+                    UserProfile userProfile = new UserProfile { DisplayName = name };
+                    Task profileTask = user.UpdateUserProfileAsync(userProfile);
+                    yield return new WaitUntil(() => profileTask.IsCompleted);
+
+                    if (profileTask.Exception != null) //setting username fails
                     {
-                        UserProfile userProfile = new UserProfile { DisplayName = name };
-                        Task profileTask = user.UpdateUserProfileAsync(userProfile);
-                        yield return new WaitUntil(() => profileTask.IsCompleted);
-
-                        if (profileTask.Exception != null) //setting username fails
-                        {
-                            Debug.LogError(message: $"Failed to set username with exception: {profileTask.Exception}");
-
-                        }
-                        else //setting username success
-                        {
-                            Debug.Log("registration success!");
-                        }
+                        Debug.LogError(message: $"Failed to set username with exception: {profileTask.Exception}");
 
                     }
+                    else //setting username success
+                    {
+                        Debug.Log("registration success!");
+                    }
+
                 }
             }
         }

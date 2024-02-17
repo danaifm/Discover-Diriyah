@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveAnimationScript : MonoBehaviour
 {
-    [SerializeField] Transform targetTransform;
+    [SerializeField] Transform targetTransformUp, targetTransformDown;
     [SerializeField] float duration;
     // Start is called before the first frame update
     void Start()
@@ -18,8 +18,13 @@ public class MoveAnimationScript : MonoBehaviour
         
     }
 
-    public void Move()
+    public void MoveUp()
     {
-        LeanTween.moveY(gameObject, targetTransform.position.y, duration);
+        LeanTween.moveY(gameObject, targetTransformUp.position.y, duration);
+    }
+
+    public void MoveDown()
+    {
+        LeanTween.moveY(gameObject, targetTransformDown.position.y, duration);
     }
 }
