@@ -6,9 +6,9 @@ using Firebase.Auth;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine.UI;
-using Firebase.Database;
-using Firebase.Extensions;
-using Firebase.Firestore;
+// using Firebase.Database;
+// using Firebase.Extensions;
+// using Firebase.Firestore;
 using System;
 
 public class SigninFirebase1 : MonoBehaviour
@@ -157,7 +157,7 @@ public class SigninFirebase1 : MonoBehaviour
                     user = authResult.User;
 
                     Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
-                    CheckAdminStatus(user.UserId);
+                    // CheckAdminStatus(user.UserId);
                 //    bool isAdmin = RetrieveAdminStatus(user.UserId);
 
 
@@ -177,63 +177,63 @@ public class SigninFirebase1 : MonoBehaviour
             }
     }
     }
-private void CheckAdminStatus(string userId)
-{
-    try
-    {
-        FirebaseFirestore db = FirebaseFirestore.GetInstance("default");
+// private void CheckAdminStatus(string userId)
+// {
+//     try
+//     {
+//         FirebaseFirestore db = FirebaseFirestore.GetInstance("default");
 
-        // if (db != null)
-        // {
-        //     CollectionReference usersCollection = db.Collection("users");
+//         // if (db != null)
+//         // {
+//         //     CollectionReference usersCollection = db.Collection("users");
 
-        //     if (usersCollection != null)
-        //     {
-        //         // usersCollection.Document(userId).GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        //         // {
-        //         //     if (task.IsCompleted)
-        //         //     {
-        //         //         DocumentSnapshot snapshot = task.Result;
+//         //     if (usersCollection != null)
+//         //     {
+//         //         // usersCollection.Document(userId).GetSnapshotAsync().ContinueWithOnMainThread(task =>
+//         //         // {
+//         //         //     if (task.IsCompleted)
+//         //         //     {
+//         //         //         DocumentSnapshot snapshot = task.Result;
 
-        //         //         if (snapshot.Exists)
-        //         //         {
-        //         //             object adminValue;
-        //         //             if (snapshot.TryGetValue("admin", out adminValue) && adminValue is bool)
-        //         //             {
-        //         //                 bool isAdmin = (bool)adminValue;
+//         //         //         if (snapshot.Exists)
+//         //         //         {
+//         //         //             object adminValue;
+//         //         //             if (snapshot.TryGetValue("admin", out adminValue) && adminValue is bool)
+//         //         //             {
+//         //         //                 bool isAdmin = (bool)adminValue;
 
-        //         //                 if (isAdmin)
-        //         //                 {
-        //         //                     Debug.Log("User is an admin.");
-        //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("adminScene");
-        //         //                 }
-        //         //                 else
-        //         //                 {
-        //         //                     Debug.Log("User is not an admin.");
-        //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("userScene");
-        //         //                 }
-        //         //             }
-        //         //             else
-        //         //             {
-        //         //                 Debug.LogError("Failed to retrieve 'admin' field or it is not a boolean value.");
-        //         //             }
-        //         //         }
-        //         //     }
-        //         // });
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("usersCollection is null.");
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.LogError("Firestore db is null.");
-        // }
-    }
-    catch (Exception e)
-    {
-        Debug.LogError($"An error occurred: {e.Message}");
-    }
-}
+//         //         //                 if (isAdmin)
+//         //         //                 {
+//         //         //                     Debug.Log("User is an admin.");
+//         //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("adminScene");
+//         //         //                 }
+//         //         //                 else
+//         //         //                 {
+//         //         //                     Debug.Log("User is not an admin.");
+//         //         //                     UnityEngine.SceneManagement.SceneManager.LoadScene("userScene");
+//         //         //                 }
+//         //         //             }
+//         //         //             else
+//         //         //             {
+//         //         //                 Debug.LogError("Failed to retrieve 'admin' field or it is not a boolean value.");
+//         //         //             }
+//         //         //         }
+//         //         //     }
+//         //         // });
+//         //     }
+//         //     else
+//         //     {
+//         //         Debug.LogError("usersCollection is null.");
+//         //     }
+//         // }
+//         // else
+//         // {
+//         //     Debug.LogError("Firestore db is null.");
+//         // }
+//     }
+//     catch (Exception e)
+//     {
+//         Debug.LogError($"An error occurred: {e.Message}");
+//     }
+// }
 }
