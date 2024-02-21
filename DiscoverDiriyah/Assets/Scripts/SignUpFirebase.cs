@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Linq;
+using System.Collections.Generic;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -31,18 +32,7 @@ public class SignUpFirebase : MonoBehaviour
     private void Start()
     {
         Debug.Log("STARTING APP");
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            dependencyStatus = task.Result;
-            if (dependencyStatus == DependencyStatus.Available)
-            {
-                initializeFirebase();
-            }
-            else
-            {
-                Debug.LogError("could not resolve firebase dependencies: " + dependencyStatus);
-            }
-        });
+        initializeFirebase();
         nameField.characterLimit = 15;
         db = FirebaseFirestore.DefaultInstance.Collection("users");
        // no need to open/ close connection
@@ -163,18 +153,6 @@ public class SignUpFirebase : MonoBehaviour
     public async void uniqueEmailAsync(string email)
     {
         Query query = db.WhereEqualTo("email", email);
-        //_ = query.GetSnapshotAsync().ContinueWithOnMainThread(querySnapshotTask =>
-        //  {
-        //      Debug.Log(querySnapshotTask.Result.Documents.Count());
-        //      //x = querySnapshotTask.Result.Documents.Count();
-        //      if (!(query.GetSnapshotAsync().Result.Documents.Count() == 0)) //not unique
-        //      {
-        //          emailError.text = "Email is already in use.";
-        //          emailValid = false;
-        //          emailField.image.color = Color.red;
-        //          return;
-        //      }
-        //  });
         var qSnapshot = await query.GetSnapshotAsync();
         if (qSnapshot.Count != 0)
         {
@@ -220,6 +198,9 @@ public class SignUpFirebase : MonoBehaviour
 
     private IEnumerator RegisterAsync(string name, string email, string password)
     {
+        Debug.Log(name);
+        Debug.Log(email);
+        Debug.Log(password);
         validateName();
         validateEmail();
         validatePassword();
@@ -255,6 +236,25 @@ public class SignUpFirebase : MonoBehaviour
                     }
                     else //setting username success
                     {
+                        Dictionary<string, string> userinfo = new Dictionary<string, string>
+                        {
+                            {"name", name},
+                            {"email", email},
+                            {"admin", "0"}
+                        };
+                        
+                        db.Document(user.UserId).SetAsync(userinfo).ContinueWith(task =>
+                        {
+                            if (task.IsCompletedSuccessfully)
+                            {
+                                Debug.Log("added user " + user.UserId + " to firestore");
+                            }
+                            else
+                            {
+                                Debug.LogError(message: $"Failed to insert into firestore with exception: {task.Exception}");
+                            }
+                        }
+                        );
                         Debug.Log("registration success!");
                     }
 
@@ -262,4 +262,6 @@ public class SignUpFirebase : MonoBehaviour
             }
         }
     }
+
+    
 }
