@@ -7,12 +7,14 @@ using Bitsplash.DatePicker;
 using UI.Dates;
 using UnityEditor;
 using System;
+using UnityEngine.UI;
+using Firebase.Firestore;
+using System.Threading.Tasks;
 
 public class AddEvent : MonoBehaviour
 {
-    //void Start() {     SetToCurrentMonthAndYear();}
 
-public TMP_InputField Name;
+    public TMP_InputField Name;
     public TMP_Text nameError;
     public TMP_InputField Description;
     public TMP_Text descriptionError;
@@ -20,9 +22,11 @@ public TMP_InputField Name;
     public TMP_Text audienceError;
     public TMP_Dropdown StartHour;
     public TMP_Dropdown StartMinute;
+    public TMP_Dropdown StartAmPm;
     public TMP_Text startTimeError;
     public TMP_Dropdown EndHour;
     public TMP_Dropdown EndMinute;
+    public TMP_Dropdown EndAmPm;
     public TMP_Text endTimeError;
     public TMP_InputField Location;
     public TMP_Text locationError;
@@ -32,11 +36,27 @@ public TMP_InputField Name;
     public DatePickerSettings endDatePicker;
     public TMP_InputField Price;
     public TMP_Text priceError;
+    string name; //fb
+    string description;//fb 
+    string audience;//fb
+    string location;//fb
+    string startTime;
+    string endTime;
+    string workingHours; //fb
+    DateTime finalStartDate; //fb
+    DateTime finalEndDate; //fb
+    string price;//fb 
+
+    FirebaseFirestore db;
+    Dictionary<string, object> Event; 
+
 
 
 
     void Start()
     {
+        db = FirebaseFirestore.DefaultInstance;
+
         //DISABLE DATES FROM PAST 6 MONTHS
         if (endDatePicker != null)
         {
@@ -74,7 +94,7 @@ public TMP_InputField Name;
         bool isValid = true;
 
         //NAME FIELD VALIDATION
-        string name = Name.text;
+        name = Name.text.Trim();
         string pattern1 = @"^[a-zA-Z0-9 \-\[\]\(\),]*$";
         if (!Regex.IsMatch(name, pattern1) || string.IsNullOrWhiteSpace(name))
         {
@@ -90,7 +110,7 @@ public TMP_InputField Name;
         }
         
         //DESCRIPTION FIELD VALIDATION
-        string  description = Description.text;
+        description = Description.text.Trim();
         string pattern2 = @"^[a-zA-Z0-9 \-\[\],:;?!().]*$";
         if (!Regex.IsMatch(description, pattern2) || string.IsNullOrWhiteSpace(description))
         {
@@ -106,7 +126,7 @@ public TMP_InputField Name;
         }
 
         //AUDIENCE FIELD VALIDATION
-        string audience = Audience.text;
+        audience = Audience.text.Trim();
         string pattern3 = @"^[a-zA-Z0-9 \-\+\(\)]*$";
         if (!Regex.IsMatch(audience, pattern3) || string.IsNullOrWhiteSpace(audience))
         {
@@ -122,7 +142,7 @@ public TMP_InputField Name;
         }
 
         //LOCATION FIELD VALIDATION
-        string location = Location.text;
+        location = Location.text.Trim();
         string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
 
         if (!Regex.IsMatch(location, urlPattern) || string.IsNullOrWhiteSpace(location))
@@ -168,7 +188,15 @@ public TMP_InputField Name;
 
         }
         else
-        { startTimeError.text = ""; }
+        {   
+            startTimeError.text = "";
+            string hourPart = StartHour.options[StartHour.value].text;
+            string minutePart = StartMinute.options[StartMinute.value].text;
+            string AmPmPart = StartAmPm.options[StartAmPm.value].text;
+            startTime = hourPart + ":" + minutePart + " " + AmPmPart;
+            workingHours = startTime + "-";
+
+        }
 
         //END TIME VALIDATION
         if (EndHour.value == 0 && EndMinute.value == 0)
@@ -199,7 +227,15 @@ public TMP_InputField Name;
 
         }
         else
-        { endTimeError.text = ""; }
+        { 
+            endTimeError.text = "";
+            string hourPart2 = EndHour.options[EndHour.value].text;
+            string minutePart2 = EndMinute.options[EndMinute.value].text;
+            string AmPmPart2 = EndAmPm.options[EndAmPm.value].text;
+            endTime = hourPart2+":"+minutePart2 + " " +AmPmPart2;
+            workingHours += endTime;
+
+        }
 
 
         DateTime currentDate = DateTime.Today; // Gets today's date with time component set to 00:00:00
@@ -266,10 +302,19 @@ public TMP_InputField Name;
                 endDateError.fontSize = 30;
                 isValid = false;
             }
+            else
+            {
+                finalStartDate = selectedStartDate.Value;
+                finalEndDate = selectedEndDate.Value;
+                //finalStartDate = startDatePicker.Content.Selection.GetItem(0).ToString();
+                //finalStartDate = finalStartDate[..9];
+                //finalEndDate = endDatePicker.Content.Selection.GetItem(0).ToString();
+                //finalEndDate = finalEndDate[..9];
+            }
         }
 
         //PRICE FIELD VALIDATION
-        string price = Price.text;
+        price = Price.text.Trim();
         string  pricePattern= @"^-?\d+(\.\d+)?$";
         if (!Regex.IsMatch(price, pricePattern) || string.IsNullOrWhiteSpace(price))
         {
@@ -282,6 +327,7 @@ public TMP_InputField Name;
         else
         {
             priceError.text = "";
+            price += " SAR";
         }
 
         //if everything is valid -> upload to firebase 
@@ -292,9 +338,33 @@ public TMP_InputField Name;
 
     }//end of validations 
 
-    public void uploadEvent()
+    public async Task uploadEvent()
     {
+        var newEvent = new Dictionary<string, object>
+        {
+            {"Name", name},
+            {"Description", description},
+            {"Audience", audience},
+            {"StartDate", finalStartDate},
+            {"EndDate", finalEndDate},
+            {"Location", location},
+            {"Price", price},
+            {"WorkingHours", workingHours},
+        };
 
+        try
+        {
+            await db.Collection("Event").Document().SetAsync(newEvent);
+            Debug.Log("Event added successfully.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error adding event: {ex.Message}");
+        }
     }
 
+
+
 }
+
+

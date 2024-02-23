@@ -3004,9 +3004,11 @@ MonoBehaviour:
   audienceError: {fileID: 220497468}
   StartHour: {fileID: 469135072}
   StartMinute: {fileID: 1807818231}
+  StartAmPm: {fileID: 1763503853}
   startTimeError: {fileID: 439951307}
   EndHour: {fileID: 632526397}
   EndMinute: {fileID: 171804488}
+  EndAmPm: {fileID: 1140788226}
   endTimeError: {fileID: 1695518221}
   Location: {fileID: 81746217}
   locationError: {fileID: 504774469}
@@ -4170,6 +4172,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1105727988}
     m_Modifications:
+    - target: {fileID: 299721539829220191, guid: 62c0d9a2614d97d43839ec69c5aef2ee,
+        type: 3}
+      propertyPath: isOpen
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 299721539881017121, guid: 62c0d9a2614d97d43839ec69c5aef2ee,
         type: 3}
       propertyPath: isOpen
@@ -5522,7 +5529,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 762773215}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -10262,9 +10269,11 @@ MonoBehaviour:
   audienceError: {fileID: 0}
   StartHour: {fileID: 0}
   StartMinute: {fileID: 0}
+  StartAmPm: {fileID: 0}
   startTimeError: {fileID: 0}
   EndHour: {fileID: 0}
   EndMinute: {fileID: 0}
+  EndAmPm: {fileID: 0}
   endTimeError: {fileID: 0}
   Location: {fileID: 0}
   locationError: {fileID: 0}
@@ -12393,7 +12402,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0.0000085831, y: 36.00101}
+  m_AnchoredPosition: {x: 0.0000085831, y: 36.000942}
   m_SizeDelta: {x: 22.4673, y: 3059.545}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -13895,7 +13904,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.6417226
+  m_Size: 0.64172626
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
