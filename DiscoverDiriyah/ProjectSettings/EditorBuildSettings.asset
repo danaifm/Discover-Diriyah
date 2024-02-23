@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WelcomeScreen.unity
     guid: 5187067a6996b421d8290da39619143c
+  - enabled: 1
+    path: Assets/Scenes/EditProfile.unity
+    guid: 145df3024de0e4927a050dd730d99442
   m_configObjects: {}

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Firebase.Firestore;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEditor.SceneManagement;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -241,20 +242,18 @@ public class SignUpFirebase : MonoBehaviour
                             {"email", email},
                             {"admin", "0"}
                         };
-                        
-                        db.Document(user.UserId).SetAsync(userinfo).ContinueWith(task =>
+
+                        Task firestoreTask = db.Document(user.UserId).SetAsync(userinfo);
+                        yield return new WaitUntil(() => firestoreTask.IsCompleted);
+                        if (firestoreTask.Exception == null)
                         {
-                            if (task.IsCompletedSuccessfully)
-                            {
-                                Debug.Log("added user " + user.UserId + " to firestore");
-                                SceneManager.LoadScene("ProfilePage");
-                            }
-                            else
-                            {
-                                Debug.LogError(message: $"Failed to insert into firestore with exception: {task.Exception}");
-                            }
+                            Debug.Log("added user " + user.UserId + " to firestore");
+                            ChangeScene();
                         }
-                        );
+                        else
+                        {
+                            Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
+                        }
                         Debug.Log("registration success!");
                     }
 
@@ -263,5 +262,13 @@ public class SignUpFirebase : MonoBehaviour
         }
     }
 
-    
+    public void ChangeScene()
+    {
+        Debug.Log("changing scene to profile");
+        SceneManager.LoadSceneAsync("EditProfile");
+        //EditorSceneManager.OpenScene("Assets/Scenes/EditProfile");
+        Debug.Log("after change scene");
+    }
+
+
 }
