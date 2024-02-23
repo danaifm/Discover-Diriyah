@@ -35,29 +35,45 @@ public TMP_InputField Name;
 
 
 
-    void Start() {
+    void Start()
+    {
+        //DISABLE DATES FROM PAST 6 MONTHS
         if (endDatePicker != null)
         {
-            endDatePicker.Content.OnDisplayChanged.AddListener(OnDisplayChanged);
-
+            endDatePicker.Content.OnDisplayChanged.AddListener(() => OnDisplayChanged(endDatePicker));
         }
-    }
-
-    public void OnDisplayChanged()
-    {
-        var cell = endDatePicker.Content.GetCellObjectByDate(DateTime.Now);
-        if (cell != null)
+        if (startDatePicker != null)
         {
-            cell.CellEnabled = false;
+            startDatePicker.Content.OnDisplayChanged.AddListener(() => OnDisplayChanged(startDatePicker));
         }
     }
 
+
+
+    public void OnDisplayChanged(DatePickerSettings calendar)
+    {
+        DateTime currentDate = DateTime.Now;
+        DateTime startDate = currentDate.AddMonths(-6);
+
+        // Loop from 6 months ago to yesterday
+        for (DateTime date = startDate; date < currentDate; date = date.AddDays(1))
+        {
+            var cell = calendar.Content.GetCellObjectByDate(date);
+            if (cell != null)
+            {
+                cell.CellEnabled = false;
+            }
+        }
+
+    }
+
+    
 
     public void validate_input()
     {
         bool isValid = true;
 
-        //name field validation
+        //NAME FIELD VALIDATION
         string name = Name.text;
         string pattern1 = @"^[a-zA-Z0-9 \-\[\]\(\),]*$";
         if (!Regex.IsMatch(name, pattern1) || string.IsNullOrWhiteSpace(name))
@@ -73,7 +89,7 @@ public TMP_InputField Name;
             nameError.text = "";
         }
         
-        //description field validation
+        //DESCRIPTION FIELD VALIDATION
         string  description = Description.text;
         string pattern2 = @"^[a-zA-Z0-9 \-\[\],:;?!().]*$";
         if (!Regex.IsMatch(description, pattern2) || string.IsNullOrWhiteSpace(description))
@@ -89,7 +105,7 @@ public TMP_InputField Name;
             descriptionError.text = "";
         }
 
-        //audience field validation
+        //AUDIENCE FIELD VALIDATION
         string audience = Audience.text;
         string pattern3 = @"^[a-zA-Z0-9 \-\+\(\)]*$";
         if (!Regex.IsMatch(audience, pattern3) || string.IsNullOrWhiteSpace(audience))
@@ -105,7 +121,7 @@ public TMP_InputField Name;
             audienceError.text = "";
         }
 
-        //location field validation
+        //LOCATION FIELD VALIDATION
         string location = Location.text;
         string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
 
@@ -122,7 +138,7 @@ public TMP_InputField Name;
             locationError.text = "";
         }
 
-        //start time validation 
+        //START TIME VALIDATION
         if(StartHour.value == 0 && StartMinute.value == 0)
         {
             startTimeError.text = "Start hour and minute must be selected";
@@ -154,7 +170,7 @@ public TMP_InputField Name;
         else
         { startTimeError.text = ""; }
 
-        //End time validation 
+        //END TIME VALIDATION
         if (EndHour.value == 0 && EndMinute.value == 0)
         {
             endTimeError.text = "End hour and minute must be selected";
@@ -185,60 +201,74 @@ public TMP_InputField Name;
         else
         { endTimeError.text = ""; }
 
-        //start date validation
-        if (startDatePicker != null)
+
+        DateTime currentDate = DateTime.Today; // Gets today's date with time component set to 00:00:00
+
+        // START DATE VALIDATION
+        DateTime? selectedStartDate = null; 
+        if (startDatePicker != null && startDatePicker.Content.Selection != null && startDatePicker.Content.Selection.Count > 0)
         {
-            if (startDatePicker.Content.Selection != null && startDatePicker.Content.Selection.Count > 0)
+            var selection = startDatePicker.Content.Selection.GetItem(0); // returns a DateTime
+            selectedStartDate = selection;
+            if (selection >= currentDate)
             {
-                var selection = startDatePicker.Content.Selection.GetItem(0);
-                string selectedStartDate = selection.ToString()[..9];
                 startDateError.text = "";
-
-
             }
-
-            else
+            else //date from past 
             {
-                startDateError.text = "Start date must be selected.";
+                startDateError.text = "Start date cannot be in the past.";
                 startDateError.color = Color.red;
                 startDateError.fontSize = 30;
+                isValid = false;
             }
         }
-        else
+        else //field left empty
         {
             startDateError.text = "Start date must be selected.";
             startDateError.color = Color.red;
             startDateError.fontSize = 30;
+            isValid = false;
         }
 
-        //end date validation
-        if (endDatePicker != null)
+        // END DATE VALIDATION 
+        DateTime? selectedEndDate = null; 
+        if (endDatePicker != null && endDatePicker.Content.Selection != null && endDatePicker.Content.Selection.Count > 0)
         {
-
-            if (endDatePicker.Content.Selection != null && endDatePicker.Content.Selection.Count > 0)
+            var selection = endDatePicker.Content.Selection.GetItem(0); //returns a DateTime
+            selectedEndDate = selection;
+            if (selection >= currentDate)
             {
-                var selection = endDatePicker.Content.Selection.GetItem(0);
-                string selectedEndDate = selection.ToString()[..9];
                 endDateError.text = "";
-
-
             }
-
-            else
+            else //past date
             {
-                endDateError.text = "End date must be selected.";
+                endDateError.text = "End date cannot be in the past.";
                 endDateError.color = Color.red;
                 endDateError.fontSize = 30;
+                isValid = false;
             }
         }
-        else
+        else //field left empty
         {
             endDateError.text = "End date must be selected.";
             endDateError.color = Color.red;
             endDateError.fontSize = 30;
+            isValid = false;
         }
 
-        //price field validation
+        // validation for end date not before start date
+        if (selectedStartDate.HasValue && selectedEndDate.HasValue)
+        {
+            if (selectedEndDate.Value < selectedStartDate.Value)
+            {
+                endDateError.text = "End date cannot be before start date.";
+                endDateError.color = Color.red;
+                endDateError.fontSize = 30;
+                isValid = false;
+            }
+        }
+
+        //PRICE FIELD VALIDATION
         string price = Price.text;
         string  pricePattern= @"^-?\d+(\.\d+)?$";
         if (!Regex.IsMatch(price, pricePattern) || string.IsNullOrWhiteSpace(price))
@@ -254,9 +284,17 @@ public TMP_InputField Name;
             priceError.text = "";
         }
 
+        //if everything is valid -> upload to firebase 
+        if (isValid)
+        {
+            uploadEvent();
+        }
+
+    }//end of validations 
+
+    public void uploadEvent()
+    {
 
     }
-
-
 
 }
