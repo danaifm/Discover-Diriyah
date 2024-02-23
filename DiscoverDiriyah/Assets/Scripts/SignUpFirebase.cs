@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using TMPro;
 using System.Text.RegularExpressions;
 using Firebase.Firestore;
-using Firebase.Extensions;
-using System.Linq;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -248,6 +247,7 @@ public class SignUpFirebase : MonoBehaviour
                             if (task.IsCompletedSuccessfully)
                             {
                                 Debug.Log("added user " + user.UserId + " to firestore");
+                                SceneManager.LoadScene("ProfilePage");
                             }
                             else
                             {
