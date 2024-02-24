@@ -7,8 +7,12 @@ Library: C:\Users\ranaa\OneDrive\Documents\GitHub\Discover-Diriyah\DiscoverDiriy
 --dump=Function
 --float-precision=Standard
 --assembly-defines=Assembly-CSharp;
+--assembly-defines=Firebase.App;
+--assembly-defines=Firebase.Firestore;
+--assembly-defines=Firebase.Platform;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
+--assembly-defines=NativeGallery.Runtime;
 --assembly-defines=Newtonsoft.Json;
 --assembly-defines=System.Configuration;
 --assembly-defines=System.Core;
