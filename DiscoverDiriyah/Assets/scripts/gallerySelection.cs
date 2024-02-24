@@ -7,105 +7,66 @@ public class GalleryImageSelector : MonoBehaviour
 {
     public RawImage[] imageDisplays; // Assign your 10 RawImage UI components in the inspector
     private List<string> selectedImagePaths = new List<string>(); // To store paths of selected images
+    public Button selectImageButton; // Assign your button for selecting images
 
-    // Start is called before the first frame update
     void Start()
     {
-        // Optionally, start the gallery access here or trigger it with a UI button
-    }
-
-    // Call this method when you want to start the image selection process
-    public void StartImageSelectionProcess()
-    {
-        StartCoroutine(CheckAndRequestPermissionCoroutine());
-    }
-
-    IEnumerator CheckAndRequestPermissionCoroutine()
-    {
-        // Assuming you want to read images from the gallery
-        NativeGallery.PermissionType permissionType = NativeGallery.PermissionType.Read;
-        NativeGallery.MediaType mediaType = NativeGallery.MediaType.Image; // Assuming we're dealing with images
-
-        // Check the current permission status for reading images
-        NativeGallery.Permission permissionCheck = NativeGallery.CheckPermission(permissionType, mediaType);
-        if (permissionCheck == NativeGallery.Permission.ShouldAsk)
+        // Make all RawImage components fully transparent initially
+        foreach (var imageDisplay in imageDisplays)
         {
-            // Request permission to read images
-            NativeGallery.Permission permissionResult = NativeGallery.RequestPermission(permissionType, mediaType);
-            yield return new WaitUntil(() => NativeGallery.CheckPermission(permissionType, mediaType) != NativeGallery.Permission.ShouldAsk);
-
-            // Re-check the permission status after the user has responded to the permission request
-            permissionCheck = NativeGallery.CheckPermission(permissionType, mediaType);
+            imageDisplay.color = new Color(imageDisplay.color.r, imageDisplay.color.g, imageDisplay.color.b, 0); // Alpha set to 0
         }
 
-        if (permissionCheck == NativeGallery.Permission.Granted)
+        // Optionally, disable the button if you reach the maximum number of images (10 in this case)
+        UpdateButtonInteractivity();
+    }
+
+    // Linked to the button's onClick event
+    public void OnSelectImageButtonClicked()
+    {
+        if (selectedImagePaths.Count < 10)
         {
-            // Permission is granted or was already granted
             PickImageFromGallery();
         }
-        else
-        {
-            Debug.Log("Permission to access gallery denied");
-        }
     }
-
 
     void PickImageFromGallery()
     {
-        // Adjusted to call GetImageFromGallery repeatedly until the desired number of images is selected
-        StartCoroutine(PickSingleImage());
-    }
-
-    IEnumerator PickSingleImage()
-    {
-        int maxImageCount = 10;
-        while (selectedImagePaths.Count < maxImageCount)
+        NativeGallery.GetImageFromGallery((path) =>
         {
-            bool isPickingImage = true;
-
-            NativeGallery.GetImageFromGallery((path) =>
+            if (!string.IsNullOrEmpty(path))
             {
-                if (!string.IsNullOrEmpty(path))
-                {
-                    selectedImagePaths.Add(path);
-                    StartCoroutine(DisplaySelectedImages(new string[] { path }));
-                }
-                isPickingImage = false;
-            }, "Select an image", "image/*");
-
-            // Wait until the image is picked
-            yield return new WaitUntil(() => isPickingImage == false);
-
-            // Optional: Check if the user wants to continue picking images or stop
-            // This could be implemented as a UI prompt asking if the user wants to select more images
-        }
+                selectedImagePaths.Add(path);
+                StartCoroutine(DisplaySelectedImages(new string[] { path }));
+                UpdateButtonInteractivity(); // Update button interactivity based on the new count of selected images
+            }
+        }, "Select an image", "image/*");
     }
 
     IEnumerator DisplaySelectedImages(string[] paths)
     {
         foreach (string path in paths)
         {
-            if (selectedImagePaths.Count > imageDisplays.Length)
-            {
-                Debug.LogWarning("Trying to display more images than the available RawImage components.");
-                break;
-            }
-
             int index = selectedImagePaths.IndexOf(path);
-            Texture2D texture = NativeGallery.LoadImageAtPath(path, 1024, false);
-            if (texture != null && index < imageDisplays.Length)
+            if (index < imageDisplays.Length)
             {
-                imageDisplays[index].texture = texture;
-                imageDisplays[index].gameObject.SetActive(true);
+                Texture2D texture = NativeGallery.LoadImageAtPath(path, 1024, false, false); // Set markTextureNonReadable to false
+                if (texture != null)
+                {
+                    imageDisplays[index].texture = texture;
+                    // Make the RawImage component opaque to show the image
+                    imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 1
+                    Debug.Log("image saved");
+                }
             }
             yield return null; // Ensure the UI updates for each image
         }
+    }
 
-        // Optionally, disable any unused RawImage components if less than the intended images were selected
-        for (int i = selectedImagePaths.Count; i < imageDisplays.Length; i++)
-        {
-            imageDisplays[i].gameObject.SetActive(false);
-        }
+    void UpdateButtonInteractivity()
+    {
+        // Disable the button if the maximum number of images has been selected
+        selectImageButton.interactable = selectedImagePaths.Count < 10;
     }
 
     // Method to retrieve selected image paths, for later use such as uploading to Firebase
