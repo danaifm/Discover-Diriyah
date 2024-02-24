@@ -26,7 +26,8 @@ public class Event_Item : MonoBehaviour
     {
         event_Root = eventRoot;
         TitleName.text = eventRoot.Name;
-        DateText.text = eventRoot.StartDate;
+        DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
+        DateText.text = dateTime.Day+"/"+ dateTime.Month+"/"+ dateTime.Year;
         CheckImage(event_Root.Picture[0]);
     }
     public void ShowAttractionDetails()

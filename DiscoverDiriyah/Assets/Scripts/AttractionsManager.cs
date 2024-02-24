@@ -16,7 +16,6 @@ public class AttractionsManager : MonoBehaviour
     public GameObject UI_Prefab;
     FirebaseFirestore db;
 
-   
 
     private void Awake()
     {
@@ -46,6 +45,7 @@ public class AttractionsManager : MonoBehaviour
                 Debug.LogError("Error fetching data: " + task.Exception);
                 return;
             }
+            AttractionsData.Clear();
             foreach (var document in task.Result.Documents)
             {
                 Dictionary<string, object> data = document.ToDictionary();
@@ -53,9 +53,9 @@ public class AttractionsManager : MonoBehaviour
                 {
                     Debug.Log(pair.Key + ": " + pair.Value);
                 }
-                if (data.ContainsKey("Picture"))
+                if (data.ContainsKey("Pictures"))
                 {
-                    List<object> yourArray = (List<object>)data["Picture"];
+                    List<object> yourArray = (List<object>)data["Pictures"];
                     foreach (var item in yourArray)
                     {
                         Debug.Log("Image url : " + item.ToString());
@@ -77,7 +77,7 @@ public class AttractionsManager : MonoBehaviour
         AttractionsPanel.SetActive(true);
         Debug.Log("DataHandler " + AttractionsData.Count);
         GameObject temp;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < AttractionsData.Count; i++)
         {
             temp = Instantiate(UI_Prefab, ParentTransform);
             temp.GetComponent<AttractionsItem>().Init(AttractionsData[i]);
@@ -91,5 +91,5 @@ public class AttractionsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-  
+   
 }
