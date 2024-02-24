@@ -315,12 +315,16 @@ public class SignUpFirebase : MonoBehaviour
             Debug.LogError("email is empty");
             emailEmptyLogin.text = "This field cannot be empty.";
             x = 1;
+        } else {
+            emailEmptyLogin.text = "";
         }
         if (string.IsNullOrEmpty(password))
         {
             Debug.LogError("password is empty");
             passwordEmptyLogin.text = "This field cannot be empty.";
             x = 1;
+        } else {
+            passwordEmptyLogin.text = "";
         }
 
         if (x < 1)
