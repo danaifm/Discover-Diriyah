@@ -9,6 +9,9 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System.Linq;
 using System.Collections.Generic;
+using System;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class SignUpFirebase : MonoBehaviour
 {
@@ -29,15 +32,47 @@ public class SignUpFirebase : MonoBehaviour
     private CollectionReference db;
     private FirebaseApp app;
 
+    //------------ Login Part ---------------------
+    [Space]
+    [Header("Login fields")]
+    public TMP_InputField emailFieldLogin;
+
+    public TMP_InputField passwordFieldLogin;
+    public TMP_Text emailLoginLength;
+    public TMP_Text passwordLoginLength;
+    public TMP_Text errormessagLogin;
+
+    public TMP_Text emailEmptyLogin;
+    public TMP_Text passwordEmptyLogin;
+
+    public Image passwordStateIcon;
+    public Sprite showPassword;
+    public Sprite hidePassword;
+    private bool isPasswordVisible = false;
+    //--------------------------------------------
     private void Start()
     {
         Debug.Log("STARTING APP");
         initializeFirebase();
         nameField.characterLimit = 15;
+        emailFieldLogin.characterLimit = 50;
+        passwordFieldLogin.characterLimit = 50;
         db = FirebaseFirestore.DefaultInstance.Collection("users");
        // no need to open/ close connection
     }
-
+//Aliyah added the following 12 lines
+    private void Update()
+    {
+        ValidateLoginLength();
+    }
+    public void Logout()
+    {
+        auth.SignOut();
+        if (SceneManager.sceneCount != 0)
+        {
+            SceneManager.LoadScene(0);
+        }
+    } //end of aliyah
     void initializeFirebase() {
         app = FirebaseApp.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
@@ -263,5 +298,122 @@ public class SignUpFirebase : MonoBehaviour
         }
     }
 
-    
+
+    //----------------------- Login Methods
+    public void Login()
+    {
+        string email = emailFieldLogin.text;
+        string password = passwordFieldLogin.text;
+        StartCoroutine(LoginAsync(email, password));
+    }
+    private IEnumerator LoginAsync(string email, string password)
+    {
+        ValidateLoginLength();
+        int x = 0;
+        if (string.IsNullOrEmpty(email) || email.Trim() == "")
+        {
+            Debug.LogError("email is empty");
+            emailEmptyLogin.text = "This field cannot be empty.";
+            x = 1;
+        }
+        if (string.IsNullOrEmpty(password))
+        {
+            Debug.LogError("password is empty");
+            passwordEmptyLogin.text = "This field cannot be empty.";
+            x = 1;
+        }
+
+        if (x < 1)
+        {
+            var signInTask = auth.SignInWithEmailAndPasswordAsync(email, password);
+            yield return new WaitUntil(() => signInTask.IsCompleted);
+
+            if (signInTask.IsCanceled)
+            {
+                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                passwordEmptyLogin.text = "Sign in was canceled.";
+                yield break;
+            }
+            if (signInTask.IsFaulted)
+            {
+                passwordEmptyLogin.text = "Incorrect email or password.";
+                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error");
+                yield break;
+            }
+
+            FirebaseUser user = signInTask.Result.User;
+            Debug.LogFormat("User signed in successfully: {0} ({1})", user.DisplayName, user.UserId);
+            CheckAdminStatus(user.UserId);
+            yield break;
+        }
+    }
+
+    private void ValidateLoginLength()
+    {
+        print("validate login length");
+        emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
+        passwordLoginLength.text = passwordFieldLogin.text.Length + "/" + passwordFieldLogin.characterLimit;
+    }
+
+    private void CheckAdminStatus(string userId)
+    {
+        try
+        {
+            FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+            DocumentReference docRef = db.Collection("users").Document(userId);
+            docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+            {
+                DocumentSnapshot snapshot = task.Result;
+                if (snapshot.Exists)
+                {
+                    Debug.Log(String.Format("Document data for {0} document:", snapshot.Id));
+                    Dictionary<string, object> userData = snapshot.ToDictionary();
+                    foreach (KeyValuePair<string, object> pair in userData)
+                    {
+                        Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
+                    }
+                    string admin = snapshot.GetValue<string>("admin");
+                    if (admin == "0")
+                    {
+                        SceneManager.LoadScene("user_home_page");
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene("admin_home_page");
+                    }
+
+                }
+                else
+                {
+                    Debug.Log(String.Format("Document {0} does not exist!", snapshot.Id));
+                }
+            });
+
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"An error occurred: {e.Message}");
+        }
+    }
+
+    public void ShowPasswordToggle()
+    {
+        if (isPasswordVisible)
+        {
+            // If password is currently visible, hide it
+            passwordFieldLogin.contentType = TMP_InputField.ContentType.Password;
+            passwordStateIcon.sprite = showPassword;
+        }
+        else
+        {
+            // If password is currently hidden, show it
+            passwordFieldLogin.contentType = TMP_InputField.ContentType.Standard;
+            passwordStateIcon.sprite = hidePassword;
+        }
+
+        // Toggle the visibility flag
+        isPasswordVisible = !isPasswordVisible;
+        passwordFieldLogin.ForceLabelUpdate();
+    }
+    //--------------- End Login Methods
 }

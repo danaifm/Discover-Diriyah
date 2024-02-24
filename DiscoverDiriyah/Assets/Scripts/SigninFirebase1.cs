@@ -15,29 +15,23 @@ using System;
 public class SigninFirebase1 : MonoBehaviour
 {
     //firebase variables
-    [Header("Firebase")]
+    [Header("Firebase Login")]
     public DependencyStatus dependencyStatus;
     public FirebaseAuth auth;
     public FirebaseUser user;
     //registration variables
     [Space]
    
-    public TMP_InputField emailField;
+    public TMP_InputField emailFieldLogin;
    
-    public TMP_InputField passwordField;
+    public TMP_InputField passwordFieldLogin;
 
-    public Text errormessag;
+    public TMP_Text errormessagLogin;
 
-    public Text emailEmpty;
-    public Text passwordEmpty;
+    public TMP_Text emailEmptyLogin;
+    public TMP_Text passwordEmptyLogin;
     string  emailError, passwordError;
 
-    void initializeFirebase()
-    {
-        auth = FirebaseAuth.DefaultInstance;
-        auth.StateChanged += AuthStateChanged;
-        AuthStateChanged(this, null);
-    }
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
@@ -58,44 +52,40 @@ public class SigninFirebase1 : MonoBehaviour
 
     private void Awake()
     {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            dependencyStatus = task.Result;
-            if (dependencyStatus == DependencyStatus.Available)
-            {
-                initializeFirebase();
-            }
-            else
-            {
-                Debug.LogError("could not resolve firebase dependencies: " + dependencyStatus);
-            }
-        }
-            );
+        auth = FindObjectOfType<SignUpFirebase>().GetComponent<SignUpFirebase>().auth;
+        user = FindObjectOfType<SignUpFirebase>().GetComponent<SignUpFirebase>().user;
     }
 
     public void Login()
     {
-        passwordEmpty.text = "";
-        emailEmpty.text = "";
+        passwordEmptyLogin.text = "";
+        emailEmptyLogin.text = "";
 
-        errormessag.text = "";
-        Debug.Log(":emailField.text " + emailField.text);
-        Debug.Log("passwordField.text " + passwordField.text);
+        errormessagLogin.text = "";
+        Debug.Log(":emailFieldLogin.text " + emailFieldLogin.text);
+        Debug.Log("passwordFieldLogin.text " + passwordFieldLogin.text);
      
             Debug.Log("Try login with error ");
-            errormessag.text = "Wrong Email or password";
-            StartCoroutine(LoginAsync(emailField.text, passwordField.text));
-        
+            errormessagLogin.text = "Wrong Email or password";
+        //StartCoroutine(LoginAsync(emailFieldLogin.text, passwordFieldLogin.text));
+        LoginAsync(emailFieldLogin.text, passwordFieldLogin.text);
+
+
     }
 
-    private IEnumerator LoginAsync(string email, string password)
+    public void Logout()
     {
+        auth.SignOut();
+    }
+    private void LoginAsync(string email, string password)
+    {
+        
         email = email.ToLower();
         int x = 0;
         if (email == "" || email == " ")
         {
             Debug.LogError("email is empty");
-            emailEmpty.text = "Email is missing";
+            emailEmptyLogin.text = "Email is missing";
             x = 1;
 
         }
@@ -104,79 +94,28 @@ public class SigninFirebase1 : MonoBehaviour
 
 
             Debug.LogError("password is empty");
-            passwordEmpty.text = "Password is missing";
+            passwordEmptyLogin.text = "Password is missing";
             x = 1;
 
         }
-        if (x < 1) { 
-        var loginTask = auth.SignInWithEmailAndPasswordAsync(email, password);
-
-        yield return new WaitUntil(() => loginTask.IsCompleted);
-
-        if (loginTask.Exception != null)
-        {
-                errormessag.text = "Login Failed!";
-            Debug.LogError(loginTask.Exception);
-
-            FirebaseException firebaseException = loginTask.Exception.GetBaseException() as FirebaseException;
-            AuthError authError = (AuthError)firebaseException.ErrorCode;
-
-            string failedMessage = "Login Failed! Because ";
-
-            switch (authError)
-            {
-                case AuthError.InvalidEmail:
-                    failedMessage += "Email is invalid";
-                    errormessag.text = "Wrong Email or password";
-                    break;
-                case AuthError.WrongPassword:
-                    failedMessage += "Wrong Password";
-                    errormessag.text = "Wrong Email or password";
-                    break;
-                case AuthError.MissingEmail:
-                    failedMessage += "Email is missing";
-                    emailEmpty.text = "Email is missing";
-                    break;
-                case AuthError.MissingPassword:
-                    failedMessage += "Password is missing";
-                    passwordEmpty.text = "Password is missing";
-                    break;
-                default:
-                    failedMessage = "Login Failed";
-                    errormessag.text = "Wrong Email or password";
-                    break;
-            }
-
-            Debug.Log(failedMessage);
-        }
-        else
-        {
-                errormessag.text = "";
-                AuthResult authResult = loginTask.Result;
-                if(authResult != null)
-    {
-                    user = authResult.User;
-                    
-                    Debug.LogFormat("{0} You Are Successfully Logged In", user.DisplayName);
-                     CheckAdminStatus(user.UserId);
-                //    bool isAdmin = RetrieveAdminStatus(user.UserId);
-
-
-                //     //int isAdmin = 0;
-                //     if (isAdmin)
-                //     {
-                //         UnityEngine.SceneManagement.SceneManager.LoadScene("AdminScene");
-                //     } else
-                //     {
-                //         UnityEngine.SceneManagement.SceneManager.LoadScene("UserScene");
-                //     }
-
-                    
-                   
-                //     UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync("WelcomeScreen");
+        if (x < 1) {
+            auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+                if (task.IsCanceled)
+                {
+                    Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                    return;
                 }
-            }
-    }
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                    return;
+                }
+
+                Firebase.Auth.AuthResult result = task.Result;
+                Debug.LogFormat("User signed in successfully: {0} ({1})",
+                    result.User.DisplayName, result.User.UserId);
+            });
+        }
     }
     private void CheckAdminStatus(string userId)
     {
