@@ -9,7 +9,9 @@ using UnityEditor;
 using System;
 using UnityEngine.UI;
 using Firebase.Firestore;
+using Firebase.Storage;
 using System.Threading.Tasks;
+using System.IO;
 
 public class AddEvent : MonoBehaviour
 {
@@ -48,7 +50,11 @@ public class AddEvent : MonoBehaviour
     string price;//fb 
 
     FirebaseFirestore db;
-    Dictionary<string, object> Event; 
+    FirebaseStorage storage;
+    StorageReference storageRef;
+    Dictionary<string, object> Event;
+    public gallerySelection gallerySelection; 
+    List<string> pictures;
 
 
 
@@ -56,6 +62,10 @@ public class AddEvent : MonoBehaviour
     void Start()
     {
         db = FirebaseFirestore.DefaultInstance;
+        storage = FirebaseStorage.DefaultInstance;
+        string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
+        storageRef = storage.GetReferenceFromUrl(storageUrl);
+
 
         //DISABLE DATES FROM PAST 6 MONTHS
         if (endDatePicker != null)
@@ -66,6 +76,9 @@ public class AddEvent : MonoBehaviour
         {
             startDatePicker.Content.OnDisplayChanged.AddListener(() => OnDisplayChanged(startDatePicker));
         }
+
+        pictures = gallerySelection.GetSelectedImagePaths();
+
     }
 
 
@@ -330,6 +343,9 @@ public class AddEvent : MonoBehaviour
             price += " SAR";
         }
 
+        //GETTING ARRAY OF PICTURES 
+        
+
         //if everything is valid -> upload to firebase 
         if (isValid)
         {
@@ -338,30 +354,96 @@ public class AddEvent : MonoBehaviour
 
     }//end of validations 
 
+    public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
+    {
+        if (imagePaths == null) return null;
+
+        List<string> uploadedImageNames = new List<string>();
+        int imageCounter = 1; // Start naming images from 1
+
+        foreach (string path in imagePaths)
+        {
+            if (File.Exists(path))
+            {
+                byte[] imageBytes = File.ReadAllBytes(path);
+                string fileExtension = Path.GetExtension(path).ToLower(); // Get the file extension in lowercase
+                string contentType = "image/jpeg"; // Default content type
+
+                // Set the content type based on the file extension
+                if (fileExtension == ".png")
+                {
+                    contentType = "image/png";
+                }
+                else if (fileExtension == ".jpg" || fileExtension == ".jpeg")
+                {
+                    contentType = "image/jpeg";
+                }
+
+                string fileName = $"{name}{imageCounter}{fileExtension}";
+                StorageReference fileRef = storageRef.Child("events").Child(fileName);
+
+                // Upload the image bytes to Firebase Storage with the determined content type
+                var metadata = new MetadataChange() { ContentType = contentType };
+                await fileRef.PutBytesAsync(imageBytes, metadata);
+
+                // Optionally, get the download URL
+                Uri downloadUri = await fileRef.GetDownloadUrlAsync();
+                string downloadUrl = downloadUri.ToString();
+
+
+                if (!string.IsNullOrEmpty(downloadUrl))
+                {
+                    uploadedImageNames.Add(fileName);
+                    imageCounter++; // Increment for the next image
+                }
+            }
+        }
+
+        return uploadedImageNames;
+    }
+
+
+
     public async Task uploadEvent()
     {
+        // Assuming you have a List<string> imagePaths filled with your image paths
+        List<string> uploadedImageNames = await UploadImages(pictures,name); // Call your UploadImages method
+
         var newEvent = new Dictionary<string, object>
-        {
-            {"Name", name},
-            {"Description", description},
-            {"Audience", audience},
-            {"StartDate", finalStartDate},
-            {"EndDate", finalEndDate},
-            {"Location", location},
-            {"Price", price},
-            {"WorkingHours", workingHours},
-        };
+    {
+        {"Name", name},
+        {"Description", description},
+        {"Audience", audience},
+        {"StartDate", finalStartDate},
+        {"EndDate", finalEndDate},
+        {"Location", location},
+        {"Price", price},
+        {"WorkingHours", workingHours},
+        // Add an empty array if uploadedImageNames is null or empty
+        {"Picture", uploadedImageNames ?? new List<string>()} // Use null-coalescing operator to handle null
+    };
 
         try
         {
-            await db.Collection("Event").Document().SetAsync(newEvent);
-            Debug.Log("Event added successfully.");
+            // Assuming 'db' is already initialized Firestore instance and ready to use
+            var docRef = await db.Collection("Event").AddAsync(newEvent);
+            Debug.Log($"Event added successfully with ID: {docRef.Id}");
+
+            if (uploadedImageNames != null && uploadedImageNames.Count > 0)
+            {
+                Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
+            }
+            else
+            {
+                Debug.Log("No images were uploaded.");
+            }
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error adding event: {ex.Message}");
         }
     }
+
 
 
 

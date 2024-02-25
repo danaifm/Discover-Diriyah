@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GalleryImageSelector : MonoBehaviour
+public class gallerySelection : MonoBehaviour
 {
     public RawImage[] imageDisplays; // Assign your 10 RawImage UI components in the inspector
     private List<string> selectedImagePaths = new List<string>(); // To store paths of selected images

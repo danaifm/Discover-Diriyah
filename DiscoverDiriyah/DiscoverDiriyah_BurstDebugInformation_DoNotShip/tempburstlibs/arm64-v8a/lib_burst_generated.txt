@@ -10,6 +10,7 @@ Library: C:\Users\ranaa\OneDrive\Documents\GitHub\Discover-Diriyah\DiscoverDiriy
 --assembly-defines=Firebase.App;
 --assembly-defines=Firebase.Firestore;
 --assembly-defines=Firebase.Platform;
+--assembly-defines=Firebase.Storage;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=NativeGallery.Runtime;
