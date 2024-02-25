@@ -354,7 +354,7 @@ public class SignUpFirebase : MonoBehaviour
 
     private void ValidateLoginLength()
     {
-        print("validate login length");
+        //print("validate login length");
         emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
         passwordLoginLength.text = passwordFieldLogin.text.Length + "/" + passwordFieldLogin.characterLimit;
     }
