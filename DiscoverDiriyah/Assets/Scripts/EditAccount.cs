@@ -73,7 +73,7 @@ public class EditAccountcript : MonoBehaviour
         nameCounter.text = nameField.text.Trim().Length + "/15";
         if (nameField.text.Trim() == "")
         {
-            nameError.text = "Name cannot be empty.";
+            nameError.text = "This field cannot be empty.";
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -105,7 +105,7 @@ public class EditAccountcript : MonoBehaviour
         Regex re = new(strRegex);
         if (emailField.text.Trim() == "")
         {
-            emailError.text = "Email cannot be empty.";
+            emailError.text = "This field cannot be empty.";
             emailValid = false;
             emailField.image.color = Color.red;
             return;
