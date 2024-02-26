@@ -27,10 +27,14 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_InputField emailField;
     public TMP_InputField passwordField;
     public TMP_Text nameError, emailError, passwordError;
-    public TMP_Text nameCounter;
+    public TMP_Text nameCounter, emailCounter, passwordCounter;
     private bool nameValid, emailValid, passwordValid;
     private CollectionReference db;
     private FirebaseApp app;
+
+    private bool isPasswordVisibleRegister = false;
+    public Image passwordStateIconRegister;
+    public Sprite showRegisterPass, hideRegisterPass;
 
     //------------ Login Part ---------------------
     [Space]
@@ -54,13 +58,11 @@ public class SignUpFirebase : MonoBehaviour
     {
         Debug.Log("STARTING APP");
         initializeFirebase();
-        nameField.characterLimit = 15;
-        emailFieldLogin.characterLimit = 50;
-        passwordFieldLogin.characterLimit = 50;
+        nameField.characterLimit = emailField.characterLimit = passwordField.characterLimit = emailFieldLogin.characterLimit = passwordFieldLogin.characterLimit = 50;
         db = FirebaseFirestore.DefaultInstance.Collection("users");
-       // no need to open/ close connection
+        // no need to open/ close connection
     }
-//Aliyah added the following 12 lines
+    //Aliyah added the following 12 lines
     private void Update()
     {
         ValidateLoginLength();
@@ -73,7 +75,8 @@ public class SignUpFirebase : MonoBehaviour
             SceneManager.LoadScene(0);
         }
     } //end of aliyah
-    void initializeFirebase() {
+    void initializeFirebase()
+    {
         app = FirebaseApp.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
@@ -82,10 +85,10 @@ public class SignUpFirebase : MonoBehaviour
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
-        if(auth.CurrentUser != user)
+        if (auth.CurrentUser != user)
         {
             bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
-            if(!signedIn && user != null)
+            if (!signedIn && user != null)
             {
                 Debug.Log("Signed out: " + user.UserId);
             }
@@ -125,10 +128,10 @@ public class SignUpFirebase : MonoBehaviour
     public void validateName()
     {
         Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
-        nameCounter.text = nameField.text.Trim().Length + "/15";
+        nameCounter.text = nameField.text.Trim().Length + "/50";
         if (nameField.text.Trim() == "")
         {
-            nameError.text = "Name cannot be empty.";
+            nameError.text = "This field cannot be empty.";
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -154,13 +157,15 @@ public class SignUpFirebase : MonoBehaviour
 
     public void validateEmail()
     {
+        emailCounter.text = emailField.text.Trim().Length + "/50";
+
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                 @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
         Regex re = new(strRegex);
         if (emailField.text.Trim() == "")
         {
-            emailError.text = "Email cannot be empty.";
+            emailError.text = "This field cannot be empty.";
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -172,13 +177,6 @@ public class SignUpFirebase : MonoBehaviour
             emailField.image.color = Color.red;
             return;
         }
-        //else if (!(uniqueEmail(emailField.text.Trim().ToLower()) == 0))
-        //{
-        //    emailError.text = "Email is already in use.";
-        //    emailValid = false;
-        //    emailField.image.color = Color.red;
-        //    return;
-        //}
         emailError.text = "";
         emailValid = true;
         emailField.image.color = Color.gray;
@@ -202,12 +200,14 @@ public class SignUpFirebase : MonoBehaviour
 
     public void validatePassword()
     {
+        passwordCounter.text = passwordField.text.Length + "/50";
+
         var hasNumber = new Regex(@"[0-9]+");
         var hasUpperChar = new Regex(@"[A-Z]+");
         //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        if (passwordField.text.Trim() == "")
+        if (passwordField.text == "")
         {
-            passwordError.text = "Password cannot be empty.";
+            passwordError.text = "This field cannot be empty.";
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -244,20 +244,20 @@ public class SignUpFirebase : MonoBehaviour
             Debug.LogError("Registration FAILED due to invalid inputs 1");
         }
         else
-        { 
-                Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
-                yield return new WaitUntil(() => registerTask.IsCompleted);
-                if (registerTask.Exception != null)
-                {
-                    Debug.LogError("exception while registering user: " + registerTask.Exception);
-                    FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
-                    AuthError authError = (AuthError)firebaseException.ErrorCode;
-                    Debug.Log("Registration failed due to exception: " + authError);
+        {
+            Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
+            yield return new WaitUntil(() => registerTask.IsCompleted);
+            if (registerTask.Exception != null)
+            {
+                Debug.LogError("exception while registering user: " + registerTask.Exception);
+                FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
+                AuthError authError = (AuthError)firebaseException.ErrorCode;
+                Debug.Log("Registration failed due to exception: " + authError);
 
-                }
-                else
-                {
-                    user = registerTask.Result.User;
+            }
+            else
+            {
+                user = registerTask.Result.User;
                 if (user != null)
                 {
                     UserProfile userProfile = new UserProfile { DisplayName = name };
@@ -277,25 +277,51 @@ public class SignUpFirebase : MonoBehaviour
                             {"email", email},
                             {"admin", "0"}
                         };
-                        
-                        db.Document(user.UserId).SetAsync(userinfo).ContinueWith(task =>
+
+                        Task firestoreTask = db.Document(user.UserId).SetAsync(userinfo);
+                        yield return new WaitUntil(() => firestoreTask.IsCompleted);
+                        if (firestoreTask.Exception == null)
                         {
-                            if (task.IsCompletedSuccessfully)
-                            {
-                                Debug.Log("added user " + user.UserId + " to firestore");
-                            }
-                            else
-                            {
-                                Debug.LogError(message: $"Failed to insert into firestore with exception: {task.Exception}");
-                            }
+                            Debug.Log("added user " + user.UserId + " to firestore");
+                            // ChangeScene(); => go to next scene (home page)
                         }
-                        );
+                        else
+                        {
+                            Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
+                        }
                         Debug.Log("registration success!");
                     }
 
                 }
             }
         }
+    }
+
+    public void ChangeScene()
+    {
+        Debug.Log("changing scene to profile");
+        SceneManager.LoadSceneAsync("EditProfile"); //can change to whatever is correct later
+        Debug.Log("after change scene");
+    }
+
+    public void ShowPasswordToggleRegister()
+    {
+        if (isPasswordVisibleRegister)
+        {
+            // If password is currently visible, hide it
+            passwordField.contentType = TMP_InputField.ContentType.Password;
+            passwordStateIconRegister.sprite = showRegisterPass;
+        }
+        else
+        {
+            // If password is currently hidden, show it
+            passwordField.contentType = TMP_InputField.ContentType.Standard;
+            passwordStateIconRegister.sprite = hideRegisterPass;
+        }
+
+        // Toggle the visibility flag
+        isPasswordVisibleRegister = !isPasswordVisibleRegister;
+        passwordField.ForceLabelUpdate();
     }
 
 
@@ -314,17 +340,25 @@ public class SignUpFirebase : MonoBehaviour
         {
             Debug.LogError("email is empty");
             emailEmptyLogin.text = "This field cannot be empty.";
+            emailFieldLogin.image.color = Color.red;
             x = 1;
-        } else {
+        }
+        else
+        {
             emailEmptyLogin.text = "";
+            emailFieldLogin.image.color = Color.gray;
         }
         if (string.IsNullOrEmpty(password))
         {
             Debug.LogError("password is empty");
             passwordEmptyLogin.text = "This field cannot be empty.";
+            passwordFieldLogin.image.color = Color.red;
             x = 1;
-        } else {
+        }
+        else
+        {
             passwordEmptyLogin.text = "";
+            passwordFieldLogin.image.color = Color.gray;
         }
 
         if (x < 1)
@@ -342,6 +376,7 @@ public class SignUpFirebase : MonoBehaviour
             {
                 passwordEmptyLogin.text = "Incorrect email or password.";
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error");
+                passwordFieldLogin.image.color = emailFieldLogin.image.color = Color.red;
                 yield break;
             }
 
