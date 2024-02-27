@@ -399,7 +399,7 @@ public class SignUpFirebase : MonoBehaviour
         try
         {
             FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-            DocumentReference docRef = db.Collection("users").Document(userId);
+            DocumentReference docRef = db.Collection("Account").Document(userId);
             docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
                 DocumentSnapshot snapshot = task.Result;
