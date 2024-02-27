@@ -38,6 +38,7 @@ public class AddEvent : MonoBehaviour
     public DatePickerSettings endDatePicker;
     public TMP_InputField Price;
     public TMP_Text priceError;
+    public TMP_Text pictureError;
     string name; //fb
     string description;//fb 
     string audience;//fb
@@ -358,7 +359,17 @@ public class AddEvent : MonoBehaviour
             priceError.text = "";
             price += " SAR";
         }
-        
+
+        //PICTURE VALIDATION
+        if (pictures.Count == 0)
+        {
+            pictureError.text = "This field cannot be empty";
+            pictureError.color = Color.red;
+            pictureError.fontSize = 30;
+            isValid = false;
+
+        }
+
 
         //if everything is valid -> upload to firebase 
         if (isValid)
