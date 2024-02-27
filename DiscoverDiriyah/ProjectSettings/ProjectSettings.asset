@@ -979,10 +979,10 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
+      Proximity: False
       InternetClient: True
       CodeGeneration: False
       BackgroundMediaPlayback: False
-      Proximity: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
@@ -1046,7 +1046,7 @@ PlayerSettings:
   cloudProjectId: c93dfb13-ab1e-467e-94f9-951bb61362f4
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
+  projectName: DiscoverDiriyah
   organizationId: danaifm
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1

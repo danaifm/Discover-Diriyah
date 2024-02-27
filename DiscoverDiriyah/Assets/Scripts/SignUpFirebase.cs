@@ -59,7 +59,7 @@ public class SignUpFirebase : MonoBehaviour
         Debug.Log("STARTING APP");
         initializeFirebase();
         nameField.characterLimit = emailField.characterLimit = passwordField.characterLimit = emailFieldLogin.characterLimit = passwordFieldLogin.characterLimit = 50;
-        db = FirebaseFirestore.DefaultInstance.Collection("users");
+        db = FirebaseFirestore.DefaultInstance.Collection("Account");
         // no need to open/ close connection
     }
     //Aliyah added the following 12 lines
@@ -273,9 +273,9 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Dictionary<string, string> userinfo = new Dictionary<string, string>
                         {
-                            {"name", name},
-                            {"email", email},
-                            {"admin", "0"}
+                            {"Name", name},
+                            {"Email", email},
+                            {"Admin", "0"}
                         };
 
                         Task firestoreTask = db.Document(user.UserId).SetAsync(userinfo);
