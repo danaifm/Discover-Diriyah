@@ -123,7 +123,7 @@ public class EditAccountcript : MonoBehaviour
         uniqueEmailAsync(emailField.text.Trim().ToLower());
     }
 
-    public async void uniqueEmailAsync(string email)
+    private async void uniqueEmailAsync(string email)
     {
         Query query = db.WhereEqualTo("email", email);
         var qSnapshot = await query.GetSnapshotAsync();
@@ -136,19 +136,20 @@ public class EditAccountcript : MonoBehaviour
         }
     }
 
-    public void validateNewPassword()
+    private void validateNewPassword()
     {
         var hasNumber = new Regex(@"[0-9]+");
         var hasUpperChar = new Regex(@"[A-Z]+");
         //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        if (newPasswordField.text.Trim() == "" && currentPasswordField.text.Trim() != "") //if enter current pass but not new pass
-        {
-            newPassError.text = "Password cannot be empty.";
-            newPassValid = false;
-            newPasswordField.image.color = Color.red;
-            return;
-        }
-        else if (newPasswordField.text.Length < 8)
+        //if (newPasswordField.text.Trim() == "" && currentPasswordField.text.Trim() != "") //if enter current pass but not new pass
+        //{
+        //    newPassError.text = "Password cannot be empty.";
+        //    newPassValid = false;
+        //    newPasswordField.image.color = Color.red;
+        //    return;
+        //}
+
+        if (newPasswordField.text.Length < 8)
         {
             newPassError.text = "Password must be at least 8 characters.";
             newPassValid = false;
@@ -167,13 +168,7 @@ public class EditAccountcript : MonoBehaviour
         newPasswordField.image.color = Color.gray;
     }
 
-    public void validateCurrentPassword()
-    {
-        Debug.Log("in void validatecurrentpassword");
-        StartCoroutine(validateOldPassword());
-    }
-
-    public IEnumerator validateOldPassword()
+    private IEnumerator validateOldPassword()
     {
         Debug.Log("in ienumerator validateoldpassword");
         Credential credential = EmailAuthProvider.GetCredential(dictionary["email"].ToString(), currentPasswordField.text);
@@ -181,12 +176,97 @@ public class EditAccountcript : MonoBehaviour
         yield return new WaitUntil(() => reauthenticate.IsCompleted);
         if (reauthenticate.Exception != null)
         {
-            Debug.Log("exception with validateoldpassword: " + reauthenticate.Exception);
+            Debug.Log("exception with VALIDATE OLD PASSWORD: " + reauthenticate.Exception);
+            currentPassError.text = "Incorrect password.";
+            currentPassValid = false;
+            currentPasswordField.image.color = Color.red;
         }
         else
         {
-            Debug.Log("no exception");
+            Debug.Log("current password correct");
+            currentPassError.text = newPassError.text = "";
+            currentPassValid = newPassValid = true;
+            currentPasswordField.image.color = newPasswordField.image.color = Color.gray;
         }
+    }
 
+    private void onSubmitValidatePasswords()
+    {
+        if(newPasswordField.text != "" && currentPasswordField.text == "")
+        {
+            validateNewPassword();
+            currentPassError.text = "Please enter your current password.";
+            currentPassValid = false;
+            currentPasswordField.image.color = Color.red;
+            return;
+        }
+        else if (currentPasswordField.text != "" && newPasswordField.text == "")
+        {
+            newPassError.text = "Please enter a new password";
+            newPassValid = false;
+            newPasswordField.image.color = Color.red;
+            return;
+        }
+        else
+        {
+            StartCoroutine(validateOldPassword());
+        }
+    }
+
+    public void updateAccountInfo()
+    {
+        StartCoroutine(updateAccountInfoAsync());
+    }
+
+    private IEnumerator updateAccountInfoAsync()
+    {
+        if(newPasswordField.text != "" || currentPasswordField.text != "") //want to change password => validate passwords on submit so i dont get blocked by firebase
+        {
+            Debug.Log("validating entered passwords");
+            onSubmitValidatePasswords();
+        }
+        if(nameValid && emailValid && newPassValid && currentPassValid)
+        {
+            Task updateemail = user.UpdateEmailAsync(emailField.text.Trim().ToLower());
+            yield return new WaitUntil(() => updateemail.IsCompleted);
+            if(updateemail.Exception == null)
+            {
+                Debug.Log("SUCCESSFULLY updated email in authentication");
+            }
+            else
+            {
+                Debug.Log("updating email in authentication FAILED with exception " + updateemail.Exception);
+            }
+
+            Dictionary<string, object> newuserinfo = new Dictionary<string, object> { 
+                {"Name", nameField.text.Trim()},
+                {"Email", emailField.text.Trim().ToLower()},
+                {"Admin", "0"}
+            };
+            if(newPasswordField.text != "" && currentPasswordField.text != "") //will change password
+            {
+                Task updatepass = user.UpdatePasswordAsync(newPasswordField.text);
+                yield return new WaitUntil(() => updatepass.IsCompleted);
+                if(updatepass.Exception == null)
+                {
+                    Debug.Log("SUCCESSFULLY updated password in authentication");
+                }
+                else
+                {
+                    Debug.Log("updating password in authentication FAILED with exception " + updatepass.Exception);
+                }
+
+            }
+            Task updatetask = userinfo.UpdateAsync(newuserinfo);
+            yield return new WaitUntil(() => updatetask.IsCompleted);
+            if(updatetask.Exception == null)
+            {
+                Debug.Log("SUCCESSFULLY updated account information in firestore");
+            }
+            else
+            {
+                Debug.Log("update account FAILED with exception " + updatetask.Exception);
+            }
+        }
     }
 }
