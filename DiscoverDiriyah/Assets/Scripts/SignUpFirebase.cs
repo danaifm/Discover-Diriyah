@@ -435,7 +435,7 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
-                    string admin = snapshot.GetValue<string>("admin");
+                    string admin = snapshot.GetValue<string>("Admin");
                     if (admin == "0")
                     {
                         SceneManager.LoadScene("user_home_page");
