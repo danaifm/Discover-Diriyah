@@ -57,7 +57,7 @@ public class SignUpFirebase : MonoBehaviour
         nameField.characterLimit = 15;
         emailFieldLogin.characterLimit = 50;
         passwordFieldLogin.characterLimit = 50;
-        db = FirebaseFirestore.DefaultInstance.Collection("users");
+        db = FirebaseFirestore.DefaultInstance.Collection("Account");
        // no need to open/ close connection
     }
 //Aliyah added the following 12 lines
@@ -364,7 +364,7 @@ public class SignUpFirebase : MonoBehaviour
         try
         {
             FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-            DocumentReference docRef = db.Collection("users").Document(userId);
+            DocumentReference docRef = db.Collection("Account").Document(userId);
             docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
                 DocumentSnapshot snapshot = task.Result;
@@ -376,7 +376,7 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
-                    string admin = snapshot.GetValue<string>("admin");
+                    string admin = snapshot.GetValue<string>("Admin");
                     if (admin == "0")
                     {
                         SceneManager.LoadScene("user_home_page");
