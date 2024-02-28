@@ -6,9 +6,11 @@ Library: C:\Users\Bdoor\Documents\GitHub\Discover-Diriyah\DiscoverDiriyah\Temp\B
 --meta-data-generation=False
 --dump=Function
 --float-precision=Standard
+--assembly-defines=Assembly-CSharp;
 --assembly-defines=Mono.Security;
 --assembly-defines=mscorlib;
 --assembly-defines=Newtonsoft.Json;
+--assembly-defines=Nobi.UiRoundedCorners;
 --assembly-defines=System.Configuration;
 --assembly-defines=System.Core;
 --assembly-defines=System.Data;
