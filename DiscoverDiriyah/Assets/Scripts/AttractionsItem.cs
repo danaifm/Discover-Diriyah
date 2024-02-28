@@ -65,7 +65,7 @@ public class AttractionsItem : MonoBehaviour
     public void DownloadImage(string name)
     {
         storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com");
+        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/attractions");
         StorageReference image = storageRef.Child(name);
 
         //Get the download link of file

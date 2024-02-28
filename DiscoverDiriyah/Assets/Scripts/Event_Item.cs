@@ -68,7 +68,7 @@ public class Event_Item : MonoBehaviour
     public void DownloadImage(string name)
     {
         storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com");
+        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/events");
         StorageReference image = storageRef.Child(name);
 
         //Get the download link of file
