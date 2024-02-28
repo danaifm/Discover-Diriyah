@@ -337,7 +337,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 1221065867}
   image: {fileID: 180991799}
 --- !u!114 &180991799
 MonoBehaviour:
@@ -856,7 +855,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 216463073}
   image: {fileID: 558505684}
 --- !u!114 &558505684
 MonoBehaviour:
@@ -948,7 +946,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 156375627}
   image: {fileID: 591050964}
 --- !u!114 &591050964
 MonoBehaviour:
@@ -1040,7 +1037,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 1655422253}
   image: {fileID: 598962370}
 --- !u!114 &598962370
 MonoBehaviour:
@@ -2089,7 +2085,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 1099475666}
   image: {fileID: 1079116596}
 --- !u!114 &1079116596
 MonoBehaviour:
@@ -2747,7 +2742,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 927040874}
   image: {fileID: 1566314373}
 --- !u!114 &1566314373
 MonoBehaviour:
@@ -3586,7 +3580,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 369047127}
   image: {fileID: 1738013926}
 --- !u!114 &1738013926
 MonoBehaviour:
@@ -4357,7 +4350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 76.3
-  material: {fileID: 138150805}
   image: {fileID: 2099358061}
 --- !u!114 &2099358061
 MonoBehaviour:
