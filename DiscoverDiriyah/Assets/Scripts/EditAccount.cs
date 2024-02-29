@@ -14,7 +14,7 @@ public class EditAccountcript : MonoBehaviour
     public FirebaseAuth auth;
     public FirebaseUser user;
     private FirebaseApp app;
-    private CollectionReference db;
+    private CollectionReference fs;
     private DocumentReference userinfo;
     private DocumentSnapshot snapshot;
     private Dictionary<string, object> dictionary;
@@ -30,17 +30,18 @@ public class EditAccountcript : MonoBehaviour
     public Image newPasswordIcon, currPasswordIcon;
     public Sprite showPass, hidePass;
 
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("1. in start");
         initializeFirebase();
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account");
         nameField.characterLimit = emailField.characterLimit = currentPasswordField.characterLimit = newPasswordField.characterLimit = 50;
         Debug.Log("4. before getuserinfo async");
-        userinfo = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId);
+        userinfo = fs.Document(user.UserId);
         getUserInfo(userinfo);
         Debug.Log("7. in start after getuserinfo async");
-        
     }
 
     public async void getUserInfo(DocumentReference userinfo)
@@ -50,10 +51,10 @@ public class EditAccountcript : MonoBehaviour
         Debug.Log("6. end of getuserinfo async");
         dictionary = snapshot.ToDictionary();
         Debug.Log("8. printing dictionary");
-        Debug.Log(dictionary["name"].ToString());
-        Debug.Log(dictionary["email"].ToString());
-        nameField.text = dictionary["name"].ToString();
-        emailField.text = dictionary["email"].ToString();
+        Debug.Log(dictionary["Name"].ToString());
+        Debug.Log(dictionary["Email"].ToString());
+        nameField.text = dictionary["Name"].ToString();
+        emailField.text = dictionary["Email"].ToString();
     }
 
     void initializeFirebase()
@@ -75,6 +76,8 @@ public class EditAccountcript : MonoBehaviour
     {
         Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
         nameCounter.text = nameField.text.Trim().Length + "/50";
+        nameError.color = Color.red;
+        nameError.fontSize = 3;
         if (nameField.text.Trim() == "")
         {
             nameError.text = "This field cannot be empty.";
@@ -101,6 +104,8 @@ public class EditAccountcript : MonoBehaviour
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                 @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
         Regex re = new(strRegex);
+        emailError.color = Color.red;
+        emailError.fontSize = 3;
         if (emailField.text.Trim() == "")
         {
             emailError.text = "This field cannot be empty.";
@@ -123,31 +128,27 @@ public class EditAccountcript : MonoBehaviour
 
     private async Task uniqueEmailAsync(string email)
     {
-        Query query = db.WhereEqualTo("email", email);
+        Query query = fs.WhereEqualTo("Email", email);
         var qSnapshot = await query.GetSnapshotAsync();
         if (qSnapshot.Count != 0)
         {
-            emailError.text = "Email is already in use.";
-            emailValid = false;
-            emailField.image.color = Color.red;
-            return;
+            if (qSnapshot[0].Id != user.UserId) //only if not the user's current email
+            {
+                emailError.text = "Email is already in use.";
+                emailValid = false;
+                emailField.image.color = Color.red;
+                return;
+            }
         }
     }
 
     private void validateNewPassword()
     {
-        
+        //newPassError.color = Color.red;
+        //newPassError.fontSize = 3;
         var hasNumber = new Regex(@"[0-9]+");
         var hasUpperChar = new Regex(@"[A-Z]+");
         //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        //if (newPasswordField.text.Trim() == "" && currentPasswordField.text.Trim() != "") //if enter current pass but not new pass
-        //{
-        //    newPassError.text = "Password cannot be empty.";
-        //    newPassValid = false;
-        //    newPasswordField.image.color = Color.red;
-        //    return;
-        //}
-
         if (newPasswordField.text.Length < 8)
         {
             newPassError.text = "Password must be at least 8 characters.";
@@ -169,6 +170,8 @@ public class EditAccountcript : MonoBehaviour
 
     private IEnumerator validateOldPassword()
     {
+        //currentPassError.color = Color.red;
+        //currentPassError.fontSize = 3;
         Debug.Log("in ienumerator validateoldpassword");
         Credential credential = EmailAuthProvider.GetCredential(dictionary["email"].ToString(), currentPasswordField.text);
         Task reauthenticate = user.ReauthenticateAsync(credential);
@@ -191,6 +194,8 @@ public class EditAccountcript : MonoBehaviour
 
     private void onSubmitValidatePasswords()
     {
+        newPassError.color = currentPassError.color = Color.red;
+        newPassError.fontSize = currentPassError.fontSize = 3;
         if(newPasswordField.text != "")
         {
             validateNewPassword();

@@ -29,7 +29,7 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_Text nameError, emailError, passwordError;
     public TMP_Text nameCounter, emailCounter, passwordCounter;
     private bool nameValid, emailValid, passwordValid;
-    private CollectionReference db;
+    private CollectionReference db, fs;
     private FirebaseApp app;
 
     private bool isPasswordVisibleRegister = false;
@@ -59,7 +59,7 @@ public class SignUpFirebase : MonoBehaviour
         Debug.Log("STARTING APP");
         initializeFirebase();
         nameField.characterLimit = emailField.characterLimit = passwordField.characterLimit = emailFieldLogin.characterLimit = passwordFieldLogin.characterLimit = 50;
-        db = FirebaseFirestore.DefaultInstance.Collection("Account");
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account");
         // no need to open/ close connection
     }
     //Aliyah added the following 12 lines
@@ -186,7 +186,7 @@ public class SignUpFirebase : MonoBehaviour
 
     public async void uniqueEmailAsync(string email)
     {
-        Query query = db.WhereEqualTo("email", email);
+        Query query = fs.WhereEqualTo("Email", email);
         var qSnapshot = await query.GetSnapshotAsync();
         if (qSnapshot.Count != 0)
         {
@@ -287,7 +287,7 @@ public class SignUpFirebase : MonoBehaviour
                             {"Admin", "0"}
                         };
 
-                        Task firestoreTask = db.Document(user.UserId).SetAsync(userinfo);
+                        Task firestoreTask = fs.Document(user.UserId).SetAsync(userinfo);
                         yield return new WaitUntil(() => firestoreTask.IsCompleted);
                         if (firestoreTask.Exception == null)
                         {
