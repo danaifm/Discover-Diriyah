@@ -138,15 +138,6 @@ public class SignUpFirebase : MonoBehaviour
             nameField.image.color = Color.red;
             return;
         }
-        else if (nameField.text.Trim().Length > 15)
-        {
-            nameError.text = "Name cannot be longer than 15 characters.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
-            nameValid = false;
-            nameField.image.color = Color.red;
-            return;
-        }
         else if (!r.IsMatch(nameField.text.Trim()))
         {
             nameError.text = "Name must only contain alphabet, numbers, and spaces.";
@@ -308,6 +299,7 @@ public class SignUpFirebase : MonoBehaviour
                             Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
                         }
                         Debug.Log("registration success!");
+                        StartCoroutine(LoadScene());
                     }
 
                 }
@@ -317,9 +309,20 @@ public class SignUpFirebase : MonoBehaviour
 
     public void ChangeScene()
     {
-        Debug.Log("changing scene to profile");
-        SceneManager.LoadSceneAsync("EditProfile"); //can change to whatever is correct later
-        Debug.Log("after change scene");
+        StartCoroutine(LoadScene());
+    }
+
+    public IEnumerator LoadScene()
+    {
+        Debug.Log("IENUMERATOR changing scene to profile");
+        var loadscene = SceneManager.LoadSceneAsync("EditProfile");
+        while (!loadscene.isDone)
+        {
+            Debug.Log("loading the scene...");
+            yield return null;
+        }
+        Debug.Log("after loading scene");
+
     }
 
     public void ShowPasswordToggleRegister()
