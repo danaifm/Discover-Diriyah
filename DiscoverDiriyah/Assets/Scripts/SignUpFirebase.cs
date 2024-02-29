@@ -264,10 +264,20 @@ public class SignUpFirebase : MonoBehaviour
 
     public void ChangeScene()
     {
-        Debug.Log("changing scene to profile");
-        SceneManager.LoadSceneAsync("EditProfile");
-        //EditorSceneManager.OpenScene("Assets/Scenes/EditProfile");
-        Debug.Log("after change scene");
+        StartCoroutine(LoadScene());
+    }
+
+    public IEnumerator LoadScene()
+    {
+        Debug.Log("IENUMERATOR changing scene to profile");
+        var loadscene = SceneManager.LoadSceneAsync("EditProfile");
+        while (!loadscene.isDone)
+        {
+            Debug.Log("loading the scene...");
+            yield return null;
+        }
+        Debug.Log("after loading scene");
+        
     }
 
 

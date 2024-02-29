@@ -2447,9 +2447,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SignUpFirebase, Assembly-CSharp
-        m_MethodName: ShowPasswordToggleRegister
+      - m_Target: {fileID: 1335336236}
+        m_TargetAssemblyTypeName: EditAccountcript, Assembly-CSharp
+        m_MethodName: toggleNewPassword
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3636,9 +3636,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SignUpFirebase, Assembly-CSharp
-        m_MethodName: ShowPasswordToggleRegister
+      - m_Target: {fileID: 1335336236}
+        m_TargetAssemblyTypeName: EditAccountcript, Assembly-CSharp
+        m_MethodName: toggleCurrPassword
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

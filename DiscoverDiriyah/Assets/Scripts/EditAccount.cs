@@ -24,7 +24,7 @@ public class EditAccountcript : MonoBehaviour
     public TMP_InputField currentPasswordField;
     public TMP_InputField newPasswordField;
     public TMP_Text nameCounter, nameError, emailError, emailCounter, currentPassError, currentPassCounter, newPassError, newPassCounter;
-    private bool nameValid, emailValid, currentPassValid, newPassValid;
+    private bool nameValid, emailValid, currentPassValid = true, newPassValid = true;
     private bool isNewPassVisible = false;
     private bool isCurrPassVisible = false;
     public Image newPasswordIcon, currPasswordIcon;
@@ -37,6 +37,7 @@ public class EditAccountcript : MonoBehaviour
         initializeFirebase();
         nameField.characterLimit = emailField.characterLimit = currentPasswordField.characterLimit = newPasswordField.characterLimit = 50;
         Debug.Log("4. before getuserinfo async");
+        userinfo = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId);
         getUserInfo(userinfo);
         Debug.Log("7. in start after getuserinfo async");
         
@@ -81,13 +82,6 @@ public class EditAccountcript : MonoBehaviour
             nameField.image.color = Color.red;
             return;
         }
-        else if (nameField.text.Trim().Length > 15)
-        {
-            nameError.text = "Name cannot be longer than 15 characters.";
-            nameValid = false;
-            nameField.image.color = Color.red;
-            return;
-        }
         else if (!r.IsMatch(nameField.text.Trim()))
         {
             nameError.text = "Name must only contain alphabet, numbers, and spaces.";
@@ -100,7 +94,7 @@ public class EditAccountcript : MonoBehaviour
         nameField.image.color = Color.gray;
     }
 
-    public void validateEmail()
+    public async void validateEmail()
     {
         emailCounter.text = emailField.text.Trim().Length + "/50";
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
@@ -124,10 +118,10 @@ public class EditAccountcript : MonoBehaviour
         emailError.text = "";
         emailValid = true;
         emailField.image.color = Color.gray;
-        uniqueEmailAsync(emailField.text.Trim().ToLower());
+        await uniqueEmailAsync(emailField.text.Trim().ToLower());
     }
 
-    private async void uniqueEmailAsync(string email)
+    private async Task uniqueEmailAsync(string email)
     {
         Query query = db.WhereEqualTo("email", email);
         var qSnapshot = await query.GetSnapshotAsync();
@@ -189,20 +183,27 @@ public class EditAccountcript : MonoBehaviour
         else
         {
             Debug.Log("current password correct");
-            currentPassError.text = newPassError.text = "";
-            currentPassValid = newPassValid = true;
-            currentPasswordField.image.color = newPasswordField.image.color = Color.gray;
+            currentPassError.text = "";
+            currentPassValid = true;
+            currentPasswordField.image.color = Color.gray;
         }
     }
 
     private void onSubmitValidatePasswords()
     {
-        if(newPasswordField.text != "" && currentPasswordField.text == "")
+        if(newPasswordField.text != "")
         {
             validateNewPassword();
-            currentPassError.text = "Please enter your current password.";
-            currentPassValid = false;
-            currentPasswordField.image.color = Color.red;
+            if (currentPasswordField.text == "")
+            {
+                currentPassError.text = "Please enter your current password.";
+                currentPassValid = false;
+                currentPasswordField.image.color = Color.red;
+            }
+            else
+            {
+                StartCoroutine(validateOldPassword());
+            }
             return;
         }
         else if (currentPasswordField.text != "" && newPasswordField.text == "")
@@ -250,6 +251,7 @@ public class EditAccountcript : MonoBehaviour
             };
             if(newPasswordField.text != "" && currentPasswordField.text != "") //will change password
             {
+                
                 Task updatepass = user.UpdatePasswordAsync(newPasswordField.text);
                 yield return new WaitUntil(() => updatepass.IsCompleted);
                 if(updatepass.Exception == null)
