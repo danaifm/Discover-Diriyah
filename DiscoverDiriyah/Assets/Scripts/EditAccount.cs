@@ -66,11 +66,6 @@ public class EditAccountcript : MonoBehaviour
         Debug.Log("3. end of initialize firebase");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void validateName()
     {
@@ -284,12 +279,12 @@ public class EditAccountcript : MonoBehaviour
 
     public void newPasswordCounter()
     {
-        newPassCounter.text = newPassCounter.text.Length + "/50";
+        newPassCounter.text = newPasswordField.text.Length + "/50";
     }
 
     public void currPassCounter()
     {
-        currentPassCounter.text = currentPassCounter.text.Length + "/50";
+        currentPassCounter.text = currentPasswordField.text.Length + "/50";
     }
 
     public void toggleNewPassword()
