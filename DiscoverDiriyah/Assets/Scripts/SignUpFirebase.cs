@@ -298,9 +298,7 @@ public class SignUpFirebase : MonoBehaviour
                         {
                             Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
                         }
-                        Debug.Log("registration success!");
-                        StartCoroutine(LoadScene());
-                    }
+                        Debug.Log("registration success!");                    }
 
                 }
             }
