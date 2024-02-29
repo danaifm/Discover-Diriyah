@@ -7,6 +7,7 @@ using Firebase.Auth;
 using Firebase.Firestore;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using UnityEngine.UI;
 
 public class EditAccountcript : MonoBehaviour
 {
@@ -22,17 +23,19 @@ public class EditAccountcript : MonoBehaviour
     public TMP_InputField emailField;
     public TMP_InputField currentPasswordField;
     public TMP_InputField newPasswordField;
-    public TMP_Text nameCounter, nameError, emailError, currentPassError, newPassError;
+    public TMP_Text nameCounter, nameError, emailError, emailCounter, currentPassError, currentPassCounter, newPassError, newPassCounter;
     private bool nameValid, emailValid, currentPassValid, newPassValid;
+    private bool isNewPassVisible = false;
+    private bool isCurrPassVisible = false;
+    public Image newPasswordIcon, currPasswordIcon;
+    public Sprite showPass, hidePass;
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("1. in start");
         initializeFirebase();
-        nameField.characterLimit = 15;
-        //db = FirebaseFirestore.DefaultInstance.Collection("users");
-        userinfo = FirebaseFirestore.DefaultInstance.Collection("users").Document(user.UserId);
+        nameField.characterLimit = emailField.characterLimit = currentPasswordField.characterLimit = newPasswordField.characterLimit = 50;
         Debug.Log("4. before getuserinfo async");
         getUserInfo(userinfo);
         Debug.Log("7. in start after getuserinfo async");
@@ -70,7 +73,7 @@ public class EditAccountcript : MonoBehaviour
     public void validateName()
     {
         Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
-        nameCounter.text = nameField.text.Trim().Length + "/15";
+        nameCounter.text = nameField.text.Trim().Length + "/50";
         if (nameField.text.Trim() == "")
         {
             nameError.text = "This field cannot be empty.";
@@ -99,6 +102,7 @@ public class EditAccountcript : MonoBehaviour
 
     public void validateEmail()
     {
+        emailCounter.text = emailField.text.Trim().Length + "/50";
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                 @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
@@ -138,6 +142,7 @@ public class EditAccountcript : MonoBehaviour
 
     private void validateNewPassword()
     {
+        
         var hasNumber = new Regex(@"[0-9]+");
         var hasUpperChar = new Regex(@"[A-Z]+");
         //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
@@ -268,5 +273,56 @@ public class EditAccountcript : MonoBehaviour
                 Debug.Log("update account FAILED with exception " + updatetask.Exception);
             }
         }
+    }
+
+    public void newPasswordCounter()
+    {
+        newPassCounter.text = newPassCounter.text.Length + "/50";
+    }
+
+    public void currPassCounter()
+    {
+        currentPassCounter.text = currentPassCounter.text.Length + "/50";
+    }
+
+    public void toggleNewPassword()
+    {
+        if (isNewPassVisible)
+        {
+            // If password is currently visible, hide it
+            newPasswordField.contentType = TMP_InputField.ContentType.Password;
+            newPasswordIcon.sprite = showPass;
+        }
+        else
+        {
+            // If password is currently hidden, show it
+            newPasswordField.contentType = TMP_InputField.ContentType.Standard;
+            newPasswordIcon.sprite = hidePass;
+        }
+
+        // Toggle the visibility flag
+        isNewPassVisible = !isNewPassVisible;
+        newPasswordField.ForceLabelUpdate();
+
+    }
+
+    public void toggleCurrPassword()
+    {
+        if (isCurrPassVisible)
+        {
+            // If password is currently visible, hide it
+            currentPasswordField.contentType = TMP_InputField.ContentType.Password;
+            currPasswordIcon.sprite = showPass;
+        }
+        else
+        {
+            // If password is currently hidden, show it
+            currentPasswordField.contentType = TMP_InputField.ContentType.Standard;
+            currPasswordIcon.sprite = hidePass;
+        }
+
+        // Toggle the visibility flag
+        isCurrPassVisible = !isCurrPassVisible;
+        currentPasswordField.ForceLabelUpdate();
     }
 }
