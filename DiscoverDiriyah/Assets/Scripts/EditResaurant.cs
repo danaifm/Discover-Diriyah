@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
@@ -24,6 +25,7 @@ public class EditResaurant : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
+    public string defualtRestId = "atpMSmgVdhkVJ1WBKWTt";
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -50,7 +52,7 @@ public class EditResaurant : MonoBehaviour
 
         //-- this line will load restaurant id from local storage in the device. 
         //-- first of all, PlayerPrefs.SetString("restId",value); will use when user click on "Edit" Button. then navigate to this scene will work.
-        restId = PlayerPrefs.GetString("restId", "OL02XUTvY0sPn46Dn1a"); //-- load restId if not exist. will use default data.
+        restId = PlayerPrefs.GetString("restId", defualtRestId); //-- load restId if not exist. will use default data.
         if (restId == null)
         {
             Debug.LogError("not found restaurant id");
@@ -218,6 +220,10 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
                     imageCounter++; // Increment for the next image
                 }
             }
+            else
+            {
+                uploadedImageNames.Add(path);
+            }
         }
 
         return uploadedImageNames;
@@ -244,7 +250,7 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
         }
         if (!isValid) return;
         // Assuming you have a List<string> imagePaths filled with your image paths
-        List<string> uploadedImageNames = pictures; //await UploadImages(pictures, name.text); // Call your UploadImages method
+        List<string> uploadedImageNames = await UploadImages(pictures, name.text); // Call your UploadImages method
 
         var newRestaurant = new Dictionary<string, object>
         {
@@ -252,7 +258,7 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
             {"Location", location.text},
             {"CuisineType", cuisineType.text},
             // Add an empty array if uploadedImageNames is null or empty
-            {"Picture", uploadedImageNames ?? new List<string>()}
+            {"Picture", uploadedImageNames.ToArray()}
         };
         try
         {

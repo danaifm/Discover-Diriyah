@@ -1,12 +1,10 @@
+using Firebase.Extensions;
 using Firebase.Storage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class gallerySelection : MonoBehaviour
@@ -14,7 +12,8 @@ public class gallerySelection : MonoBehaviour
     public RawImage[] imageDisplays; // Assign your 10 RawImage UI components in the inspector
     private List<string> selectedImagePaths = new List<string>(); // To store paths of selected images
     public Button selectImageButton; // Assign your button for selecting images
-
+    public Texture defaultTexture;
+    public TextAsset defaultImageTexture;
     StorageReference storageRef;
     FirebaseStorage storage;
     void Awake()
@@ -82,30 +81,18 @@ public class gallerySelection : MonoBehaviour
     {
         try
         {
-            if (selectedImagePaths[index] == null) return;
-
+            imageDisplays[index].texture = null;
+            imageDisplays[selectedImagePaths.Count - 1].texture = null;
             //-- remove it from storage
             if (!File.Exists(selectedImagePaths[index]))
             {
+                imageDisplays[index].texture = null;
                 RemoveImageFromFirebaseStorage(index);
                 return;
             }
             selectedImagePaths.RemoveAt(index);
             DisplayImages();
-            /*for(int i = 0; i < imageDisplays.Length; i++)
-            {
-                if (selectedImagePaths.Count > i)
-                {
-                    Texture2D texture = NativeGallery.LoadImageAtPath(selectedImagePaths[i], 1024, false, false); // Set markTextureNonReadable to false
-                    imageDisplays[i].texture = texture;
-                    //imageDisplays[i].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 1
-                }
-                else
-                {
-                    imageDisplays[i].texture = null;
-                }
-            }*/
-            
+
         }
         catch{
             Debug.Log("index " + index + " not exist");
@@ -132,7 +119,7 @@ public class gallerySelection : MonoBehaviour
                     try
                     {
                         // Firebase Storage URL
-                        StartCoroutine(LoadImageFromFirebaseStorage(imagePath, i));
+                        LoadImageFromFirebaseStorage(imagePath, i);
                     }catch(Exception e)
                     {
                         print(e.Message);
@@ -141,42 +128,83 @@ public class gallerySelection : MonoBehaviour
             }
             else
             {
-                imageDisplays[i].texture = null;
+                imageDisplays[i].texture = defaultTexture;
+                imageDisplays[i].color = new Color(imageDisplays[i].color.r, imageDisplays[i].color.g, imageDisplays[i].color.b, 1); // Alpha set to 1
             }
         }
     }
 
-    private IEnumerator LoadImageFromFirebaseStorage(string fileName, int index)
+    private void LoadImageFromFirebaseStorage(string fileName, int index)
     {
-            StorageReference fileRef = storageRef.Child("restaurant").Child(fileName);
-            const long maxAllowedSize = 10 * 1024 * 1024;
+        StorageReference fileRef = storageRef.Child("restaurant").Child(fileName);
+        const long maxAllowedSize = 10 * 1024 * 1024;
+        print("Load from firebase");
+        fileRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log(task.Exception);
+                selectedImagePaths.RemoveAt(index);
+                // Uh-oh, an error occurred!
+            }
+            else
+            {
+                byte[] fileContents = task.Result;
 
-            // Fetch image bytes asynchronously
-            var task = fileRef.GetBytesAsync(maxAllowedSize);
-            yield return new WaitUntil(() => task.IsCompleted);
+                Texture2D texture = new Texture2D(1, 1);
+                texture.LoadImage(fileContents);
+                texture.Apply(); // Apply changes to the texture
+                print("Apply done.");
+                imageDisplays[index].texture = texture;
+                imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 0
+                Debug.Log("Finished downloading!");
+            }
+        });
 
+        /*StorageReference fileRef = storageRef.Child("restaurant").Child(fileName);
+        const long maxAllowedSize = 10 * 1024 * 1024;
+
+        print("Load from firebase");
+        fileRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
+        {
+            print("task begin");
             if (task.IsFaulted || task.IsCanceled)
             {
                 Debug.LogError(task.Exception != null ? task.Exception.ToString() : "Load image task was cancelled.");
-                yield break;
+                selectedImagePaths.RemoveAt(index);
+                return;
             }
-        try
-        {
+
             byte[] fileContents = task.Result;
 
-            Texture2D texture = new Texture2D(1, 1);
-            texture.LoadImage(fileContents);
-            texture.Apply(); // Apply changes to the texture
+            try
+            {
+                print("try here");
+                Texture2D texture = new Texture2D(1, 1);
+                texture.LoadImage(fileContents);
+                texture.Apply(); // Apply changes to the texture
+                print("Apply done.");
+                UnityMainThreadDispatcher.Enqueue(() =>
+                {
+                    // Code to be executed on the main Unity thread
+                    imageDisplays[index].texture = texture;
+                    imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 1
+                    if (selectedImagePaths.Count == index)
+                    {
+                        imageDisplays[index + 1].texture = defaultTexture;
+                    }
+                    Debug.Log("Finished downloading!");
+                });
 
-            imageDisplays[index].texture = texture;
-            imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 1
-            Debug.Log("Finished downloading!");
-        }catch(Exception e)
-        {
-            print(e.Message);
-            yield break;
-        }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
+        });*/
     }
+
+
     private void RemoveImageFromFirebaseStorage(int index)
     {
         StorageReference fileRef = storageRef.Child("restaurant").Child(selectedImagePaths[index]);
@@ -186,17 +214,17 @@ public class gallerySelection : MonoBehaviour
             if (task.IsFaulted || task.IsCanceled)
             {
                 Debug.LogError(task.Exception != null ? task.Exception.ToString() : "Delete image task was cancelled.");
+                //-- sometimes images not exist in storage.
+                //selectedImagePaths.RemoveAt(index);
             }
             else
             {
                 Debug.Log("Image deleted successfully from Firebase Storage." + selectedImagePaths[index]);
                 selectedImagePaths.RemoveAt(index);
                 DisplayImages();
-
             }
         });
     }
-
 
     void UpdateButtonInteractivity()
     {
