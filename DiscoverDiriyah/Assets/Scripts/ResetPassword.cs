@@ -114,12 +114,19 @@ public class ResetPassword : MonoBehaviour
                     Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
                     return;
                 }
-                if(task.IsCompleted)
+                if(!task.IsCompleted)
                 {
-                    Debug.Log("email sent");
-                    emailSentMessage.text = "Reset Password Email is sent successfully, Please check your email inbox to continue.";
+                    Debug.Log("email not sent");
+                   emailSentMessage.text = " ";
                 }
-                
+                else
+                {
+                    Debug.Log("email is sent");
+                    emailSentMessage.text = "Reset Password Email is sent successfully, Please check your email inbox to continue.";
+                    emailSentMessage.color = Color.black; emailSentMessage.fontSize = 3;
+                    return;
+                }
+
             });
         }
     }
