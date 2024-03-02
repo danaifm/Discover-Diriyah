@@ -65,7 +65,7 @@ public class SignUpFirebase : MonoBehaviour
     //Aliyah added the following 12 lines
     private void Update()
     {
-        ValidateLoginLength();
+        //ValidateLoginLength();
     }
     public void Logout()
     {
@@ -415,7 +415,7 @@ public class SignUpFirebase : MonoBehaviour
     private void ValidateLoginLength()
     {
         //print("validate login length");
-        emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
+       // emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
         passwordLoginLength.text = passwordFieldLogin.text.Length + "/" + passwordFieldLogin.characterLimit;
     }
 
