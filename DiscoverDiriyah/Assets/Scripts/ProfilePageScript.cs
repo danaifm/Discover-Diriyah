@@ -17,6 +17,8 @@ public class ProfilePageScript : MonoBehaviour
     private DocumentSnapshot snapshot;
     private Dictionary<string, object> dictionary;
     [SerializeField] public TMP_Text nameText, emailText;
+    [SerializeField] private ConfirmationScript confirmationWindow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,7 +32,7 @@ public class ProfilePageScript : MonoBehaviour
         Debug.Log("7. in start after getuserinfo async");
     }
 
-    public async void getUserInfo(DocumentReference userinfo)
+    private async void getUserInfo(DocumentReference userinfo)
     {
         Debug.Log("5. in getuserinfo async");
         snapshot = await userinfo.GetSnapshotAsync();
@@ -43,7 +45,7 @@ public class ProfilePageScript : MonoBehaviour
         emailText.text = dictionary["Email"].ToString();
     }
 
-    void initializeFirebase()
+    private void initializeFirebase()
     {
         Debug.Log("2. in initialize firebase");
         app = FirebaseApp.DefaultInstance;
@@ -52,18 +54,12 @@ public class ProfilePageScript : MonoBehaviour
         Debug.Log("3. end of initialize firebase");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void ChangeSceneToEditProfile()
     {
         StartCoroutine(LoadSceneEditProfile());
     }
 
-    public IEnumerator LoadSceneEditProfile()
+    private IEnumerator LoadSceneEditProfile()
     {
         Debug.Log("IENUMERATOR changing scene to edit profile");
         var loadscene = SceneManager.LoadSceneAsync("EditProfile");
@@ -76,7 +72,7 @@ public class ProfilePageScript : MonoBehaviour
 
     }
 
-    public void DeleteAccount()
+    private void DeleteAccount()
     {
         string userID = user.UserId;
 
@@ -106,9 +102,46 @@ public class ProfilePageScript : MonoBehaviour
                 Debug.LogError("Failed to delete account document: " + task.Exception);
             }
         });
-
-
-
     }
 
+    private void SignOut()
+    {
+        confirmationWindow.gameObject.SetActive(false);
+        //TODO: ADD SIGNOUT CODE
+        Debug.Log("yes clicked");
+    }
+
+    private void NoClicked()
+    {
+        confirmationWindow.gameObject.SetActive(false);
+        Debug.Log("no clicked");
+    }
+
+    private void openConfirmationWindow(string message, int x)
+        //x = 1 sign out
+        //x = 2 delete account
+    {
+        confirmationWindow.gameObject.SetActive(true);
+        if (x == 1)
+        {
+            confirmationWindow.yesButton.onClick.AddListener(SignOut);
+            confirmationWindow.noButton.onClick.AddListener(NoClicked);
+        }
+        else if(x == 2)
+        {
+            confirmationWindow.yesButton.onClick.AddListener(DeleteAccount);
+            confirmationWindow.noButton.onClick.AddListener(NoClicked);
+        }
+        confirmationWindow.messageText.text = message;
+    }
+
+    public void signOutClicked()
+    {
+        openConfirmationWindow("Are you sure you want to sign out?", 1);
+    }
+
+    public void deleteAccountClicked()
+    {
+        openConfirmationWindow("Are you sure you want to delete your account? You can't undo this action.", 2);
+    }
 }
