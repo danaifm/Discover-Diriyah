@@ -541,7 +541,7 @@ RectTransform:
   - {fileID: 3885051686740555694}
   - {fileID: 3649426996543671803}
   m_Father: {fileID: 0}
-  m_RootOrder: -2
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -655,6 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FavouriteImage: {fileID: 3288204534498440723}
+  FavouriteDefaultImage: {fileID: 1346133370498203355}
   AttractionImage: {fileID: 8451630835542017699}
   DefaultSprite: {fileID: 21300000, guid: 7f5c25d0de500485b99afb5d2c5dfd83, type: 3}
   TitleName: {fileID: 6957116429435052320}

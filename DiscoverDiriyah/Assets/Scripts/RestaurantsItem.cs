@@ -12,6 +12,7 @@ using System.IO;
 public class RestaurantsItem : MonoBehaviour
 {
     public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
     public Image RestaurantImage;
     public Sprite DefaultSprite;
     public Text TitleName;
@@ -24,14 +25,15 @@ public class RestaurantsItem : MonoBehaviour
 
     public void Init(RestaurantsRoot restaurantsRoot)
     {
+        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         Restaurant_Root = restaurantsRoot;
         TitleName.text = restaurantsRoot.Name;
         CuisineTypeText.text = restaurantsRoot.CuisineType;
         CheckImage(restaurantsRoot.Picture[0]);
     }
-    public void ShowAttractionDetails()
+    public void ShowRestaurantDetails()
     {
-        //DescriptionImagesManager.Instance.ShowDescription(event_Root);
+        RestaurantDescriptionImagesManager.Instance.ShowDescription(Restaurant_Root);
     }
     public void CheckImage(string name)
     {

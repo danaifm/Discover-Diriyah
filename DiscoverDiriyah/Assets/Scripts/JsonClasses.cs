@@ -34,7 +34,7 @@ public class AccommodationRoot
 {
     public string Description;
     public string Location;
-    public int StarRating;
+    public float StarRating;
     public string Name;
     public List<string> Picture;
 }

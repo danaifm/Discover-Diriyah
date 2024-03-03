@@ -61,17 +61,17 @@ public class EventsManager : MonoBehaviour
                     {
                         timestamp = pair.Value.ToString();
                         timestamp = timestamp.Substring(timestamp.IndexOf(':') + 2);
+                        Debug.Log("StartDate timestamp ::" + timestamp);
                         Start_Date = timestamp;
+                        //Start_Date = pair.Value.ToString();
                     }
-                    else if (data.ContainsKey("EndDate"))
+                    if (pair.Key == "EndDate")
                     {
                         timestamp = pair.Value.ToString();
                         timestamp = timestamp.Substring(timestamp.IndexOf(':') + 2);
+                        Debug.Log("EndDate timestamp ::" + timestamp);
                         End_Date = timestamp;
-                    }
-                    else
-                    {
-                        Debug.Log("No date found");
+                        //End_Date = pair.Value.ToString(); ;
                     }
                 }
                 if (data.ContainsKey("Pictures"))

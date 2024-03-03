@@ -1466,7 +1466,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7614958052229111718}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6319536013394387094}
+        m_TargetAssemblyTypeName: Event_Item, Assembly-CSharp
+        m_MethodName: ShowEventDetails
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6319536013394387094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,6 +1492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FavouriteImage: {fileID: 6662512066941996504}
+  FavouriteDefaultImage: {fileID: 2966974255255936314}
   EventImage: {fileID: 4590410855544936125}
   DefaultSprite: {fileID: 21300000, guid: 2df1b72d212bf44b88dc3a1274171c5d, type: 3}
   TitleName: {fileID: 5444491213308945493}

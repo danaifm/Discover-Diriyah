@@ -14,6 +14,10 @@ public class AttractionsManager : MonoBehaviour
     public RectTransform ParentTransform;
     public GameObject AttractionsPanel;
     public GameObject UI_Prefab;
+
+    [Header("Firebase Storage url")]
+    public string FirebaseStorageUrl;
+
     FirebaseFirestore db;
 
 

@@ -12,6 +12,7 @@ using System.IO;
 public class Event_Item : MonoBehaviour
 {
     public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
     public Image EventImage;
     public Sprite DefaultSprite;
     public Text TitleName;
@@ -24,15 +25,16 @@ public class Event_Item : MonoBehaviour
 
     public void Init(EventRoot eventRoot)
     {
+        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         event_Root = eventRoot;
         TitleName.text = eventRoot.Name;
         DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
         DateText.text = dateTime.Day+"/"+ dateTime.Month+"/"+ dateTime.Year;
         CheckImage(event_Root.Picture[0]);
     }
-    public void ShowAttractionDetails()
+    public void ShowEventDetails()
     {
-        //DescriptionImagesManager.Instance.ShowDescription(event_Root);
+        EventsDescriptionImagesManager.Instance.ShowDescription(event_Root);
     }
     public void CheckImage(string name)
     {

@@ -12,6 +12,7 @@ using System.IO;
 public class AttractionsItem : MonoBehaviour
 {
     public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
     public Image AttractionImage;
     public Sprite DefaultSprite;
     public Text TitleName;
@@ -23,13 +24,14 @@ public class AttractionsItem : MonoBehaviour
 
     public void Init(AttractionsRoot attractionsRoot)
     {
+        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         attractions_Root = attractionsRoot;
         TitleName.text = attractionsRoot.Name;
         CheckImage(attractionsRoot.Picture[0]);
     }
     public void ShowAttractionDetails()
     {
-        //DescriptionImagesManager.Instance.ShowDescription(attractions_Root);
+        DescriptionImagesManager.Instance.ShowDescription(attractions_Root);
     }
     public void CheckImage(string name)
     {

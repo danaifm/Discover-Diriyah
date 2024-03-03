@@ -12,6 +12,7 @@ using System.IO;
 public class AccommodationItem : MonoBehaviour
 {
     public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
     public Image HotelImage;
     public Sprite DefaultSprite;
     public Text TitleName;
@@ -23,13 +24,14 @@ public class AccommodationItem : MonoBehaviour
 
     public void Init(AccommodationRoot accommodationRoot)
     {
+        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         Accommodation_Root = accommodationRoot;
         TitleName.text = accommodationRoot.Name;
         CheckImage(accommodationRoot.Picture[0]);
     }
-    public void ShowAttractionDetails()
+    public void ShowAccommodationDetails()
     {
-        //DescriptionImagesManager.Instance.ShowDescription(event_Root);
+        AccommodationDescriptionImagesManager.Instance.ShowDescription(Accommodation_Root);
     }
     public void CheckImage(string name)
     {

@@ -132,8 +132,6 @@ public class SignUpFirebase : MonoBehaviour
         if (nameField.text.Trim() == "")
         {
             nameError.text = "This field cannot be empty.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -141,8 +139,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (nameField.text.Trim().Length > 15)
         {
             nameError.text = "Name cannot be longer than 15 characters.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -150,8 +146,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (!r.IsMatch(nameField.text.Trim()))
         {
             nameError.text = "Name must only contain alphabet, numbers, and spaces.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -172,8 +166,6 @@ public class SignUpFirebase : MonoBehaviour
         if (emailField.text.Trim() == "")
         {
             emailError.text = "This field cannot be empty.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -181,8 +173,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (!re.IsMatch(emailField.text.Trim()))
         {
             emailError.text = "Please enter a valid email.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -200,8 +190,6 @@ public class SignUpFirebase : MonoBehaviour
         if (qSnapshot.Count != 0)
         {
             emailError.text = "Email is already in use.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -220,8 +208,6 @@ public class SignUpFirebase : MonoBehaviour
         if (passwordField.text == "")
         {
             passwordError.text = "This field cannot be empty.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -229,8 +215,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (passwordField.text.Length < 8)
         {
             passwordError.text = "Password must be at least 8 characters.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -238,8 +222,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (!hasNumber.IsMatch(passwordField.text) || !hasUpperChar.IsMatch(passwordField.text))
         {
             passwordError.text = "Password must contain at least one digit and one uppercase letter.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -358,8 +340,6 @@ public class SignUpFirebase : MonoBehaviour
         {
             Debug.LogError("email is empty");
             emailEmptyLogin.text = "This field cannot be empty.";
-            emailEmptyLogin.color = Color.red;
-            emailEmptyLogin.fontSize = 3;
             emailFieldLogin.image.color = Color.red;
             x = 1;
         }
@@ -372,8 +352,6 @@ public class SignUpFirebase : MonoBehaviour
         {
             Debug.LogError("password is empty");
             passwordEmptyLogin.text = "This field cannot be empty.";
-            passwordEmptyLogin.color = Color.red;
-            passwordEmptyLogin.fontSize = 3;
             passwordFieldLogin.image.color = Color.red;
             x = 1;
         }
@@ -397,8 +375,6 @@ public class SignUpFirebase : MonoBehaviour
             if (signInTask.IsFaulted)
             {
                 passwordEmptyLogin.text = "Incorrect email or password.";
-                passwordEmptyLogin.color = Color.red;
-                passwordEmptyLogin.fontSize = 3;
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error");
                 passwordFieldLogin.image.color = emailFieldLogin.image.color = Color.red;
                 yield break;
@@ -435,7 +411,7 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
-                    string admin = snapshot.GetValue<string>("Admin");
+                    string admin = snapshot.GetValue<string>("admin");
                     if (admin == "0")
                     {
                         SceneManager.LoadScene("user_home_page");

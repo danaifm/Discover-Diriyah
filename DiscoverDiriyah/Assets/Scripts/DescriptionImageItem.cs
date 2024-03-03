@@ -32,12 +32,12 @@ public class DescriptionImageItem : MonoBehaviour
     }
     public void OnCustomSelect()
     {
-        //DescriptionImagesManager.Instance.OnSpecificItemSelection(ItemIndex);
+        DescriptionImagesManager.Instance.OnSpecificItemSelection(ItemIndex);
     }
     public void OnSelect()
     {
         SelectionImage.SetActive(true);
-        //DescriptionImagesManager.Instance.ChangeDescriptionImage(ImageItem.sprite);
+        DescriptionImagesManager.Instance.ChangeDescriptionImage(ImageItem.sprite);
     }
     public void OnPrevious()
     {
@@ -46,19 +46,20 @@ public class DescriptionImageItem : MonoBehaviour
     public void CheckImage(string name)
     {
         ResetImage();
-        Debug.Log("id and URL " + name);
-        localURL = string.Format("{0}/{1}.jpg", Application.persistentDataPath, "" + name);
+        DownloadImage(name);
+        //Debug.Log("id and URL " + name);
+        //localURL = string.Format("{0}/{1}.jpg", Application.persistentDataPath, "" + name);
 
-        if (File.Exists(localURL))
-        {
-            Debug.Log("Image exist " + name);
-            LoadLocalFile();
-            //ConsoleManager.instance.ShowMessage("Image Found");
-        }
-        else
-        {
-            DownloadImage(name);
-        }
+        //if (File.Exists(localURL))
+        //{
+        //    Debug.Log("Image exist " + name);
+        //    LoadLocalFile();
+        //    //ConsoleManager.instance.ShowMessage("Image Found");
+        //}
+        //else
+        //{
+        //    DownloadImage(name);
+        //}
     }
     public void LoadLocalFile()
     {
@@ -76,7 +77,7 @@ public class DescriptionImageItem : MonoBehaviour
     public void DownloadImage(string name)
     {
         storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://diriyah-300d5.appspot.com");
+        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/attractions");
         StorageReference image = storageRef.Child(name);
 
         //Get the download link of file
@@ -111,8 +112,12 @@ public class DescriptionImageItem : MonoBehaviour
             Texture2D texture = DownloadHandlerTexture.GetContent(www);
             //rawImage.texture = texture;
             ImageItem.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-            File.WriteAllBytes(localURL, texture.EncodeToPNG());
+            //File.WriteAllBytes(localURL, texture.EncodeToPNG());
             Debug.Log("Image Downloaded and saved at " + localURL);
+            if (ItemIndex == 0)
+            {
+                DescriptionImagesManager.Instance.DescriptionImage.sprite = ImageItem.sprite;
+            }
         }
     }
 }
