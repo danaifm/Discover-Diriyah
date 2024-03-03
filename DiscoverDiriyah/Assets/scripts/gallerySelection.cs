@@ -17,11 +17,9 @@ public class gallerySelection : MonoBehaviour
             imageDisplay.color = new Color(imageDisplay.color.r, imageDisplay.color.g, imageDisplay.color.b, 0); // Alpha set to 0
         }
 
-        // Optionally, disable the button if you reach the maximum number of images (10 in this case)
         UpdateButtonInteractivity();
     }
 
-    // Linked to the button's onClick event
     public void OnSelectImageButtonClicked()
     {
         if (selectedImagePaths.Count < 10)
@@ -34,42 +32,37 @@ public class gallerySelection : MonoBehaviour
     {
         NativeGallery.GetImageFromGallery((path) =>
         {
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path) && selectedImagePaths.Count < 10)
             {
                 selectedImagePaths.Add(path);
-                StartCoroutine(DisplaySelectedImages(new string[] { path }));
+                StartCoroutine(DisplaySelectedImage(path));
                 UpdateButtonInteractivity(); // Update button interactivity based on the new count of selected images
             }
         }, "Select an image", "image/*");
     }
 
-    IEnumerator DisplaySelectedImages(string[] paths)
+    IEnumerator DisplaySelectedImage(string path)
     {
-        foreach (string path in paths)
+        // Use the count of selectedImagePaths to determine the display index
+        int displayIndex = selectedImagePaths.Count - 1;
+        if (displayIndex < imageDisplays.Length)
         {
-            int index = selectedImagePaths.IndexOf(path);
-            if (index < imageDisplays.Length)
+            Texture2D texture = NativeGallery.LoadImageAtPath(path, 1024, false, false); // Set markTextureNonReadable to false
+            if (texture != null)
             {
-                Texture2D texture = NativeGallery.LoadImageAtPath(path, 1024, false, false); // Set markTextureNonReadable to false
-                if (texture != null)
-                {
-                    imageDisplays[index].texture = texture;
-                    // Make the RawImage component opaque to show the image
-                    imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 1
-                    Debug.Log("image saved");
-                }
+                imageDisplays[displayIndex].texture = texture;
+                imageDisplays[displayIndex].color = new Color(imageDisplays[displayIndex].color.r, imageDisplays[displayIndex].color.g, imageDisplays[displayIndex].color.b, 1); // Alpha set to 1
+                Debug.Log("Image displayed at index: " + displayIndex);
             }
-            yield return null; // Ensure the UI updates for each image
         }
+        yield return null; // Ensure the UI updates for each image
     }
 
     void UpdateButtonInteractivity()
     {
-        // Disable the button if the maximum number of images has been selected
         selectImageButton.interactable = selectedImagePaths.Count < 10;
     }
 
-    // Method to retrieve selected image paths, for later use such as uploading to Firebase
     public List<string> GetSelectedImagePaths()
     {
         return selectedImagePaths;

@@ -1249,7 +1249,7 @@ MonoBehaviour:
   Location: {fileID: 81746217}
   locationError: {fileID: 504774469}
   pictureError: {fileID: 1754908820}
-  gallerySelection: {fileID: 1295480719}
+  gallerySelection: {fileID: 1295480721}
 --- !u!1 &403904027
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,8 +1495,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1295480719}
-        m_TargetAssemblyTypeName: GalleryImageSelector, Assembly-CSharp
+      - m_Target: {fileID: 1295480721}
+        m_TargetAssemblyTypeName: gallerySelection, Assembly-CSharp
         m_MethodName: OnSelectImageButtonClicked
         m_Mode: 1
         m_Arguments:
@@ -3865,7 +3865,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1295480720}
-  - component: {fileID: 1295480719}
+  - component: {fileID: 1295480721}
   m_Layer: 0
   m_Name: gallery selection script
   m_TagString: Untagged
@@ -3873,7 +3873,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1295480719
+--- !u!4 &1295480720
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295480718}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 558.12244, y: 814.1617, z: -14.244295}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1295480721
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3897,21 +3912,6 @@ MonoBehaviour:
   - {fileID: 916618117}
   - {fileID: 340592145}
   selectImageButton: {fileID: 406651890}
---- !u!4 &1295480720
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1295480718}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 558.12244, y: 814.1617, z: -14.244295}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1313835613
 GameObject:
   m_ObjectHideFlags: 0
@@ -4386,7 +4386,7 @@ MonoBehaviour:
   Location: {fileID: 81746217}
   locationError: {fileID: 504774469}
   pictureError: {fileID: 1754908820}
-  gallerySelection: {fileID: 1295480719}
+  gallerySelection: {fileID: 1295480721}
 --- !u!1 &1407387400
 GameObject:
   m_ObjectHideFlags: 0
