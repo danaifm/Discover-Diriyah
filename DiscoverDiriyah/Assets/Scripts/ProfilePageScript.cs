@@ -22,6 +22,7 @@ public class ProfilePageScript : MonoBehaviour
     {
         Debug.Log("1. in start");
         initializeFirebase();
+        Debug.Log(user.UserId);
         fs = FirebaseFirestore.DefaultInstance.Collection("Account");
         Debug.Log("4. before getuserinfo async");
         userinfo = fs.Document(user.UserId);
@@ -72,6 +73,41 @@ public class ProfilePageScript : MonoBehaviour
             yield return null;
         }
         Debug.Log("after loading scene");
+
+    }
+
+    public void DeleteAccount()
+    {
+        string userID = user.UserId;
+
+        FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
+        DocumentReference docRef = db.Collection("Account").Document(userID);
+
+        docRef.DeleteAsync().ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                Debug.Log("Account document deleted successfully!" + userID);
+                user.DeleteAsync().ContinueWith(task =>
+                {
+                    if (task.IsCompleted)
+                    {
+                        Debug.Log("deleted user from auth");
+                        StartCoroutine(LoadSceneEditProfile());
+                    }
+                    else
+                    {
+                        Debug.Log("error deleting user from auth");
+                    }
+                });
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to delete account document: " + task.Exception);
+            }
+        });
+
+
 
     }
 
