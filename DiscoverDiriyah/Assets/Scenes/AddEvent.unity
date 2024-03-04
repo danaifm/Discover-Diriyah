@@ -3236,6 +3236,8 @@ MonoBehaviour:
   - {fileID: 916618117}
   - {fileID: 340592145}
   selectImageButton: {fileID: 406651890}
+  defaultTexture: {fileID: 0}
+  defaultImageTexture: {fileID: 0}
 --- !u!114 &406651890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9401,6 +9403,8 @@ MonoBehaviour:
   - {fileID: 916618117}
   - {fileID: 340592145}
   selectImageButton: {fileID: 406651890}
+  defaultTexture: {fileID: 0}
+  defaultImageTexture: {fileID: 0}
 --- !u!4 &1295480720
 Transform:
   m_ObjectHideFlags: 0
@@ -11894,7 +11898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0.0000085831, y: 36.000595}
+  m_AnchoredPosition: {x: 0.0000085831, y: 36.00074}
   m_SizeDelta: {x: 22.4673, y: 3248.8052}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -13410,8 +13414,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 446633490}
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.60433996
+  m_Value: 1.0000002
+  m_Size: 0.6043423
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
