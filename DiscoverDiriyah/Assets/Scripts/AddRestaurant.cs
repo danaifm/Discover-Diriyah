@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
@@ -26,6 +27,7 @@ public class AddRestaurant : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
+    // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -34,6 +36,7 @@ public class AddRestaurant : MonoBehaviour
     
     List<string> pictures;
     bool isValid = true;
+    public UnityEvent onCompleteAddEvent;
     // Start is called before the first frame update
     void Start()
     {
@@ -70,7 +73,7 @@ public class AddRestaurant : MonoBehaviour
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index);
+        gallerySelection.RemoveImage(index, "");
     }
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
     {
@@ -221,6 +224,7 @@ public class AddRestaurant : MonoBehaviour
             if (uploadedImageNames != null && uploadedImageNames.Count > 0)
             {
                 Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
+                onCompleteAddEvent.Invoke();
             }
             else
             {

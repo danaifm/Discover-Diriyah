@@ -38,25 +38,41 @@ public class gallerySelection : MonoBehaviour
         {
             PickImageFromGallery();
         }
+
     }
 
     void PickImageFromGallery()
     {
         NativeGallery.GetImageFromGallery((path) =>
         {
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path) && selectedImagePaths.Count < 10)
             {
                 selectedImagePaths.Add(path);
-                StartCoroutine(DisplaySelectedImages(new string[] { path }));
+                StartCoroutine(DisplaySelectedImage(path));
                 UpdateButtonInteractivity(); // Update button interactivity based on the new count of selected images
             }
         }, "Select an image", "image/*");
     }
-
-    public void DisplayLoadedImages(List<string> images)
+    IEnumerator DisplaySelectedImage(string path)
+    {
+        // Use the count of selectedImagePaths to determine the display index
+        int displayIndex = selectedImagePaths.Count - 1;
+        if (displayIndex < imageDisplays.Length)
+        {
+            Texture2D texture = NativeGallery.LoadImageAtPath(path, 1024, false, false); // Set markTextureNonReadable to false
+            if (texture != null)
+            {
+                imageDisplays[displayIndex].texture = texture;
+                imageDisplays[displayIndex].color = new Color(imageDisplays[displayIndex].color.r, imageDisplays[displayIndex].color.g, imageDisplays[displayIndex].color.b, 1); // Alpha set to 1
+                Debug.Log("Image displayed at index: " + displayIndex);
+            }
+        }
+        yield return null; // Ensure the UI updates for each image
+    }
+    public void DisplayLoadedImages(List<string> images,string folderName)
     {
         selectedImagePaths = images;
-        DisplayImages();
+        DisplayImages(folderName);
     }
     IEnumerator DisplaySelectedImages(string[] paths)
     {
@@ -77,7 +93,7 @@ public class gallerySelection : MonoBehaviour
             yield return null; // Ensure the UI updates for each image
         }
     }
-    public void RemoveImage(int index)
+    public void RemoveImage(int index, string folderName)
     {
         try
         {
@@ -87,18 +103,18 @@ public class gallerySelection : MonoBehaviour
             if (!File.Exists(selectedImagePaths[index]))
             {
                 imageDisplays[index].texture = null;
-                RemoveImageFromFirebaseStorage(index);
+                RemoveImageFromFirebaseStorage(index, folderName);
                 return;
             }
             selectedImagePaths.RemoveAt(index);
-            DisplayImages();
+            DisplayImages(folderName);
 
         }
         catch{
             Debug.Log("index " + index + " not exist");
         }
     }
-    public void DisplayImages()
+    public void DisplayImages(string folderName)
     {
         for (int i = 0; i < imageDisplays.Length; i++)
         {
@@ -119,7 +135,7 @@ public class gallerySelection : MonoBehaviour
                     try
                     {
                         // Firebase Storage URL
-                        LoadImageFromFirebaseStorage(imagePath, i);
+                        LoadImageFromFirebaseStorage(imagePath, i,folderName);
                     }catch(Exception e)
                     {
                         print(e.Message);
@@ -134,9 +150,9 @@ public class gallerySelection : MonoBehaviour
         }
     }
 
-    private void LoadImageFromFirebaseStorage(string fileName, int index)
+    private void LoadImageFromFirebaseStorage(string fileName, int index, string folderName)
     {
-        StorageReference fileRef = storageRef.Child("restaurant").Child(fileName);
+        StorageReference fileRef = storageRef.Child(folderName).Child(fileName);
         const long maxAllowedSize = 10 * 1024 * 1024;
         print("Load from firebase");
         fileRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
@@ -205,9 +221,9 @@ public class gallerySelection : MonoBehaviour
     }
 
 
-    private void RemoveImageFromFirebaseStorage(int index)
+    private void RemoveImageFromFirebaseStorage(int index, string folderName)
     {
-        StorageReference fileRef = storageRef.Child("restaurant").Child(selectedImagePaths[index]);
+        StorageReference fileRef = storageRef.Child(folderName).Child(selectedImagePaths[index]);
 
         fileRef.DeleteAsync().ContinueWith(task =>
         {
@@ -221,14 +237,13 @@ public class gallerySelection : MonoBehaviour
             {
                 Debug.Log("Image deleted successfully from Firebase Storage." + selectedImagePaths[index]);
                 selectedImagePaths.RemoveAt(index);
-                DisplayImages();
+                DisplayImages(folderName);
             }
         });
     }
 
     void UpdateButtonInteractivity()
     {
-        // Disable the button if the maximum number of images has been selected
         selectImageButton.interactable = selectedImagePaths.Count < 10;
     }
 

@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EditResaurant : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class EditResaurant : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
-    public string defualtRestId = "atpMSmgVdhkVJ1WBKWTt";
+    public string defualtRestId = "01IjVvdcAvWI21VCaiq4";
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -36,6 +37,7 @@ public class EditResaurant : MonoBehaviour
     bool isValid = true;
 
     private string restId;
+    public UnityEvent onCompleteAddEvent;
     // Start is called before the first frame update
     void Start()
     {
@@ -92,7 +94,7 @@ public class EditResaurant : MonoBehaviour
         name.text = restaurant.Name;
         location.text = restaurant.Location;
         cuisineType.text = restaurant.CuisineType;
-        gallerySelection.DisplayLoadedImages(restaurant.Pictures);
+        gallerySelection.DisplayLoadedImages(restaurant.Pictures, "restaurant");
         // Handle pictures if needed
     }
 
@@ -116,7 +118,7 @@ public class EditResaurant : MonoBehaviour
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index);
+        gallerySelection.RemoveImage(index, "restaurant");
     }
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
     {
@@ -268,7 +270,9 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
 
             await docRef.UpdateAsync(newRestaurant);
             Debug.Log($"Restaurant updated successfully with ID: {docRef.Id}");
-            
+            onCompleteAddEvent.Invoke();
+
+
         }
         catch (Exception ex)
         {
