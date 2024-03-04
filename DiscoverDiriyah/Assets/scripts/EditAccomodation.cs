@@ -279,12 +279,12 @@ public class EditAccommodation : MonoBehaviour
 
         var newAccommodation = new Dictionary<string, object>
     {
-        {"Name", name},
-        {"Description", description},
-        {"StarRating", starRating},
-        {"Location", location},
+        {"Name", Name.text},
+        {"Description", Description.text},
+        {"StarRating", StarRating.text},
+        {"Location", Location.text},
         // Add an empty array if uploadedImageNames is null or empty
-        {"Picture", uploadedImageNames ?? new List<string>()}
+        {"Picture", uploadedImageNames.ToArray()}
     };
 
         try
