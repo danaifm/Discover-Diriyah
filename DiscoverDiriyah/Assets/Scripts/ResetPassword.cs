@@ -13,6 +13,7 @@ using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class ResetPassword : MonoBehaviour
 
 {
@@ -23,6 +24,7 @@ public class ResetPassword : MonoBehaviour
     public TMP_Text emailError;
     public TMP_Text emailSentMessage;
     private bool emailValid;
+    private bool emailRegistered;
 
     public FirebaseAuth auth;
     public FirebaseUser user;
@@ -42,13 +44,21 @@ public class ResetPassword : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
      
     }
+
+    public  void StartResetPasswordCoroutine()
+    {
+        StartCoroutine(SendPasswordResetEmail());
+    }
     public async void validateEmail(String email)
     {
         emailResetPasswordLength.text = emailFieldResetPassword.text.Trim().Length + "/50";
 
         //for unique email
+
         Query query = fs.WhereEqualTo("Email", email.Trim().ToLower());
+
         var qSnapshot = await query.GetSnapshotAsync();
+
 
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
@@ -56,103 +66,133 @@ public class ResetPassword : MonoBehaviour
         Regex re = new(strRegex);
         if (emailFieldResetPassword.text.Trim() == "")
         {
+
             emailError.text = "This field cannot be empty.";
+            emailSentMessage.text = "";
             emailError.color = Color.red;
             emailError.fontSize = 3;
             emailValid = false;
+           // emailRegistered = false;
             emailFieldResetPassword.image.color = Color.red;
             return;
         }
-        else if (!re.IsMatch(emailFieldResetPassword.text.Trim()))
+         if (!re.IsMatch(emailFieldResetPassword.text.Trim()))
         {
             emailError.text = "Please enter a valid email.";
+            emailSentMessage.text = "";
             emailError.color = Color.red;
             emailError.fontSize = 3;
             emailValid = false;
+            //emailRegistered = false;
             emailFieldResetPassword.image.color = Color.red;
             return;
         }
-        else if (qSnapshot.Count == 0)
-        {
-            emailError.text = "email not registered";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
-            emailError.fontSize = 3;
-            emailValid = false;
-            emailFieldResetPassword.image.color = Color.red;
-            return;
-        }
+
+        if (qSnapshot.Count == 0)
+            {
+                emailError.text = "email not registered";
+                emailSentMessage.text = "";
+                emailError.color = Color.red;
+                emailError.fontSize = 3;
+                emailError.fontSize = 3;
+                emailValid = false;
+                //emailValid = false;
+                emailFieldResetPassword.image.color = Color.red;
+                return;
+            }
         emailError.text = "";
+        emailError.color = Color.green;
         emailValid = true;
+        //emailRegistered = true;
+        //emailRegistered = true; 
         emailFieldResetPassword.image.color = Color.gray;
-       // uniqueEmailAsync(emailFieldResetPassword.text.Trim().ToLower());
+        //uniqueEmailAsync(emailFieldResetPassword.text.Trim().ToLower());
     }
 
-    //public async void uniqueEmailAsync(string email)
-    //{
-        //Query query = fs.WhereEqualTo("Email", email);
-        //var qSnapshot = await query.GetSnapshotAsync();
+   // public async void uniqueEmailAsync(string email)
+   /// {
+   // Query query = fs.WhereEqualTo("Email", email);
+  //  var qSnapshot = await query.GetSnapshotAsync();
 
-         //if (qSnapshot.Count == 0)
-        //{
-          //  emailError.text = "email not registered";
-           // emailError.color = Color.red;
-           // emailError.fontSize = 3;
-            //emailError.fontSize = 3;
-            //emailValid = false;
-            //emailFieldResetPassword.image.color = Color.red;
-           // return;
-        //}
-    
-    //}
-    public void SendPasswordResetEmail()
+   // if (qSnapshot.Count == 0)
+    //{
+     // emailError.text = "Please enter a registered email";
+     // emailSentMessage.text = "";
+    // emailError.color = Color.red;
+   //  emailError.fontSize = 3;
+   //  emailError.fontSize = 3;
+   // emailRegistered = false;
+     //emailValid = false;
+    // emailFieldResetPassword.image.color = Color.red;
+     //return;
+   // }
+      // emailError.text = "";
+       // emailValid = true;
+       // emailRegistered = true;
+       //emailFieldResetPassword.image.color = Color.gray;
+
+   // }
+
+    private IEnumerator SendPasswordResetEmail()
     {
         auth = FirebaseAuth.DefaultInstance;
         user = auth.CurrentUser;
-        validateEmail(emailFieldResetPassword.text);
-        //uniqueEmailAsync(emailFieldResetPassword.text.Trim().ToLower());
         string emailAddress = emailFieldResetPassword.text;
-       // emailSentMessage.text = " ";
+       
+        validateEmail(emailAddress);
+        emailSentMessage.text = " ";
         Debug.Log("email received" + emailAddress );
 
-        if (!emailValid)
-        {
-            Debug.LogError("Registration FAILED due to invalid inputs 1");
-            emailSentMessage.text = " ";
+       // if (!emailValid)
+       // {
+          //  Debug.LogError("Registration FAILED due to invalid inputs 1");
+            // emailSentMessage.text = ""
+         //   yield break;
+            
 
-        }
+       // }
 
-        else
-        {
-           emailSentMessage.text = "Reset password email is sent successfully, Please check your email inbox to continue.";
-
-            if (user != null)
+        if (emailValid )
             {
-                auth.SendPasswordResetEmailAsync(emailAddress).ContinueWith(task =>
-                {
-                    if (task.IsCanceled)
-                    {
-                        Debug.LogError("SendPasswordResetEmailAsync was canceled.");
-                        emailSentMessage.text = " ";
-                        return;
-                    }
-                    if (task.IsFaulted)
-                    {
-                        Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
-                        emailSentMessage.text = " ";
-                        return;
-                    }
-                    else
-                    {
+            var task = auth.SendPasswordResetEmailAsync(emailAddress);
 
-                        Debug.Log("Password reset email sent successfully.");
-                    }
-                });
+            yield return new WaitUntil(() => task.IsCompleted);
+
+            if (task.Exception != null)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+                yield break;
             }
 
+            emailSentMessage.text = "Reset password email is sent successfully, Please check your email inbox to continue.";
+            Debug.Log("Password reset email sent successfully.");
+
+           // auth.SendPasswordResetEmailAsync(emailAddress).ContinueWith(task =>
+              //  {
+                 //   if (task.IsCanceled)
+                  //  {
+                   //     Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+                     
+                  //      return;
+                  //  }
+                   // if (task.IsFaulted)
+                   // {
+                        //Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+                     
+                       // return;
+                 //   }
+                   
+               // });
+                    }
+        else
+        {
+            Debug.LogError("Registration FAILED due to invalid inputs 1");
+        }
+    }
+
 
 
 
         }
-    }
-}
+   
+
