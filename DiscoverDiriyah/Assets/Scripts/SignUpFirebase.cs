@@ -35,7 +35,6 @@ public class SignUpFirebase : MonoBehaviour
     private bool isPasswordVisibleRegister = false;
     public Image passwordStateIconRegister;
     public Sprite showRegisterPass, hideRegisterPass;
-
     //------------ Login Part ---------------------
     [Space]
     [Header("Login fields")]
@@ -53,6 +52,8 @@ public class SignUpFirebase : MonoBehaviour
     public Sprite showPassword;
     public Sprite hidePassword;
     private bool isPasswordVisible = false;
+    public string userScene;
+    public string adminScene;
     //--------------------------------------------
     private void Start()
     {
@@ -411,14 +412,17 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
-                    string admin = snapshot.GetValue<string>("admin");
+                    string admin = snapshot.GetValue<string>("Admin");
+                    print(admin);
                     if (admin == "0")
                     {
-                        SceneManager.LoadScene("user_home_page");
+                        print("load scene "+userScene);
+                        SceneManager.LoadScene(userScene);
                     }
                     else
                     {
-                        SceneManager.LoadScene("admin_home_page");
+                        print("load scene "+adminScene);
+                        SceneManager.LoadScene(adminScene);
                     }
 
                 }

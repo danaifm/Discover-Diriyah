@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44407395, g: 0.49333173, b: 0.57240045, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641228, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -8145,6 +8145,16 @@ PrefabInstance:
       propertyPath: nameField
       value: 
       objectReference: {fileID: 1649590345}
+    - target: {fileID: 4269826215126234162, guid: 251223eeacc02284a8a53d2a26f152da,
+        type: 3}
+      propertyPath: userScene
+      value: userDiscoverpage
+      objectReference: {fileID: 0}
+    - target: {fileID: 4269826215126234162, guid: 251223eeacc02284a8a53d2a26f152da,
+        type: 3}
+      propertyPath: adminScene
+      value: admin_home_page
+      objectReference: {fileID: 0}
     - target: {fileID: 4269826215126234162, guid: 251223eeacc02284a8a53d2a26f152da,
         type: 3}
       propertyPath: emailError

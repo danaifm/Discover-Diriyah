@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/SamplesResources/Scenes/0-Main.unity
     guid: a09cb257d566c489595b16ab37547666
   - enabled: 1
+    path: Assets/Scenes/WelcomeScreen.unity
+    guid: 5187067a6996b421d8290da39619143c
+  - enabled: 1
     path: Assets/Scenes/userDiscoverpage.unity
     guid: 31f9869fb2a37fe409f2b5d8f616ad07
   - enabled: 1
@@ -21,12 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ProfilePage.unity
     guid: b10b4a172722c44c68752b7b9acfc07a
   - enabled: 1
-    path: Assets/Scenes/WelcomeScreen.unity
-    guid: 5187067a6996b421d8290da39619143c
-  - enabled: 1
     path: Assets/Scenes/EditProfile.unity
     guid: 145df3024de0e4927a050dd730d99442
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/user_home_page.unity
     guid: e26337fa19d574abe815a84fd1a163da
   - enabled: 1
