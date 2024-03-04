@@ -41,6 +41,7 @@ public class EditAccommodation : MonoBehaviour
     public gallerySelection gallerySelection;
     List<string> pictures;
     private string AccommodationId;
+    bool isValid;
 
 
 
@@ -48,6 +49,7 @@ public class EditAccommodation : MonoBehaviour
 
     void Start()
     {
+
         db = FirebaseFirestore.DefaultInstance;
         storage = FirebaseStorage.DefaultInstance;
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
@@ -81,7 +83,7 @@ public class EditAccommodation : MonoBehaviour
                 accommodation.Name = snapshot.GetValue<string>("Name");
                 accommodation.Location = snapshot.GetValue<string>("Location");
                 accommodation.Description = snapshot.GetValue<string>("Description");
-                accommodation.StarRating = snapshot.GetValue<string>("StarRating");
+                accommodation.StarRating = snapshot.GetValue<double>("StarRating");
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 accommodation.Pictures = pictures.ToList<string>();
 
@@ -96,10 +98,15 @@ public class EditAccommodation : MonoBehaviour
 
     private void DisplayAccommodationData(Accommodation accommodation)
     {
+        Debug.Log($"Name: {accommodation.Name}");
+        Debug.Log($"Location: {accommodation.Location}");
+        Debug.Log($"Description: {accommodation.Description}");
+        Debug.Log($"StarRating: {accommodation.StarRating}");
+
         Name.text = accommodation.Name;
         Location.text = accommodation.Location;
         Description.text = accommodation.Description;
-        StarRating.text = accommodation.StarRating;
+        StarRating.text = accommodation.StarRating.ToString();
         gallerySelection.DisplayLoadedImages(accommodation.Pictures);
     }
 
@@ -112,7 +119,7 @@ public class EditAccommodation : MonoBehaviour
 
     public void validate_input()
     {
-        bool isValid = true;
+        isValid = true;
 
         //NAME FIELD VALIDATION
         name = Name.text.Trim();
@@ -197,14 +204,14 @@ public class EditAccommodation : MonoBehaviour
         }
 
         //PICTURE VALIDATION
-        if (pictures.Count == 0)
+        /*if (pictures.Count == 0)
         {
             pictureError.text = "This field cannot be empty";
             pictureError.color = Color.red;
             pictureError.fontSize = 30;
             isValid = false;
 
-        }
+        }*/
 
 
         //if everything is valid -> upload to firebase 
@@ -274,6 +281,22 @@ public class EditAccommodation : MonoBehaviour
 
     public async Task uploadAccommodation()
     {
+
+        if (pictures.Count <= 0)
+        {
+            isValid = false;
+            Debug.LogError("Images is empty");
+            pictureError.text = "A picture must be uploaded.";
+            pictureError.color = Color.red;
+            pictureError.fontSize = 30;
+        }
+        else
+        {
+            pictureError.text = "";
+        }
+
+        if (!isValid) return;
+
         // Assuming you have a List<string> imagePaths filled with your image paths
         List<string> uploadedImageNames = await UploadImages(pictures, name);
 
