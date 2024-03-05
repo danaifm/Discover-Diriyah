@@ -24,7 +24,6 @@ public class ResetPassword : MonoBehaviour
     public TMP_Text emailError;
     public TMP_Text emailSentMessage;
     private bool emailValid;
-    private bool emailRegistered;
 
     public FirebaseAuth auth;
     public FirebaseUser user;
@@ -92,7 +91,6 @@ public class ResetPassword : MonoBehaviour
             emailError.color = Color.red;
             emailError.fontSize = 3;
             emailValid = false;
-            // emailRegistered = false;
             emailFieldResetPassword.image.color = Color.red;
             return;
         }
@@ -103,7 +101,6 @@ public class ResetPassword : MonoBehaviour
             emailError.color = Color.red;
             emailError.fontSize = 3;
             emailValid = false;
-            //emailRegistered = false;
             emailFieldResetPassword.image.color = Color.red;
             return;
         }
@@ -116,7 +113,6 @@ public class ResetPassword : MonoBehaviour
             emailError.fontSize = 3;
             emailError.fontSize = 3;
             emailValid = false;
-            //emailValid = false;
             emailFieldResetPassword.image.color = Color.red;
             return;
         }
@@ -125,32 +121,9 @@ public class ResetPassword : MonoBehaviour
         emailValid = true;
         emailFieldResetPassword.image.color = Color.gray;
         
-        //uniqueEmailAsync(emailFieldResetPassword.text.Trim().ToLower());
+        
     }
 
-    // public async void uniqueEmailAsync(string email)
-    /// {
-    // Query query = fs.WhereEqualTo("Email", email);
-    //  var qSnapshot = await query.GetSnapshotAsync();
-
-    // if (qSnapshot.Count == 0)
-    //{
-    // emailError.text = "Please enter a registered email";
-    // emailSentMessage.text = "";
-    // emailError.color = Color.red;
-    //  emailError.fontSize = 3;
-    //  emailError.fontSize = 3;
-    // emailRegistered = false;
-    //emailValid = false;
-    // emailFieldResetPassword.image.color = Color.red;
-    //return;
-    // }
-    // emailError.text = "";
-    // emailValid = true;
-    // emailRegistered = true;
-    //emailFieldResetPassword.image.color = Color.gray;
-
-    // }
 
     public async Task<bool> SendPasswordResetEmail(string emailAddress)
     {
