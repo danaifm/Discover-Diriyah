@@ -292,7 +292,7 @@ public class SignUpFirebase : MonoBehaviour
                         if (firestoreTask.Exception == null)
                         {
                             Debug.Log("added user " + user.UserId + " to firestore");
-                            // ChangeScene(); => go to next scene (home page)
+                            SceneManager.LoadScene("userDiscoverpage");
                         }
                         else
                         {
@@ -439,7 +439,7 @@ public class SignUpFirebase : MonoBehaviour
                     string admin = snapshot.GetValue<string>("Admin");
                     if (admin == "0")
                     {
-                        SceneManager.LoadScene("user_home_page");
+                        SceneManager.LoadScene("userDiscoverpage");
                     }
                     else
                     {
