@@ -29,12 +29,13 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_Text nameError, emailError, passwordError;
     public TMP_Text nameCounter, emailCounter, passwordCounter;
     private bool nameValid, emailValid, passwordValid;
-    private CollectionReference db;
+    private CollectionReference db, fs;
     private FirebaseApp app;
 
     private bool isPasswordVisibleRegister = false;
     public Image passwordStateIconRegister;
     public Sprite showRegisterPass, hideRegisterPass;
+
     //------------ Login Part ---------------------
     [Space]
     [Header("Login fields")]
@@ -52,21 +53,19 @@ public class SignUpFirebase : MonoBehaviour
     public Sprite showPassword;
     public Sprite hidePassword;
     private bool isPasswordVisible = false;
-    public string userScene;
-    public string adminScene;
     //--------------------------------------------
     private void Start()
     {
         Debug.Log("STARTING APP");
         initializeFirebase();
         nameField.characterLimit = emailField.characterLimit = passwordField.characterLimit = emailFieldLogin.characterLimit = passwordFieldLogin.characterLimit = 50;
-        db = FirebaseFirestore.DefaultInstance.Collection("Account");
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account");
         // no need to open/ close connection
     }
     //Aliyah added the following 12 lines
     private void Update()
     {
-        ValidateLoginLength();
+        //ValidateLoginLength();
     }
     public void Logout()
     {
@@ -133,13 +132,8 @@ public class SignUpFirebase : MonoBehaviour
         if (nameField.text.Trim() == "")
         {
             nameError.text = "This field cannot be empty.";
-            nameValid = false;
-            nameField.image.color = Color.red;
-            return;
-        }
-        else if (nameField.text.Trim().Length > 15)
-        {
-            nameError.text = "Name cannot be longer than 15 characters.";
+            nameError.color = Color.red;
+            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -147,6 +141,8 @@ public class SignUpFirebase : MonoBehaviour
         else if (!r.IsMatch(nameField.text.Trim()))
         {
             nameError.text = "Name must only contain alphabet, numbers, and spaces.";
+            nameError.color = Color.red;
+            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -167,6 +163,8 @@ public class SignUpFirebase : MonoBehaviour
         if (emailField.text.Trim() == "")
         {
             emailError.text = "This field cannot be empty.";
+            emailError.color = Color.red;
+            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -174,6 +172,8 @@ public class SignUpFirebase : MonoBehaviour
         else if (!re.IsMatch(emailField.text.Trim()))
         {
             emailError.text = "Please enter a valid email.";
+            emailError.color = Color.red;
+            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -186,11 +186,13 @@ public class SignUpFirebase : MonoBehaviour
 
     public async void uniqueEmailAsync(string email)
     {
-        Query query = db.WhereEqualTo("email", email);
+        Query query = fs.WhereEqualTo("Email", email);
         var qSnapshot = await query.GetSnapshotAsync();
         if (qSnapshot.Count != 0)
         {
             emailError.text = "Email is already in use.";
+            emailError.color = Color.red;
+            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -209,6 +211,8 @@ public class SignUpFirebase : MonoBehaviour
         if (passwordField.text == "")
         {
             passwordError.text = "This field cannot be empty.";
+            passwordError.color = Color.red;
+            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -216,6 +220,8 @@ public class SignUpFirebase : MonoBehaviour
         else if (passwordField.text.Length < 8)
         {
             passwordError.text = "Password must be at least 8 characters.";
+            passwordError.color = Color.red;
+            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -223,6 +229,8 @@ public class SignUpFirebase : MonoBehaviour
         else if (!hasNumber.IsMatch(passwordField.text) || !hasUpperChar.IsMatch(passwordField.text))
         {
             passwordError.text = "Password must contain at least one digit and one uppercase letter.";
+            passwordError.color = Color.red;
+            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -279,7 +287,7 @@ public class SignUpFirebase : MonoBehaviour
                             {"Admin", "0"}
                         };
 
-                        Task firestoreTask = db.Document(user.UserId).SetAsync(userinfo);
+                        Task firestoreTask = fs.Document(user.UserId).SetAsync(userinfo);
                         yield return new WaitUntil(() => firestoreTask.IsCompleted);
                         if (firestoreTask.Exception == null)
                         {
@@ -290,8 +298,7 @@ public class SignUpFirebase : MonoBehaviour
                         {
                             Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
                         }
-                        Debug.Log("registration success!");
-                    }
+                        Debug.Log("registration success!");                    }
 
                 }
             }
@@ -300,9 +307,20 @@ public class SignUpFirebase : MonoBehaviour
 
     public void ChangeScene()
     {
-        Debug.Log("changing scene to profile");
-        SceneManager.LoadSceneAsync("EditProfile"); //can change to whatever is correct later
-        Debug.Log("after change scene");
+        StartCoroutine(LoadScene());
+    }
+
+    public IEnumerator LoadScene()
+    {
+        Debug.Log("IENUMERATOR changing scene to profile");
+        var loadscene = SceneManager.LoadSceneAsync("EditProfile");
+        while (!loadscene.isDone)
+        {
+            Debug.Log("loading the scene...");
+            yield return null;
+        }
+        Debug.Log("after loading scene");
+
     }
 
     public void ShowPasswordToggleRegister()
@@ -341,6 +359,8 @@ public class SignUpFirebase : MonoBehaviour
         {
             Debug.LogError("email is empty");
             emailEmptyLogin.text = "This field cannot be empty.";
+            emailEmptyLogin.color = Color.red;
+            emailEmptyLogin.fontSize = 3;
             emailFieldLogin.image.color = Color.red;
             x = 1;
         }
@@ -353,6 +373,8 @@ public class SignUpFirebase : MonoBehaviour
         {
             Debug.LogError("password is empty");
             passwordEmptyLogin.text = "This field cannot be empty.";
+            passwordEmptyLogin.color = Color.red;
+            passwordEmptyLogin.fontSize = 3;
             passwordFieldLogin.image.color = Color.red;
             x = 1;
         }
@@ -376,6 +398,8 @@ public class SignUpFirebase : MonoBehaviour
             if (signInTask.IsFaulted)
             {
                 passwordEmptyLogin.text = "Incorrect email or password.";
+                passwordEmptyLogin.color = Color.red;
+                passwordEmptyLogin.fontSize = 3;
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error");
                 passwordFieldLogin.image.color = emailFieldLogin.image.color = Color.red;
                 yield break;
@@ -391,7 +415,7 @@ public class SignUpFirebase : MonoBehaviour
     private void ValidateLoginLength()
     {
         //print("validate login length");
-        emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
+       // emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
         passwordLoginLength.text = passwordFieldLogin.text.Length + "/" + passwordFieldLogin.characterLimit;
     }
 
@@ -413,16 +437,13 @@ public class SignUpFirebase : MonoBehaviour
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
                     string admin = snapshot.GetValue<string>("Admin");
-                    print(admin);
                     if (admin == "0")
                     {
-                        print("load scene "+userScene);
-                        SceneManager.LoadScene(userScene);
+                        SceneManager.LoadScene("user_home_page");
                     }
                     else
                     {
-                        print("load scene "+adminScene);
-                        SceneManager.LoadScene(adminScene);
+                        SceneManager.LoadScene("admin_home_page");
                     }
 
                 }

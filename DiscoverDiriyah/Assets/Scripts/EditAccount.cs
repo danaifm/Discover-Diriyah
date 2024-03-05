@@ -29,7 +29,7 @@ public class EditAccountcript : MonoBehaviour
     private bool isCurrPassVisible = false;
     public Image newPasswordIcon, currPasswordIcon;
     public Sprite showPass, hidePass;
-    [SerializeField] private ConfirmationScript confirmationWindow;
+
 
     // Start is called before the first frame update
     void Start()
@@ -219,10 +219,10 @@ public class EditAccountcript : MonoBehaviour
         }
     }
 
-    //public void updateAccountInfo()
-    //{
-    //    StartCoroutine(updateAccountInfoAsync());
-    //}
+    public void updateAccountInfo()
+    {
+        StartCoroutine(updateAccountInfoAsync());
+    }
 
     private IEnumerator updateAccountInfoAsync()
     {
@@ -326,30 +326,5 @@ public class EditAccountcript : MonoBehaviour
         // Toggle the visibility flag
         isCurrPassVisible = !isCurrPassVisible;
         currentPasswordField.ForceLabelUpdate();
-    }
-
-    private void YesClicked()
-    {
-        StartCoroutine(updateAccountInfoAsync());
-        confirmationWindow.gameObject.SetActive(false);
-        Debug.Log("yes clicked");
-    }
-
-    private void NoClicked()
-    {
-        confirmationWindow.gameObject.SetActive(false);
-        Debug.Log("no clicked");
-    }
-
-    private void openConfirmationWindow(string message) {
-        confirmationWindow.gameObject.SetActive(true);
-        confirmationWindow.yesButton.onClick.AddListener(YesClicked);
-        confirmationWindow.noButton.onClick.AddListener(NoClicked);
-        confirmationWindow.messageText.text = message;
-    }
-
-    public void editButtonClicked()
-    {
-        openConfirmationWindow("Are you sure you want to edit your information?");
     }
 }
