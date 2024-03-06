@@ -24,7 +24,13 @@ public class AttractionsItem : MonoBehaviour
 
     public void Init(AttractionsRoot attractionsRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (attractionsRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
         attractions_Root = attractionsRoot;
         TitleName.text = attractionsRoot.Name;
         CheckImage(attractionsRoot.Picture[0]);

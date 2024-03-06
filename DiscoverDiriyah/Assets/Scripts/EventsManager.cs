@@ -5,7 +5,8 @@ using Firebase;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
-using System;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
 public class EventsManager : MonoBehaviour
 {
@@ -16,8 +17,11 @@ public class EventsManager : MonoBehaviour
     public GameObject EventsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
+    public FirebaseUser user;
+    private CollectionReference fs;
+    private QuerySnapshot querySnapshot;
+    private bool isFav;
 
-   
 
     private void Awake()
     {
@@ -40,7 +44,7 @@ public class EventsManager : MonoBehaviour
         Debug.Log("fffff");
         EventsPanel.SetActive(true);
         db = FirebaseFirestore.DefaultInstance;
-        db.Collection("Event").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        db.Collection("Event").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
             if (task.IsFaulted)
             {
@@ -82,7 +86,8 @@ public class EventsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
-                
+                await isFavoriteAsync(document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 EventRoot EventsRoot = JsonUtility.FromJson<EventRoot>(json);
                 EventsRoot.StartDate = Start_Date;
@@ -113,5 +118,14 @@ public class EventsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-   
+
+    public async Task isFavoriteAsync(string ID)
+    {
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
+        Query query = fs.WhereEqualTo("ID", ID);
+        querySnapshot = await query.GetSnapshotAsync();
+        isFav = querySnapshot.Count != 0;
+    }
+
 }

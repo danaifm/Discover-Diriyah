@@ -24,7 +24,13 @@ public class AccommodationItem : MonoBehaviour
 
     public void Init(AccommodationRoot accommodationRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (accommodationRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
         Accommodation_Root = accommodationRoot;
         TitleName.text = accommodationRoot.Name;
         CheckImage(accommodationRoot.Picture[0]);

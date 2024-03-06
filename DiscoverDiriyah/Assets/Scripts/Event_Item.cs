@@ -25,7 +25,13 @@ public class Event_Item : MonoBehaviour
 
     public void Init(EventRoot eventRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (eventRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
         event_Root = eventRoot;
         TitleName.text = eventRoot.Name;
         DateTime dateTime = DateTime.Parse(eventRoot.StartDate);

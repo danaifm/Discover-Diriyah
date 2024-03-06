@@ -16,7 +16,6 @@ public class RestaurantsManager : MonoBehaviour
     public GameObject RestaurantsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
-    //toggleFavorite toggleFav;
     public FirebaseUser user;
     private CollectionReference fs;
     private QuerySnapshot querySnapshot;
@@ -66,8 +65,7 @@ public class RestaurantsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
-                Debug.Log("BEFORE TOGGLE FAV DOCUMENT ID IS " + document.Id);
-                await getQuerySnapshot(document.Id);
+                await isFavoriteAsync(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
@@ -100,14 +98,7 @@ public class RestaurantsManager : MonoBehaviour
         }
     }
 
-    //public bool isFavoriteAsync(string ID)
-    //{
-    //    Debug.Log("in isfavorite");
-    //    getQuerySnapshot(ID);
-    //    return querySnapshot.Count != 0;
-    //}
-
-    public async Task getQuerySnapshot(string ID)
+    public async Task isFavoriteAsync(string ID)
     {
         user = FirebaseAuth.DefaultInstance.CurrentUser;
         fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");

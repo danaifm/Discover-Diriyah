@@ -5,6 +5,8 @@ using Firebase;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
 public class AccommodationManager : MonoBehaviour
 {
@@ -15,8 +17,11 @@ public class AccommodationManager : MonoBehaviour
     public GameObject AccommodationPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
+    public FirebaseUser user;
+    private CollectionReference fs;
+    private QuerySnapshot querySnapshot;
+    private bool isFav;
 
-  
 
     private void Awake()
     {
@@ -39,7 +44,7 @@ public class AccommodationManager : MonoBehaviour
         AccommodationPanel.SetActive(true);
         Debug.Log("fffff");
         db = FirebaseFirestore.DefaultInstance;
-        db.Collection("Accommodation").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        db.Collection("Accommodation").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
             if (task.IsFaulted)
             {
@@ -62,6 +67,8 @@ public class AccommodationManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
+                await isFavoriteAsync(document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 AccommodationRoot AccommodationsRoot = JsonUtility.FromJson<AccommodationRoot>(json);
                 AccommodationsData.Add(AccommodationsRoot);
@@ -92,5 +99,15 @@ public class AccommodationManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-  
+
+    public async Task isFavoriteAsync(string ID)
+    {
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
+        Query query = fs.WhereEqualTo("ID", ID);
+        querySnapshot = await query.GetSnapshotAsync();
+        isFav = querySnapshot.Count != 0;
+    }
+
+
 }
