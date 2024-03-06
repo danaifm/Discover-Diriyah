@@ -8,32 +8,34 @@ using System.Threading.Tasks;
 
 public class toggleFavorite : MonoBehaviour
 {
-    public FirebaseAuth auth;
     public FirebaseUser user;
     private CollectionReference fs;
-
+    private int favRestaurantCount;
+    private bool isFav;
+    private QuerySnapshot querySnapshot;
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("in togglefav start..!!!!!!");
         initializeFirebase();
         fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
     }
 
     void initializeFirebase()
     {
-        auth = FirebaseAuth.DefaultInstance;
-        user = auth.CurrentUser;
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
     }
 
-    public bool initializeFavoriteRestaurant(string restaurantID)
+    public bool isFavorite(string ID)
     {
-        return isFavoriteRestaurantAsync(restaurantID).Result;
+        Debug.Log("in isfavorite");
+        return true;
     }
 
-    private async Task<bool> isFavoriteRestaurantAsync(string restaurantID)
+    public async Task getQuerySnapshot(string ID)
     {
-        QuerySnapshot query = await fs.WhereEqualTo("ID", restaurantID).GetSnapshotAsync();
-        return query.Count != 0; //true -> is favorite (filled heart)
+        Query query = fs.WhereEqualTo("ID", ID);
+        querySnapshot = await query.GetSnapshotAsync();
     }
 
 }

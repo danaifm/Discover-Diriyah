@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
 public class RestaurantsManager : MonoBehaviour
 {
@@ -15,8 +16,11 @@ public class RestaurantsManager : MonoBehaviour
     public GameObject RestaurantsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
-    private toggleFavorite toggleFav;
-   
+    //toggleFavorite toggleFav;
+    public FirebaseUser user;
+    private CollectionReference fs;
+    private QuerySnapshot querySnapshot;
+    private bool isFav;
 
     private void Awake()
     {
@@ -39,7 +43,7 @@ public class RestaurantsManager : MonoBehaviour
         RestaurantsPanel.SetActive(true);
         Debug.Log("fffff");
         db = FirebaseFirestore.DefaultInstance;
-        db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
             if (task.IsFaulted)
             {
@@ -62,7 +66,8 @@ public class RestaurantsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
-                bool isFav = toggleFav.initializeFavoriteRestaurant(document.Id);
+                Debug.Log("BEFORE TOGGLE FAV DOCUMENT ID IS " + document.Id);
+                await getQuerySnapshot(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
@@ -94,5 +99,20 @@ public class RestaurantsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-   
+
+    //public bool isFavoriteAsync(string ID)
+    //{
+    //    Debug.Log("in isfavorite");
+    //    getQuerySnapshot(ID);
+    //    return querySnapshot.Count != 0;
+    //}
+
+    public async Task getQuerySnapshot(string ID)
+    {
+        user = FirebaseAuth.DefaultInstance.CurrentUser;
+        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
+        Query query = fs.WhereEqualTo("ID", ID);
+        querySnapshot = await query.GetSnapshotAsync();
+        isFav = querySnapshot.Count != 0;
+    }
 }
