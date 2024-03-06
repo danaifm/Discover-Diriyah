@@ -25,7 +25,14 @@ public class RestaurantsItem : MonoBehaviour
 
     public void Init(RestaurantsRoot restaurantsRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (restaurantsRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
+        //FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         Restaurant_Root = restaurantsRoot;
         TitleName.text = restaurantsRoot.Name;
         CuisineTypeText.text = restaurantsRoot.CuisineType;

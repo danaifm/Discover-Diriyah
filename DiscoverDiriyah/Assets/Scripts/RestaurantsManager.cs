@@ -15,7 +15,7 @@ public class RestaurantsManager : MonoBehaviour
     public GameObject RestaurantsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
-
+    private toggleFavorite toggleFav;
    
 
     private void Awake()
@@ -62,6 +62,8 @@ public class RestaurantsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
+                bool isFav = toggleFav.initializeFavoriteRestaurant(document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
                 RestaurantsData.Add(EventsRoot);

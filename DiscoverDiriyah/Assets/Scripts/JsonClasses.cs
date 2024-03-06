@@ -45,6 +45,7 @@ public class RestaurantsRoot
     public string Location;
     public List<string> Picture;
     public string Name;
+    public bool userFavorite;
 }
 
 
