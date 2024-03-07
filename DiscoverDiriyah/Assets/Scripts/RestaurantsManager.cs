@@ -39,6 +39,7 @@ public class RestaurantsManager : MonoBehaviour
     {
         RestaurantsPanel.SetActive(true);
         Debug.Log("fffff");
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
         db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
@@ -63,7 +64,6 @@ public class RestaurantsManager : MonoBehaviour
                     //    Debug.Log("Image url : " + item.ToString());
                     //}
                 }
-                toggleFav = gameObject.AddComponent<toggleFavorite>();
                 isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("ID", document.Id);
                 data.Add("userFavorite", isFav);
@@ -97,5 +97,4 @@ public class RestaurantsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
 }

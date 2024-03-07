@@ -23,6 +23,8 @@ public class RestaurantsItem : MonoBehaviour
     StorageReference storageRef;
     RestaurantsRoot Restaurant_Root;
 
+    private toggleFavorite toggleFav;
+
     public void Init(RestaurantsRoot restaurantsRoot)
     {
         if (!AdminFunctionalityManager.Admin)
@@ -114,5 +116,14 @@ public class RestaurantsItem : MonoBehaviour
             //File.WriteAllBytes(localURL, texture.EncodeToPNG());
             //Debug.Log("Image Downloaded and saved at " + localURL);
         }
+
+    }
+
+    public void Favorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(Restaurant_Root.ID, "Restaurant");
+        FavouriteImage.SetActive(true);
+        FavouriteDefaultImage.SetActive(false);
     }
 }

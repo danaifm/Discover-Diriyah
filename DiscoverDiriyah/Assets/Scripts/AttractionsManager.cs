@@ -46,6 +46,7 @@ public class AttractionsManager : MonoBehaviour
     {
         AttractionsPanel.SetActive(true);
         Debug.Log("fffff");
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
         db.Collection("Attraction").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
@@ -64,7 +65,6 @@ public class AttractionsManager : MonoBehaviour
                     List<object> yourArray = (List<object>)data["Pictures"];
                    
                 }
-                toggleFav = gameObject.AddComponent<toggleFavorite>();
                 isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);

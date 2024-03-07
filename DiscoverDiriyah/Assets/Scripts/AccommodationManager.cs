@@ -40,6 +40,7 @@ public class AccommodationManager : MonoBehaviour
     {
         AccommodationPanel.SetActive(true);
         Debug.Log("fffff");
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
         db.Collection("Accommodation").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
@@ -58,7 +59,6 @@ public class AccommodationManager : MonoBehaviour
                     List<object> yourArray = (List<object>)data["Pictures"];
                 
                 }
-                toggleFav = gameObject.AddComponent<toggleFavorite>();
                 isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
