@@ -46,6 +46,34 @@ public class toggleFavorite : MonoBehaviour
         if (task.Exception != null)
             Debug.Log("error adding favorite: " + task.Exception);
         else
-            Debug.Log("added "+type+" to favorites successfully!");
+            Debug.Log("added " + type + " to favorites successfully!");
+    }
+
+    public void removeFromFavorites(string ID)
+    {
+        StartCoroutine(Unfavorite(ID));
+    }
+
+    public IEnumerator Unfavorite(string ID)
+    {
+        string documentID;
+        Query query = fs.WhereEqualTo("ID", ID);
+        var querySnapshot = query.GetSnapshotAsync();
+        yield return new WaitUntil(() => querySnapshot.IsCompleted);
+        if (querySnapshot.Exception != null) {
+            Debug.Log("error removing from favorites: " + querySnapshot.Exception);
+            yield break;
+        }
+        else
+        {
+            documentID = querySnapshot.Result[0].Id;
+        }
+
+        var task = fs.Document(documentID).DeleteAsync();
+        yield return new WaitUntil(() => task.IsCompleted);
+        if (task.Exception != null)
+            Debug.Log("error removing from favorites " + task.Exception);
+        else
+            Debug.Log("successfully removed from favorites");
     }
 }

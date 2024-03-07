@@ -53,6 +53,7 @@ public class EventsDescriptionImagesManager : MonoBehaviour
         if (eventRoot.userFavorite)
         {
             FavouriteImage.SetActive(true);
+            FavouriteDefaultImage.SetActive(false);
         }
         else
         {

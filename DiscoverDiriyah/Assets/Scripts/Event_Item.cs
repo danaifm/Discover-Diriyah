@@ -23,6 +23,8 @@ public class Event_Item : MonoBehaviour
     StorageReference storageRef;
     EventRoot event_Root;
 
+    private toggleFavorite toggleFav;
+
     public void Init(EventRoot eventRoot)
     {
         if (!AdminFunctionalityManager.Admin)
@@ -115,4 +117,22 @@ public class Event_Item : MonoBehaviour
             //Debug.Log("Image Downloaded and saved at " + localURL);
         }
     }
+
+    public void Favorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(event_Root.ID, "Event");
+        FavouriteImage.SetActive(true);
+        event_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(event_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        event_Root.userFavorite = false;
+    }
+
 }

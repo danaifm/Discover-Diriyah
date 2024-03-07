@@ -15,6 +15,7 @@ public class AttractionsRoot
     public List<string> Picture;
     public string Name;
     public bool userFavorite;
+    public string ID;
 }
 
 [Serializable]
@@ -30,6 +31,7 @@ public class EventRoot
     public string Price;
     public string WorkingHours;
     public bool userFavorite;
+    public string ID;
 }
 [Serializable]
 public class AccommodationRoot
@@ -40,6 +42,7 @@ public class AccommodationRoot
     public string Name;
     public List<string> Picture;
     public bool userFavorite;
+    public string ID;
 }
 [Serializable]
 public class RestaurantsRoot

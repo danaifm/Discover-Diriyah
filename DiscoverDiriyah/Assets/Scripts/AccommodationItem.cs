@@ -22,6 +22,8 @@ public class AccommodationItem : MonoBehaviour
     StorageReference storageRef;
     AccommodationRoot Accommodation_Root;
 
+    private toggleFavorite toggleFav;
+
     public void Init(AccommodationRoot accommodationRoot)
     {
         if (!AdminFunctionalityManager.Admin)
@@ -112,4 +114,22 @@ public class AccommodationItem : MonoBehaviour
             //Debug.Log("Image Downloaded and saved at " + localURL);
         }
     }
+
+    public void Favorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(Accommodation_Root.ID, "Accommodation");
+        FavouriteImage.SetActive(true);
+        Accommodation_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(Accommodation_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        Accommodation_Root.userFavorite = false;
+    }
+
 }

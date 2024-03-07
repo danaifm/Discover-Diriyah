@@ -124,6 +124,15 @@ public class RestaurantsItem : MonoBehaviour
         toggleFav = gameObject.AddComponent<toggleFavorite>();
         toggleFav.addToFavorites(Restaurant_Root.ID, "Restaurant");
         FavouriteImage.SetActive(true);
-        FavouriteDefaultImage.SetActive(false);
+        Restaurant_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(Restaurant_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        Restaurant_Root.userFavorite = false;
     }
 }
