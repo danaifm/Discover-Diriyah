@@ -52,20 +52,15 @@ public class AccommodationManager : MonoBehaviour
             foreach (var document in task.Result.Documents)
             {
                 Dictionary<string, object> data = document.ToDictionary();
-                foreach (var pair in data)
-                {
-                    Debug.Log(pair.Key + ": " + pair.Value);
-                }
+             
                 if (data.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)data["Pictures"];
-                    foreach (var item in yourArray)
-                    {
-                        Debug.Log("Image url : " + item.ToString());
-                    }
+                
                 }
                 toggleFav = gameObject.AddComponent<toggleFavorite>();
-                isFav = await toggleFav.isFavorite(document.Id); data.Add("userFavorite", isFav);
+                isFav = await toggleFav.isFavorite(document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 AccommodationRoot AccommodationsRoot = JsonUtility.FromJson<AccommodationRoot>(json);
                 AccommodationsData.Add(AccommodationsRoot);

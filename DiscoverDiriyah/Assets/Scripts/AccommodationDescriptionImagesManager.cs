@@ -20,6 +20,10 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
     private int currentIndex = 0;
     private string LocationUrl = "";
 
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+
+
     private void Awake()
     {
         if (Instance != null)
@@ -42,6 +46,17 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
         PlaceTitle.text = accommodationRoot.Name;
         Description.text = accommodationRoot.Description;
         LocationUrl = accommodationRoot.Location;
+
+        if (accommodationRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
         GameObject temp;
         SetRating(accommodationRoot.StarRating);
         for (int i = 0; i < accommodationRoot.Picture.Count; i++)

@@ -19,6 +19,11 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
     private int currentIndex = 0;
     private string LocationUrl = "";
 
+
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+
+
     private void Awake()
     {
         if (Instance != null)
@@ -40,6 +45,17 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
         DescriptionPanel.SetActive(true);
         PlaceTitle.text = restaurantsRoot.Name;
         CuisineType.text = restaurantsRoot.CuisineType;
+
+        if (restaurantsRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
         //Description.text = attractionsRoot.Description;
         LocationUrl = restaurantsRoot.Location;
         GameObject temp;

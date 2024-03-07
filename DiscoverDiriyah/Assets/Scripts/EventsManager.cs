@@ -78,10 +78,7 @@ public class EventsManager : MonoBehaviour
                 if (data.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)data["Pictures"];
-                    foreach (var item in yourArray)
-                    {
-                        Debug.Log("Image url : " + item.ToString());
-                    }
+                   
                 }
                 toggleFav = gameObject.AddComponent<toggleFavorite>();
                 isFav = await toggleFav.isFavorite(document.Id);

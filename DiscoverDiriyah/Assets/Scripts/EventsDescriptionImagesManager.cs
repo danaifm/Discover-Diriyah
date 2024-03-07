@@ -25,6 +25,10 @@ public class EventsDescriptionImagesManager : MonoBehaviour
     private int currentIndex = 0;
     private string LocationUrl = "";
 
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+
+
     private void Awake()
     {
         if (Instance != null)
@@ -45,6 +49,17 @@ public class EventsDescriptionImagesManager : MonoBehaviour
     {
         DescriptionPanel.SetActive(true);
         PlaceTitle.text = eventRoot.Name;
+
+        if (eventRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
         DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
         StartDate.text = dateTime.Day + "/" + dateTime.Month + "/" + dateTime.Year;
 

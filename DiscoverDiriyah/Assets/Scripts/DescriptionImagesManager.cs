@@ -23,6 +23,10 @@ public class DescriptionImagesManager : MonoBehaviour
     private int currentIndex = 0;
     private string LocationUrl = "";
 
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+
+
     private void Awake()
     {
         if (Instance!=null)
@@ -45,6 +49,17 @@ public class DescriptionImagesManager : MonoBehaviour
         PlaceTitle.text = attractionsRoot.Name;
         Description.text = attractionsRoot.Description;
         LocationUrl = attractionsRoot.Location;
+
+        if (attractionsRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
         GameObject temp;
         for (int i = 0; i < attractionsRoot.Picture.Count; i++)
         {

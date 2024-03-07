@@ -22,6 +22,7 @@ public class RestaurantDescriptionImageItem : MonoBehaviour
     FirebaseStorage storage;
     StorageReference storageRef;
 
+
     private void Start()
     {
         //SelectionImage.SetActive(false);
