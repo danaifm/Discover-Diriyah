@@ -21,7 +21,7 @@ public class EventsManager : MonoBehaviour
     private CollectionReference fs;
     private QuerySnapshot querySnapshot;
     private bool isFav;
-
+    private toggleFavorite toggleFav;
 
     private void Awake()
     {
@@ -86,7 +86,8 @@ public class EventsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
-                await isFavoriteAsync(document.Id);
+                toggleFav = new toggleFavorite();
+                isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 EventRoot EventsRoot = JsonUtility.FromJson<EventRoot>(json);
@@ -118,14 +119,4 @@ public class EventsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-
-    public async Task isFavoriteAsync(string ID)
-    {
-        user = FirebaseAuth.DefaultInstance.CurrentUser;
-        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
-        Query query = fs.WhereEqualTo("ID", ID);
-        querySnapshot = await query.GetSnapshotAsync();
-        isFav = querySnapshot.Count != 0;
-    }
-
 }

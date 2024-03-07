@@ -10,32 +10,24 @@ public class toggleFavorite : MonoBehaviour
 {
     public FirebaseUser user;
     private CollectionReference fs;
-    private int favRestaurantCount;
-    private bool isFav;
-    private QuerySnapshot querySnapshot;
     // Start is called before the first frame update
-    void Start()
+    //void Start()
+    //{
+    //    Debug.Log("in togglefav start!!!!!");
+    //    user = FirebaseAuth.DefaultInstance.CurrentUser;
+    //    fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
+    //}
+
+    public toggleFavorite()
     {
-        Debug.Log("in togglefav start..!!!!!!");
-        initializeFirebase();
-        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
     }
 
-    void initializeFirebase()
+    public async Task<bool> isFavorite(string ID)
     {
-        user = FirebaseAuth.DefaultInstance.CurrentUser;
-    }
-
-    public bool isFavorite(string ID)
-    {
-        Debug.Log("in isfavorite");
-        return true;
-    }
-
-    public async Task getQuerySnapshot(string ID)
-    {
+        CollectionReference fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(FirebaseAuth.DefaultInstance.CurrentUser.UserId).Collection("Favorites");
         Query query = fs.WhereEqualTo("ID", ID);
-        querySnapshot = await query.GetSnapshotAsync();
+        QuerySnapshot querySnapshot = await query.GetSnapshotAsync();
+        return querySnapshot.Count != 0;
     }
 
 }

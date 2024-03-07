@@ -20,6 +20,7 @@ public class RestaurantsManager : MonoBehaviour
     private CollectionReference fs;
     private QuerySnapshot querySnapshot;
     private bool isFav;
+    private toggleFavorite toggleFav;
 
     private void Awake()
     {
@@ -53,19 +54,21 @@ public class RestaurantsManager : MonoBehaviour
             foreach (var document in task.Result.Documents)
             {
                 Dictionary<string, object> data = document.ToDictionary();
-                foreach (var pair in data)
-                {
-                    Debug.Log(pair.Key + ": " + pair.Value);
-                }
+                //foreach (var pair in data)
+                //{
+                //    Debug.Log(pair.Key + ": " + pair.Value);
+                //}
                 if (data.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)data["Pictures"];
-                    foreach (var item in yourArray)
-                    {
-                        Debug.Log("Image url : " + item.ToString());
-                    }
+                    //foreach (var item in yourArray)
+                    //{
+                    //    Debug.Log("Image url : " + item.ToString());
+                    //}
                 }
-                await isFavoriteAsync(document.Id);
+                toggleFav = new toggleFavorite();
+                isFav = await toggleFav.isFavorite(document.Id);
+                data.Add("ID", document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
@@ -80,8 +83,8 @@ public class RestaurantsManager : MonoBehaviour
     }
     private void DataHandler()
     {
-        //RestaurantsPanel.SetActive(true);
-        Debug.Log("DataHandler " + RestaurantsData.Count);
+    //RestaurantsPanel.SetActive(true);
+    Debug.Log("DataHandler " + RestaurantsData.Count);
         GameObject temp;
         for (int i = 0; i < RestaurantsData.Count; i++)
         {
@@ -98,12 +101,4 @@ public class RestaurantsManager : MonoBehaviour
         }
     }
 
-    public async Task isFavoriteAsync(string ID)
-    {
-        user = FirebaseAuth.DefaultInstance.CurrentUser;
-        fs = FirebaseFirestore.DefaultInstance.Collection("Account").Document(user.UserId).Collection("Favorites");
-        Query query = fs.WhereEqualTo("ID", ID);
-        querySnapshot = await query.GetSnapshotAsync();
-        isFav = querySnapshot.Count != 0;
-    }
 }
