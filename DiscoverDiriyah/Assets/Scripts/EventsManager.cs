@@ -17,9 +17,6 @@ public class EventsManager : MonoBehaviour
     public GameObject EventsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
-    public FirebaseUser user;
-    private CollectionReference fs;
-    private QuerySnapshot querySnapshot;
     private bool isFav;
     private toggleFavorite toggleFav;
 
@@ -86,7 +83,7 @@ public class EventsManager : MonoBehaviour
                         Debug.Log("Image url : " + item.ToString());
                     }
                 }
-                toggleFav = new toggleFavorite();
+                toggleFav = gameObject.AddComponent<toggleFavorite>();
                 isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
