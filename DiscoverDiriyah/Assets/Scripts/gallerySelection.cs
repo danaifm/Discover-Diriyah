@@ -4,20 +4,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class gallerySelection : MonoBehaviour
 {
-    public TMP_Text errorText;
     public RawImage[] imageDisplays; // Assign your 10 RawImage UI components in the inspector
     private List<string> selectedImagePaths = new List<string>(); // To store paths of selected images
     public Button selectImageButton; // Assign your button for selecting images
     public Texture defaultTexture;
+    public TextAsset defaultImageTexture;
     StorageReference storageRef;
     FirebaseStorage storage;
-    public AlertDialog alertDialog;
     void Awake()
     {
         storage = FirebaseStorage.DefaultInstance;
@@ -29,7 +27,6 @@ public class gallerySelection : MonoBehaviour
             imageDisplay.color = new Color(imageDisplay.color.r, imageDisplay.color.g, imageDisplay.color.b, 0); // Alpha set to 0
         }
 
-        alertDialog = FindObjectOfType<AlertDialog>();
         // Optionally, disable the button if you reach the maximum number of images (10 in this case)
         UpdateButtonInteractivity();
     }
@@ -100,14 +97,8 @@ public class gallerySelection : MonoBehaviour
     {
         try
         {
-            if (selectedImagePaths.Count == 1)
-            {
-                errorText.text = "You can't delete all images";
-                errorText.color = Color.red;
-                return;
-            }
             imageDisplays[index].texture = null;
-            //imageDisplays[selectedImagePaths.Count - 1].texture = null;
+            imageDisplays[selectedImagePaths.Count - 1].texture = null;
             //-- remove it from storage
             if (!File.Exists(selectedImagePaths[index]))
             {
@@ -164,12 +155,10 @@ public class gallerySelection : MonoBehaviour
         StorageReference fileRef = storageRef.Child(folderName).Child(fileName);
         const long maxAllowedSize = 10 * 1024 * 1024;
         print("Load from firebase");
-        alertDialog.ShowLoading();
         fileRef.GetBytesAsync(maxAllowedSize).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted || task.IsCanceled)
             {
-                alertDialog.HideLoading();
                 Debug.Log(task.Exception);
                 selectedImagePaths.RemoveAt(index);
                 // Uh-oh, an error occurred!
@@ -185,7 +174,6 @@ public class gallerySelection : MonoBehaviour
                 imageDisplays[index].texture = texture;
                 imageDisplays[index].color = new Color(imageDisplays[index].color.r, imageDisplays[index].color.g, imageDisplays[index].color.b, 1); // Alpha set to 0
                 Debug.Log("Finished downloading!");
-                alertDialog.HideLoading();
             }
         });
 
@@ -237,22 +225,19 @@ public class gallerySelection : MonoBehaviour
     {
         StorageReference fileRef = storageRef.Child(folderName).Child(selectedImagePaths[index]);
 
-        alertDialog.ShowLoading();
-        fileRef.DeleteAsync().ContinueWithOnMainThread(task =>
+        fileRef.DeleteAsync().ContinueWith(task =>
         {
             if (task.IsFaulted || task.IsCanceled)
             {
-                //Debug.LogError(task.Exception != null ? task.Exception.ToString() : "Delete image task was cancelled.");
+                Debug.LogError(task.Exception != null ? task.Exception.ToString() : "Delete image task was cancelled.");
                 //-- sometimes images not exist in storage.
                 //selectedImagePaths.RemoveAt(index);
-                alertDialog.HideLoading();
             }
             else
             {
                 Debug.Log("Image deleted successfully from Firebase Storage." + selectedImagePaths[index]);
                 selectedImagePaths.RemoveAt(index);
                 DisplayImages(folderName);
-                alertDialog.HideLoading();
             }
         });
     }

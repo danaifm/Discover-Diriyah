@@ -36,12 +36,10 @@ public class AddRestaurant : MonoBehaviour
     
     List<string> pictures;
     bool isValid = true;
-    public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
     // Start is called before the first frame update
     void Start()
     {
-        alertDialog = FindObjectOfType<AlertDialog>();
         db = FirebaseFirestore.DefaultInstance;
         storage = FirebaseStorage.DefaultInstance;
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
@@ -190,7 +188,6 @@ public class AddRestaurant : MonoBehaviour
     }
     public async Task uploadEvent()
     {
-        alertDialog.ShowLoading();
         if (pictures.Count <= 0)
         {
             isValid = false;
@@ -228,18 +225,15 @@ public class AddRestaurant : MonoBehaviour
             {
                 Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
                 onCompleteAddEvent.Invoke();
-                alertDialog.HideLoading();
             }
             else
             {
                 Debug.Log("No images were uploaded.");
-                alertDialog.HideLoading();
             }
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error adding Restaurant: {ex.Message}");
-            alertDialog.HideLoading();
         }
     }
 
