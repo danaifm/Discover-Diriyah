@@ -25,6 +25,9 @@ public class AddAttraction : MonoBehaviour
     public TMP_InputField name;
     public TMP_Text nameError;
     public TMP_Text nameCounter;
+    public TMP_InputField description;
+    public TMP_Text descriptionCounter;
+    public TMP_Text descriptionError;
     public TMP_InputField location;
     public TMP_Text locationError;
     public TMP_Text locationCounter;
@@ -67,6 +70,7 @@ public class AddAttraction : MonoBehaviour
 
         name.characterLimit = 25;
         location.characterLimit = 35;
+        description.characterLimit = 250;
 
         if (isEdit)
         {
@@ -90,6 +94,7 @@ public class AddAttraction : MonoBehaviour
     {
         nameCounter.text = name.text.Length + "/" + name.characterLimit;
         locationCounter.text = location.text.Length + "/" + location.characterLimit;
+        descriptionCounter.text = description.text.Length + "/" + description.characterLimit;
     }
 
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
@@ -124,7 +129,6 @@ public class AddAttraction : MonoBehaviour
 
     public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
     {
-        return;
         int x = 0;
         if (string.IsNullOrEmpty(inputField.text) || inputField.text.Trim() == "")
         {
@@ -292,7 +296,7 @@ public class AddAttraction : MonoBehaviour
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index, storageFolderName);
+        gallerySelection.RemoveImage(index, storageFolderName, !isEdit);
     }
     public void SubmitButtonClick()
     {
@@ -303,6 +307,7 @@ public class AddAttraction : MonoBehaviour
     {
         isValid = true;
         ValidateInput(name, nameError);
+        ValidateInput(description, descriptionError);
         string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
         ValidateLocation(location, locationError, urlPattern);
         pictures = gallerySelection.GetSelectedImagePaths();
@@ -336,6 +341,7 @@ public class AddAttraction : MonoBehaviour
             {"Name", name.text},
             {"Location", location.text},
             {"WorkingHours", workingHours},
+            {"Description", description},
             {"Picture", uploadedImageNames ?? new List<string>()},
         };
         try

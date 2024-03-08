@@ -75,7 +75,7 @@ public class AddRestaurant : MonoBehaviour
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index, "");
+        gallerySelection.RemoveImage(index, "restaurant");
     }
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
     {
@@ -190,7 +190,6 @@ public class AddRestaurant : MonoBehaviour
     }
     public async Task uploadEvent()
     {
-        alertDialog.ShowLoading();
         if (pictures.Count <= 0)
         {
             isValid = false;
@@ -204,6 +203,7 @@ public class AddRestaurant : MonoBehaviour
             picturesError.text = "";
         }
         if (!isValid) return;
+        alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
         List<string> uploadedImageNames = await UploadImages(pictures, name.text); // Call your UploadImages method
 

@@ -96,11 +96,11 @@ public class gallerySelection : MonoBehaviour
             yield return null; // Ensure the UI updates for each image
         }
     }
-    public void RemoveImage(int index, string folderName)
+    public void RemoveImage(int index, string folderName, bool allowRemoveFinalImage = true)
     {
         try
         {
-            if (selectedImagePaths.Count == 1)
+            if (selectedImagePaths.Count == 1 && !allowRemoveFinalImage)
             {
                 errorText.text = "You can't delete all images";
                 errorText.color = Color.red;

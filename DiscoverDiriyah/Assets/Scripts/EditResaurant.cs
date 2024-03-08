@@ -123,7 +123,7 @@ public class EditResaurant : MonoBehaviour
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index, "restaurant");
+        gallerySelection.RemoveImage(index, "restaurant", false);
     }
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
     {
@@ -243,7 +243,6 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
     }
     public async Task uploadEvent()
     {
-        alertDialog.ShowLoading();
         if (pictures.Count <= 0)
         {
             isValid = false;
@@ -257,6 +256,7 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
             picturesError.text = "";
         }
         if (!isValid) return;
+        alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
         List<string> uploadedImageNames = await UploadImages(pictures, name.text); // Call your UploadImages method
 
