@@ -37,10 +37,12 @@ public class EditResaurant : MonoBehaviour
     bool isValid = true;
 
     private string restId;
+    public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
     // Start is called before the first frame update
     void Start()
     {
+        alertDialog = FindObjectOfType<AlertDialog>();
         db = FirebaseFirestore.DefaultInstance;
         storage = FirebaseStorage.DefaultInstance;
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
@@ -65,6 +67,7 @@ public class EditResaurant : MonoBehaviour
     private void LoadData()
     {
         DocumentReference docRef = db.Collection("Restaurant").Document(restId);
+        alertDialog.ShowLoading();
         docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
         {
             DocumentSnapshot snapshot = task.Result;
@@ -81,10 +84,12 @@ public class EditResaurant : MonoBehaviour
                 restaurant.Pictures = pictures.ToList<string>();
 
                 DisplayRestaurantData(restaurant);
+                alertDialog.HideLoading();
             }
             else
             {
                 Debug.Log($"Document {snapshot.Id} does not exist!");
+                alertDialog.HideLoading();
             }
         });
     }
@@ -238,6 +243,7 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
     }
     public async Task uploadEvent()
     {
+        alertDialog.ShowLoading();
         if (pictures.Count <= 0)
         {
             isValid = false;
@@ -271,12 +277,14 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
             await docRef.UpdateAsync(newRestaurant);
             Debug.Log($"Restaurant updated successfully with ID: {docRef.Id}");
             onCompleteAddEvent.Invoke();
+            alertDialog.HideLoading();
 
 
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error adding Restaurant: {ex.Message}");
+            alertDialog.HideLoading();
         }
     }
 }
