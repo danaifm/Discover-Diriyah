@@ -29,7 +29,7 @@ public class EditAccountcript : MonoBehaviour
     private bool isCurrPassVisible = false;
     public Image newPasswordIcon, currPasswordIcon;
     public Sprite showPass, hidePass;
-
+    [SerializeField] private ConfirmationScript confirmationWindow;
 
     // Start is called before the first frame update
     void Start()
@@ -191,7 +191,7 @@ public class EditAccountcript : MonoBehaviour
     {
         newPassError.color = currentPassError.color = Color.red;
         newPassError.fontSize = currentPassError.fontSize = 3;
-        if(newPasswordField.text != "")
+        if (newPasswordField.text != "")
         {
             validateNewPassword();
             if (currentPasswordField.text == "")
@@ -219,23 +219,23 @@ public class EditAccountcript : MonoBehaviour
         }
     }
 
-    public void updateAccountInfo()
-    {
-        StartCoroutine(updateAccountInfoAsync());
-    }
+    //public void updateAccountInfo()
+    //{
+    //    StartCoroutine(updateAccountInfoAsync());
+    //}
 
     private IEnumerator updateAccountInfoAsync()
     {
-        if(newPasswordField.text != "" || currentPasswordField.text != "") //want to change password => validate passwords on submit so i dont get blocked by firebase
+        if (newPasswordField.text != "" || currentPasswordField.text != "") //want to change password => validate passwords on submit so i dont get blocked by firebase
         {
             Debug.Log("validating entered passwords");
             onSubmitValidatePasswords();
         }
-        if(nameValid && emailValid && newPassValid && currentPassValid)
+        if (nameValid && emailValid && newPassValid && currentPassValid)
         {
             Task updateemail = user.UpdateEmailAsync(emailField.text.Trim().ToLower());
             yield return new WaitUntil(() => updateemail.IsCompleted);
-            if(updateemail.Exception == null)
+            if (updateemail.Exception == null)
             {
                 Debug.Log("SUCCESSFULLY updated email in authentication");
             }
@@ -244,17 +244,17 @@ public class EditAccountcript : MonoBehaviour
                 Debug.Log("updating email in authentication FAILED with exception " + updateemail.Exception);
             }
 
-            Dictionary<string, object> newuserinfo = new Dictionary<string, object> { 
+            Dictionary<string, object> newuserinfo = new Dictionary<string, object> {
                 {"Name", nameField.text.Trim()},
                 {"Email", emailField.text.Trim().ToLower()},
                 {"Admin", "0"}
             };
-            if(newPasswordField.text != "" && currentPasswordField.text != "") //will change password
+            if (newPasswordField.text != "" && currentPasswordField.text != "") //will change password
             {
-                
+
                 Task updatepass = user.UpdatePasswordAsync(newPasswordField.text);
                 yield return new WaitUntil(() => updatepass.IsCompleted);
-                if(updatepass.Exception == null)
+                if (updatepass.Exception == null)
                 {
                     Debug.Log("SUCCESSFULLY updated password in authentication");
                 }
@@ -266,7 +266,7 @@ public class EditAccountcript : MonoBehaviour
             }
             Task updatetask = userinfo.UpdateAsync(newuserinfo);
             yield return new WaitUntil(() => updatetask.IsCompleted);
-            if(updatetask.Exception == null)
+            if (updatetask.Exception == null)
             {
                 Debug.Log("SUCCESSFULLY updated account information in firestore");
             }
@@ -326,5 +326,31 @@ public class EditAccountcript : MonoBehaviour
         // Toggle the visibility flag
         isCurrPassVisible = !isCurrPassVisible;
         currentPasswordField.ForceLabelUpdate();
+    }
+
+    private void YesClicked()
+    {
+        StartCoroutine(updateAccountInfoAsync());
+        confirmationWindow.gameObject.SetActive(false);
+        Debug.Log("yes clicked");
+    }
+
+    private void NoClicked()
+    {
+        confirmationWindow.gameObject.SetActive(false);
+        Debug.Log("no clicked");
+    }
+
+    private void openConfirmationWindow(string message)
+    {
+        confirmationWindow.gameObject.SetActive(true);
+        confirmationWindow.yesButton.onClick.AddListener(YesClicked);
+        confirmationWindow.noButton.onClick.AddListener(NoClicked);
+        confirmationWindow.messageText.text = message;
+    }
+
+    public void editButtonClicked()
+    {
+        openConfirmationWindow("Are you sure you want to edit your information?");
     }
 }
