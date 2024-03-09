@@ -9,40 +9,48 @@ using Firebase.Extensions;
 using System;
 using System.IO;
 
-public class AccommodationItem : MonoBehaviour
+public class AttractionsItem : MonoBehaviour
 {
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
-    public Image HotelImage;
+    public Image AttractionImage;
     public Sprite DefaultSprite;
     public Text TitleName;
 
     private string localURL;
     FirebaseStorage storage;
     StorageReference storageRef;
-    AccommodationRoot Accommodation_Root;
+    AttractionsRoot attractions_Root;
 
-    public void Init(AccommodationRoot accommodationRoot)
+    private toggleFavorite toggleFav;
+
+    public void Init(AttractionsRoot attractionsRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
-        Accommodation_Root = accommodationRoot;
-        TitleName.text = accommodationRoot.Name;
-        CheckImage(accommodationRoot.Picture[0]);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (attractionsRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
+        attractions_Root = attractionsRoot;
+        TitleName.text = attractionsRoot.Name;
+        CheckImage(attractionsRoot.Picture[0]);
     }
-    public void ShowAccommodationDetails()
+    public void ShowAttractionDetails()
     {
-        AccommodationDescriptionImagesManager.Instance.ShowDescription(Accommodation_Root);
+        DescriptionImagesManager.Instance.ShowDescription(attractions_Root, this);
     }
     public void CheckImage(string name)
     {
         ResetImage();
         DownloadImage(name);
-        //Debug.Log("id and URL " + name);
+        //Debug.Log("id and URL " + name );
         //localURL = string.Format("{0}/{1}.jpg", Application.persistentDataPath, "" + name);
 
         //if (File.Exists(localURL))
         //{
-        //    Debug.Log("Image exist " + name);
+        //    Debug.Log("Image exist "+ name);
         //    LoadLocalFile();
         //    //ConsoleManager.instance.ShowMessage("Image Found");
         //}
@@ -58,16 +66,16 @@ public class AccommodationItem : MonoBehaviour
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(bytes);
         Sprite thumbnail = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        HotelImage.sprite = thumbnail;
+        AttractionImage.sprite = thumbnail;
     }
     public void ResetImage()
     {
-        HotelImage.sprite = DefaultSprite;
+        AttractionImage.sprite = DefaultSprite;
     }
     public void DownloadImage(string name)
     {
         storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/accommodations");
+        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/attractions");
         StorageReference image = storageRef.Child(name);
 
         //Get the download link of file
@@ -98,12 +106,30 @@ public class AccommodationItem : MonoBehaviour
         }
         else
         {
-
+            
             Texture2D texture = DownloadHandlerTexture.GetContent(www);
             //rawImage.texture = texture;
-            HotelImage.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            AttractionImage.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             //File.WriteAllBytes(localURL, texture.EncodeToPNG());
-            //Debug.Log("Image Downloaded and saved at " + localURL);
+            //Debug.Log("Image Downloaded and saved at "+ localURL);
         }
     }
+
+    public void Favorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(attractions_Root.ID, "Attraction");
+        FavouriteImage.SetActive(true);
+        attractions_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(attractions_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        attractions_Root.userFavorite = false;
+    }
+
 }

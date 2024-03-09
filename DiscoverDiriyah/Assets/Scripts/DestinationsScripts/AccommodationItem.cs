@@ -9,31 +9,37 @@ using Firebase.Extensions;
 using System;
 using System.IO;
 
-public class RestaurantsItem : MonoBehaviour
+public class AccommodationItem : MonoBehaviour
 {
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
-    public Image RestaurantImage;
+    public Image HotelImage;
     public Sprite DefaultSprite;
     public Text TitleName;
-    public Text CuisineTypeText;
 
     private string localURL;
     FirebaseStorage storage;
     StorageReference storageRef;
-    RestaurantsRoot Restaurant_Root;
+    AccommodationRoot Accommodation_Root;
 
-    public void Init(RestaurantsRoot restaurantsRoot)
+    private toggleFavorite toggleFav;
+
+    public void Init(AccommodationRoot accommodationRoot)
     {
-        FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
-        Restaurant_Root = restaurantsRoot;
-        TitleName.text = restaurantsRoot.Name;
-        CuisineTypeText.text = restaurantsRoot.CuisineType;
-        CheckImage(restaurantsRoot.Picture[0]);
+        if (!AdminFunctionalityManager.Admin)
+        {
+            if (accommodationRoot.userFavorite)
+                FavouriteImage.SetActive(true);
+            else
+                FavouriteDefaultImage.SetActive(true);
+        }
+        Accommodation_Root = accommodationRoot;
+        TitleName.text = accommodationRoot.Name;
+        CheckImage(accommodationRoot.Picture[0]);
     }
-    public void ShowRestaurantDetails()
+    public void ShowAccommodationDetails()
     {
-        RestaurantDescriptionImagesManager.Instance.ShowDescription(Restaurant_Root);
+        AccommodationDescriptionImagesManager.Instance.ShowDescription(Accommodation_Root, this);
     }
     public void CheckImage(string name)
     {
@@ -60,16 +66,16 @@ public class RestaurantsItem : MonoBehaviour
         Texture2D texture = new Texture2D(1, 1);
         texture.LoadImage(bytes);
         Sprite thumbnail = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-        RestaurantImage.sprite = thumbnail;
+        HotelImage.sprite = thumbnail;
     }
     public void ResetImage()
     {
-        RestaurantImage.sprite = DefaultSprite;
+        HotelImage.sprite = DefaultSprite;
     }
     public void DownloadImage(string name)
     {
         storage = FirebaseStorage.DefaultInstance;
-        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/restaurant");
+        storageRef = storage.GetReferenceFromUrl("gs://discover-diriyah-96e5d.appspot.com/accommodations");
         StorageReference image = storageRef.Child(name);
 
         //Get the download link of file
@@ -103,9 +109,27 @@ public class RestaurantsItem : MonoBehaviour
 
             Texture2D texture = DownloadHandlerTexture.GetContent(www);
             //rawImage.texture = texture;
-            RestaurantImage.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            HotelImage.sprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
             //File.WriteAllBytes(localURL, texture.EncodeToPNG());
             //Debug.Log("Image Downloaded and saved at " + localURL);
         }
     }
+
+    public void Favorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(Accommodation_Root.ID, "Accommodation");
+        FavouriteImage.SetActive(true);
+        Accommodation_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(Accommodation_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        Accommodation_Root.userFavorite = false;
+    }
+
 }

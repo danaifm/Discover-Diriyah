@@ -1,22 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EventsDescriptionImagesManager : MonoBehaviour
+public class RestaurantDescriptionImagesManager : MonoBehaviour
 {
-    public static EventsDescriptionImagesManager Instance;
+    public static RestaurantDescriptionImagesManager Instance;
 
     public GameObject DescriptionPanel;
     public Image DescriptionImage;
     public Text PlaceTitle;
-    public Text StartDate;
-    public Text EndDate;
-    public Text WorkingHours;
-    public Text Price;
-    public Text Audience;
-    public Text Description;
+    public Text CuisineType;
 
     public Transform ParentContent;
     public GameObject UI_Prefab;
@@ -24,6 +18,14 @@ public class EventsDescriptionImagesManager : MonoBehaviour
     private List<GameObject> DesImageItems = new List<GameObject>();
     private int currentIndex = 0;
     private string LocationUrl = "";
+
+
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+    RestaurantsRoot Restaurant_Root;
+    private toggleFavorite toggleFav;
+    RestaurantsItem restaurantInstance;
+
 
     private void Awake()
     {
@@ -41,29 +43,31 @@ public class EventsDescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(EventRoot eventRoot)
+    public void ShowDescription(RestaurantsRoot restaurantsRoot, RestaurantsItem instance)
     {
+        restaurantInstance = instance;
+        Restaurant_Root = restaurantsRoot;
         DescriptionPanel.SetActive(true);
-        PlaceTitle.text = eventRoot.Name;
-        DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
-        StartDate.text = dateTime.Day + "/" + dateTime.Month + "/" + dateTime.Year;
+        PlaceTitle.text = restaurantsRoot.Name;
+        CuisineType.text = restaurantsRoot.CuisineType;
 
-        dateTime = DateTime.Parse(eventRoot.EndDate);
-        EndDate.text = dateTime.Day + "/" + dateTime.Month + "/" + dateTime.Year;
-        //StartDate.text = eventRoot.StartDate;
-        //EndDate.text = eventRoot.EndDate;
-        //Debug.Log("StartDate "+ StartDate);
-        //Debug.Log("EndDate " + EndDate);
-        WorkingHours.text = eventRoot.WorkingHours;
-        Price.text = eventRoot.Price+" SAR";
-        Audience.text = eventRoot.Audience;
-        Description.text = eventRoot.Description;
-        LocationUrl = eventRoot.Location;
+        if (restaurantsRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
+        //Description.text = attractionsRoot.Description;
+        LocationUrl = restaurantsRoot.Location;
         GameObject temp;
-        for (int i = 0; i < eventRoot.Picture.Count; i++)
+        for (int i = 0; i < restaurantsRoot.Picture.Count; i++)
         {
             temp = Instantiate(UI_Prefab, ParentContent);
-            temp.GetComponent<EventsDescriptionImageItem>().Init(eventRoot.Picture[i]);
+            temp.GetComponent<RestaurantDescriptionImageItem>().Init(restaurantsRoot.Picture[i]);
         }
         currentIndex = 0;
         GetAllChildGameObjects();
@@ -75,6 +79,7 @@ public class EventsDescriptionImagesManager : MonoBehaviour
     public void Back()
     {
         DescriptionPanel.SetActive(false);
+        
         foreach (Transform child in ParentContent)
         {
             Destroy(child.gameObject);
@@ -90,7 +95,7 @@ public class EventsDescriptionImagesManager : MonoBehaviour
         {
             // Add the child GameObject to the list
             DesImageItems.Add(child.gameObject);
-            child.gameObject.GetComponent<EventsDescriptionImageItem>().ItemIndex = ChildIndex;
+            child.gameObject.GetComponent<RestaurantDescriptionImageItem>().ItemIndex = ChildIndex;
             ChildIndex++;
         }
         if (DesImageItems.Count > 0)
@@ -152,12 +157,31 @@ public class EventsDescriptionImagesManager : MonoBehaviour
 
     private void ActivateItem(int index)
     {
-        DesImageItems[index].GetComponent<EventsDescriptionImageItem>().OnSelect();
+        DesImageItems[index].GetComponent<RestaurantDescriptionImageItem>().OnSelect();
     }
 
     private void DeactivateOtherItems(int index)
     {
-        DesImageItems[index].GetComponent<EventsDescriptionImageItem>().OnPrevious();
+        DesImageItems[index].GetComponent<RestaurantDescriptionImageItem>().OnPrevious();
+    }
+
+    public void Favorite()
+    {
+        restaurantInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(Restaurant_Root.ID, "Restaurant");
+        FavouriteImage.SetActive(true);
+        Restaurant_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        restaurantInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(Restaurant_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        Restaurant_Root.userFavorite = false;
     }
 
 }

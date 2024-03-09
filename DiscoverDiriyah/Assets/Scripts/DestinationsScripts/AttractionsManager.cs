@@ -5,18 +5,26 @@ using Firebase;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using Firebase.Auth;
+using System.Threading.Tasks;
 
-public class AccommodationManager : MonoBehaviour
+public class AttractionsManager : MonoBehaviour
 {
-    public static AccommodationManager Instance;
+    public static AttractionsManager Instance;
 
-    public List<AccommodationRoot> AccommodationsData = new List<AccommodationRoot>();
+    public List<AttractionsRoot> AttractionsData = new List<AttractionsRoot>();
     public RectTransform ParentTransform;
-    public GameObject AccommodationPanel;
+    public GameObject AttractionsPanel;
     public GameObject UI_Prefab;
+
+    [Header("Firebase Storage url")]
+    public string FirebaseStorageUrl;
+
     FirebaseFirestore db;
 
-  
+    private bool isFav;
+    private toggleFavorite toggleFav;
+
 
     private void Awake()
     {
@@ -34,37 +42,34 @@ public class AccommodationManager : MonoBehaviour
     {
 
     }
-    public void GetAccommodationsData()
+    public void GetAttractionsData()
     {
-        AccommodationPanel.SetActive(true);
+        AttractionsPanel.SetActive(true);
         Debug.Log("fffff");
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
-        db.Collection("Accommodation").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        db.Collection("Attraction").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
             if (task.IsFaulted)
             {
                 Debug.LogError("Error fetching data: " + task.Exception);
                 return;
             }
-            AccommodationsData.Clear();
+            AttractionsData.Clear();
             foreach (var document in task.Result.Documents)
             {
                 Dictionary<string, object> data = document.ToDictionary();
-                foreach (var pair in data)
-                {
-                    Debug.Log(pair.Key + ": " + pair.Value);
-                }
+               
                 if (data.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)data["Pictures"];
-                    foreach (var item in yourArray)
-                    {
-                        Debug.Log("Image url : " + item.ToString());
-                    }
+                   
                 }
+                isFav = await toggleFav.isFavorite(document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
-                AccommodationRoot AccommodationsRoot = JsonUtility.FromJson<AccommodationRoot>(json);
-                AccommodationsData.Add(AccommodationsRoot);
+                AttractionsRoot AttractionsRoot = JsonUtility.FromJson<AttractionsRoot>(json);
+                AttractionsData.Add(AttractionsRoot);
                 // Log the JSON string
                 Debug.Log("JSON data: " + json);
                 //documentsList.Add(data);
@@ -73,15 +78,15 @@ public class AccommodationManager : MonoBehaviour
             DataHandler();
         });
     }
-    private void DataHandler()
+    public void DataHandler()
     {
-        //AccommodationPanel.SetActive(true);
-        Debug.Log("DataHandler " + AccommodationsData.Count);
+        AttractionsPanel.SetActive(true);
+        Debug.Log("DataHandler " + AttractionsData.Count);
         GameObject temp;
-        for (int i = 0; i < AccommodationsData.Count; i++)
+        for (int i = 0; i < AttractionsData.Count; i++)
         {
             temp = Instantiate(UI_Prefab, ParentTransform);
-            temp.GetComponent<AccommodationItem>().Init(AccommodationsData[i]);
+            temp.GetComponent<AttractionsItem>().Init(AttractionsData[i]);
         }
     }
     public void DiscardData()
@@ -92,5 +97,4 @@ public class AccommodationManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-  
 }

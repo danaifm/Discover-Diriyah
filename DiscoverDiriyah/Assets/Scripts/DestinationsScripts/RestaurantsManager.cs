@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
@@ -15,8 +13,8 @@ public class RestaurantsManager : MonoBehaviour
     public GameObject RestaurantsPanel;
     public GameObject UI_Prefab;
     FirebaseFirestore db;
-
-   
+    private bool isFav;
+    private toggleFavorite toggleFav;
 
     private void Awake()
     {
@@ -30,6 +28,7 @@ public class RestaurantsManager : MonoBehaviour
         }
     }
 
+
     void Start()
     {
 
@@ -38,8 +37,9 @@ public class RestaurantsManager : MonoBehaviour
     {
         RestaurantsPanel.SetActive(true);
         Debug.Log("fffff");
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
-        db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
         {
             if (task.IsFaulted)
             {
@@ -50,18 +50,21 @@ public class RestaurantsManager : MonoBehaviour
             foreach (var document in task.Result.Documents)
             {
                 Dictionary<string, object> data = document.ToDictionary();
-                foreach (var pair in data)
-                {
-                    Debug.Log(pair.Key + ": " + pair.Value);
-                }
+                //foreach (var pair in data)
+                //{
+                //    Debug.Log(pair.Key + ": " + pair.Value);
+                //}
                 if (data.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)data["Pictures"];
-                    foreach (var item in yourArray)
-                    {
-                        Debug.Log("Image url : " + item.ToString());
-                    }
+                    //foreach (var item in yourArray)
+                    //{
+                    //    Debug.Log("Image url : " + item.ToString());
+                    //}
                 }
+                isFav = await toggleFav.isFavorite(document.Id);
+                data.Add("ID", document.Id);
+                data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
                 RestaurantsData.Add(EventsRoot);
@@ -75,8 +78,8 @@ public class RestaurantsManager : MonoBehaviour
     }
     private void DataHandler()
     {
-        //RestaurantsPanel.SetActive(true);
-        Debug.Log("DataHandler " + RestaurantsData.Count);
+    //RestaurantsPanel.SetActive(true);
+    Debug.Log("DataHandler " + RestaurantsData.Count);
         GameObject temp;
         for (int i = 0; i < RestaurantsData.Count; i++)
         {
@@ -92,5 +95,16 @@ public class RestaurantsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-   
+
+    public void RefreshRestaurantsList() //dana
+    {
+        //DiscardData();
+        GameObject temp;
+        for (int i = 0; i < RestaurantsData.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentTransform);
+            temp.GetComponent<RestaurantsItem>().Init(RestaurantsData[i]);
+        }
+
+    }
 }

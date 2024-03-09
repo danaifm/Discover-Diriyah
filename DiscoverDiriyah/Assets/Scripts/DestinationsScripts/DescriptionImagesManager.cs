@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AccommodationDescriptionImagesManager : MonoBehaviour
+public class DescriptionImagesManager : MonoBehaviour
 {
-    public static AccommodationDescriptionImagesManager Instance;
+    public static DescriptionImagesManager Instance;
 
     public GameObject DescriptionPanel;
-    public Image[] Stars;
     public Image DescriptionImage;
     public Text PlaceTitle;
+    public Text Routine_1_Days;
+    public Text Routine_1_Timing;
+    public Text Routine_2_Days;
+    public Text Routine_2_Timing;
     public Text Description;
 
     public Transform ParentContent;
@@ -20,9 +23,15 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
     private int currentIndex = 0;
     private string LocationUrl = "";
 
+    public GameObject FavouriteImage;
+    public GameObject FavouriteDefaultImage;
+    private AttractionsRoot attractions_root;
+    private AttractionsItem attractionInstance;
+    private toggleFavorite toggleFav;
+
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance!=null)
         {
             Destroy(gameObject);
         }
@@ -36,42 +45,34 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(AccommodationRoot accommodationRoot)
+    public void ShowDescription(AttractionsRoot attractionsRoot, AttractionsItem instance)
     {
         DescriptionPanel.SetActive(true);
-        PlaceTitle.text = accommodationRoot.Name;
-        Description.text = accommodationRoot.Description;
-        LocationUrl = accommodationRoot.Location;
+        attractions_root = attractionsRoot;
+        attractionInstance = instance;
+        PlaceTitle.text = attractionsRoot.Name;
+        Description.text = attractionsRoot.Description;
+        LocationUrl = attractionsRoot.Location;
+
+        if (attractionsRoot.userFavorite)
+        {
+            FavouriteImage.SetActive(true);
+        }
+        else
+        {
+            FavouriteImage.SetActive(false);
+            FavouriteDefaultImage.SetActive(true);
+        }
+
         GameObject temp;
-        SetRating(accommodationRoot.StarRating);
-        for (int i = 0; i < accommodationRoot.Picture.Count; i++)
+        for (int i = 0; i < attractionsRoot.Picture.Count; i++)
         {
             temp = Instantiate(UI_Prefab, ParentContent);
-            temp.GetComponent<AccommodationDescriptionImageItem>().Init(accommodationRoot.Picture[i]);
+            temp.GetComponent<DescriptionImageItem>().ItemIndex = i;
+            temp.GetComponent<DescriptionImageItem>().Init(attractionsRoot.Picture[i]);
         }
         currentIndex = 0;
         GetAllChildGameObjects();
-    }
-    public void SetRating(float rating)
-    {
-        int fullStars = Mathf.FloorToInt(rating); // Get the integer part of the rating
-        float remainder = rating - fullStars; // Get the decimal part of the rating
-
-        // Set full stars
-        for (int i = 0; i < fullStars; i++)
-        {
-            Stars[i].fillAmount = 1f; // Fill the image fully
-        }
-        // Set half star if necessary
-        if (fullStars < Stars.Length && remainder > 0)
-        {
-            Stars[fullStars].fillAmount = remainder; // Fill the next image partially
-        }
-        // Clear remaining stars
-        for (int i = fullStars + 1; i < Stars.Length; i++)
-        {
-            Stars[i].fillAmount = 0f; // Clear the remaining images
-        }
     }
     public void OpenLocationUrl()
     {
@@ -95,10 +96,10 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
         {
             // Add the child GameObject to the list
             DesImageItems.Add(child.gameObject);
-            child.gameObject.GetComponent<AccommodationDescriptionImageItem>().ItemIndex = ChildIndex;
+            child.gameObject.GetComponent<DescriptionImageItem>().ItemIndex = ChildIndex;
             ChildIndex++;
         }
-        if (DesImageItems.Count > 0)
+        if (DesImageItems.Count>0)
         {
             // Activate the first game object in the list
             ActivateItem(currentIndex);
@@ -157,12 +158,32 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
 
     private void ActivateItem(int index)
     {
-        DesImageItems[index].GetComponent<AccommodationDescriptionImageItem>().OnSelect();
+        DesImageItems[index].GetComponent<DescriptionImageItem>().OnSelect();
     }
 
     private void DeactivateOtherItems(int index)
     {
-        DesImageItems[index].GetComponent<AccommodationDescriptionImageItem>().OnPrevious();
+        DesImageItems[index].GetComponent<DescriptionImageItem>().OnPrevious();
     }
+
+    public void Favorite()
+    {
+        attractionInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(attractions_root.ID, "Attraction");
+        FavouriteImage.SetActive(true);
+        attractions_root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        attractionInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(attractions_root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        attractions_root.userFavorite = false;
+    }
+
 
 }
