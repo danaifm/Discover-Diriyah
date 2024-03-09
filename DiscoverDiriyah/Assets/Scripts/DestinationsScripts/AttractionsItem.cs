@@ -33,6 +33,10 @@ public class AttractionsItem : MonoBehaviour
             else
                 FavouriteDefaultImage.SetActive(true);
         }
+        else
+        {
+            FavouriteDefaultImage.SetActive(false);
+        }
         attractions_Root = attractionsRoot;
         TitleName.text = attractionsRoot.Name;
         CheckImage(attractionsRoot.Picture[0]);

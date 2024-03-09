@@ -721,7 +721,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7f5c25d0de500485b99afb5d2c5dfd83, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 556095356fcf04bea915d1d5a0484d09, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1413,5 +1413,5 @@ MonoBehaviour:
   FavouriteImage: {fileID: 6662512066941996504}
   FavouriteDefaultImage: {fileID: 2966974255255936314}
   HotelImage: {fileID: 4590410855544936125}
-  DefaultSprite: {fileID: 21300000, guid: 2df1b72d212bf44b88dc3a1274171c5d, type: 3}
+  DefaultSprite: {fileID: 21300000, guid: 556095356fcf04bea915d1d5a0484d09, type: 3}
   TitleName: {fileID: 3652477735504481752}
