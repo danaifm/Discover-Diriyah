@@ -5382,7 +5382,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isEdit: 0
   defaultId: 
-  titleForAdd: Add Attraction h
+  titleForAdd: 'Add Attraction '
   titleForEdit: Edit Attraction
   storageFolderName: attractions
   firestoreCollectionName: Attraction
