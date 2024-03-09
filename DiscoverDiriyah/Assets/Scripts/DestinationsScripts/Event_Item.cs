@@ -34,10 +34,6 @@ public class Event_Item : MonoBehaviour
             else
                 FavouriteDefaultImage.SetActive(true);
         }
-        else
-        {
-            FavouriteDefaultImage.SetActive(false);
-        }
         event_Root = eventRoot;
         TitleName.text = eventRoot.Name;
         DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
