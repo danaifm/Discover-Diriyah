@@ -34,6 +34,10 @@ public class RestaurantsItem : MonoBehaviour
             else
                 FavouriteDefaultImage.SetActive(true);
         }
+        else
+        {
+            FavouriteDefaultImage.SetActive(false);
+        }
         //FavouriteDefaultImage.SetActive(!AdminFunctionalityManager.Admin);
         Restaurant_Root = restaurantsRoot;
         TitleName.text = restaurantsRoot.Name;
