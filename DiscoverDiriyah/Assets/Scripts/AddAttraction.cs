@@ -341,7 +341,7 @@ public class AddAttraction : MonoBehaviour
             {"Name", name.text},
             {"Location", location.text},
             {"WorkingHours", workingHours},
-            {"Description", description},
+            {"Description", description.text},
             {"Picture", uploadedImageNames ?? new List<string>()},
         };
         try
