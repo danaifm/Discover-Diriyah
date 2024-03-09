@@ -12,12 +12,17 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.PlayerLoop;
 
 public class EditAccommodation : MonoBehaviour
 {
 
     public TMP_InputField Name;
     public TMP_Text nameError;
+    public TMP_Text nameCounter;
+    public TMP_Text descriptionCounter;
+    public TMP_Text locationCounter;
+    public TMP_Text starRatingCounter;
     public TMP_InputField Description;
     public TMP_Text descriptionError;
     public TMP_InputField StarRating;
@@ -25,6 +30,7 @@ public class EditAccommodation : MonoBehaviour
     public TMP_InputField Location;
     public TMP_Text locationError;
     public TMP_Text pictureError;
+    public string defaultAccommodationID = "uJeWIHkqCfIToT3KlMrs";
     string name; //fb
     string description;//fb 
     string rating;//fb
@@ -44,6 +50,7 @@ public class EditAccommodation : MonoBehaviour
 
     private string accommodationId;
     public AlertDialog alertDialog;
+    public UnityEvent onCompleteAddEvent;
 
 
     void Start()
@@ -54,6 +61,12 @@ public class EditAccommodation : MonoBehaviour
         storageRef = storage.GetReferenceFromUrl(storageUrl);
 
         pictures = gallerySelection.GetSelectedImagePaths();
+
+        accommodationId = PlayerPrefs.GetString("accommodationID", defaultAccommodationID); //-- load restId if not exist. will use default data.
+        if (accommodationId == null)
+        {
+            Debug.LogError("not found accommodation id");
+        }
         
         LoadData();
     }
@@ -69,7 +82,18 @@ private void LoadData()
             {
                 Debug.Log($"Document data for {snapshot.Id} document:");
                 Debug.Log($"Document data for {snapshot.Reference} document:");
-                
+
+                Accommodation accommodation = new Accommodation();
+
+                accommodation.Name = snapshot.GetValue<string>("Name");
+                accommodation.Location = snapshot.GetValue<string>("Location");
+                accommodation.Description = snapshot.GetValue<string>("Description");
+                accommodation.StarRating = snapshot.GetValue<double>("StarRating");
+                string[] pictures = snapshot.GetValue<string[]>("Picture");
+                accommodation.Pictures = pictures.ToList<string>();
+
+                DisplayAccommodationData(accommodation);
+                alertDialog.HideLoading();
             }
             else
             {
@@ -77,6 +101,24 @@ private void LoadData()
                 alertDialog.HideLoading();
             }
         });
+    }
+
+    private void DisplayAccommodationData(Accommodation accommodation)
+    {
+        Name.text = accommodation.Name;
+        Location.text = accommodation.Location;
+        gallerySelection.DisplayLoadedImages(accommodation.Pictures, "accommodations");
+        Description.text = accommodation.Description;
+        StarRating.text = accommodation.StarRating.ToString();
+        // Handle pictures if needed
+    }
+
+    void Update()
+    {
+        nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
+        descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
+        locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
+        starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit;
     }
 
     public void validate_input()
@@ -164,6 +206,8 @@ private void LoadData()
         {
             locationError.text = "";
         }
+        
+        pictures = gallerySelection.GetSelectedImagePaths();
 
         //PICTURE VALIDATION
         if(pictures.Count == 0)
@@ -175,17 +219,15 @@ private void LoadData()
 
         }
 
-
-        //if everything is valid -> upload to firebase 
-        if (isValid)
-        {
-            uploadAccommodation();
-        }
-
     }//end of validations 
 
+    public void RemoveImage(int index)
+    {
+        //pictures.RemoveAt(index);
+        gallerySelection.RemoveImage(index, "accommodations", false);
+    }
 
-    //upload pictures in storage
+
     public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
     {
         if (imagePaths == null) return null;
@@ -229,51 +271,66 @@ private void LoadData()
                     imageCounter++; // Increment for the next image
                 }
             }
+            else
+            {
+                uploadedImageNames.Add(path);
+            }
         }
 
         return uploadedImageNames;
     }
 
 
-
-    public async Task uploadAccommodation()
+    public void SubmitButtonClick()
     {
+        validate_input();
+        uploadEvent();
+    }
+    public async Task uploadEvent()
+    {
+        if (pictures.Count <= 0)
+        {
+            isValid = false;
+            Debug.LogError("Images is empty");
+            pictureError.text = "A picture must be uploaded.";
+            pictureError.color = Color.red;
+            pictureError.fontSize = 3;
+        }
+        else
+        {
+            pictureError.text = "";
+        }
+        if (!isValid) return;
+        alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
-        List<string> uploadedImageNames = await UploadImages(pictures, name);
+        List<string> uploadedImageNames = await UploadImages(pictures, Name.text); // Call your UploadImages method
 
         var newAccommodation = new Dictionary<string, object>
-    {
-        {"Name", name},
-        {"Description", description},
-        {"StarRating", starRating},
-        {"Location", location},
-        // Add an empty array if uploadedImageNames is null or empty
-        {"Picture", uploadedImageNames ?? new List<string>()}
-    };
-
+        {
+            {"Name", Name.text},
+            {"Location", Location.text},
+            {"Description", Description.text},
+            {"StarRating", StarRating.text},
+            // Add an empty array if uploadedImageNames is null or empty
+            {"Picture", uploadedImageNames.ToArray()}
+        };
         try
         {
-            var docRef = await db.Collection("Accommodation").AddAsync(newAccommodation);
-            Debug.Log($"Accommodation added successfully with ID: {docRef.Id}");
+            // Assuming 'db' is already initialized Firestore instance and ready to use
 
-            if (uploadedImageNames != null && uploadedImageNames.Count > 0)
-            {
-                Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
-            }
-            else
-            {
-                Debug.Log("No images were uploaded.");
-            }
+            var docRef = db.Collection("Accommodation").Document(accommodationId);
+
+            await docRef.UpdateAsync(newAccommodation);
+            Debug.Log($"Accommodation updated successfully with ID: {docRef.Id}");
+            onCompleteAddEvent.Invoke();
+            alertDialog.HideLoading();
+
+
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Error adding accommodation: {ex.Message}");
+            Debug.LogError($"Error adding Accommodation: {ex.Message}");
+            alertDialog.HideLoading();
         }
     }
-
-
-
-
 }
-
-
