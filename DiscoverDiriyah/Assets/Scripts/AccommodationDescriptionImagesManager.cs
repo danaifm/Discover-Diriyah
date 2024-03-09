@@ -22,6 +22,9 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
 
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
+    private toggleFavorite toggleFav;
+    private AccommodationItem accommodationInstance;
+    private AccommodationRoot accommodation_root;
 
 
     private void Awake()
@@ -40,9 +43,11 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(AccommodationRoot accommodationRoot)
+    public void ShowDescription(AccommodationRoot accommodationRoot, AccommodationItem instance)
     {
         DescriptionPanel.SetActive(true);
+        accommodationInstance = instance;
+        accommodation_root = accommodationRoot;
         PlaceTitle.text = accommodationRoot.Name;
         Description.text = accommodationRoot.Description;
         LocationUrl = accommodationRoot.Location;
@@ -179,5 +184,25 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
     {
         DesImageItems[index].GetComponent<AccommodationDescriptionImageItem>().OnPrevious();
     }
+
+    public void Favorite()
+    {
+        accommodationInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(accommodation_root.ID, "Accommodation");
+        FavouriteImage.SetActive(true);
+        accommodation_root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        accommodationInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(accommodation_root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        accommodation_root.userFavorite = false;
+    }
+
 
 }

@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
-using Firebase.Auth;
-using System.Threading.Tasks;
 
 public class RestaurantsManager : MonoBehaviour
 {
@@ -30,6 +27,7 @@ public class RestaurantsManager : MonoBehaviour
             Instance = this;
         }
     }
+
 
     void Start()
     {
@@ -96,5 +94,17 @@ public class RestaurantsManager : MonoBehaviour
             // Destroy the child GameObject
             Destroy(child.gameObject);
         }
+    }
+
+    public void RefreshRestaurantsList() //dana
+    {
+        //DiscardData();
+        GameObject temp;
+        for (int i = 0; i < RestaurantsData.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentTransform);
+            temp.GetComponent<RestaurantsItem>().Init(RestaurantsData[i]);
+        }
+
     }
 }

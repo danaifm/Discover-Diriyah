@@ -39,7 +39,7 @@ public class AttractionsItem : MonoBehaviour
     }
     public void ShowAttractionDetails()
     {
-        DescriptionImagesManager.Instance.ShowDescription(attractions_Root);
+        DescriptionImagesManager.Instance.ShowDescription(attractions_Root, this);
     }
     public void CheckImage(string name)
     {

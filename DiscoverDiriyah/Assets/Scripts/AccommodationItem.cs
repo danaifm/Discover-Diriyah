@@ -39,7 +39,7 @@ public class AccommodationItem : MonoBehaviour
     }
     public void ShowAccommodationDetails()
     {
-        AccommodationDescriptionImagesManager.Instance.ShowDescription(Accommodation_Root);
+        AccommodationDescriptionImagesManager.Instance.ShowDescription(Accommodation_Root, this);
     }
     public void CheckImage(string name)
     {

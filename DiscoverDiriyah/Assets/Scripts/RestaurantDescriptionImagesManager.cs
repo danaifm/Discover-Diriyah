@@ -22,6 +22,9 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
 
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
+    RestaurantsRoot Restaurant_Root;
+    private toggleFavorite toggleFav;
+    RestaurantsItem restaurantInstance;
 
 
     private void Awake()
@@ -40,8 +43,10 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(RestaurantsRoot restaurantsRoot)
+    public void ShowDescription(RestaurantsRoot restaurantsRoot, RestaurantsItem instance)
     {
+        restaurantInstance = instance;
+        Restaurant_Root = restaurantsRoot;
         DescriptionPanel.SetActive(true);
         PlaceTitle.text = restaurantsRoot.Name;
         CuisineType.text = restaurantsRoot.CuisineType;
@@ -74,6 +79,7 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
     public void Back()
     {
         DescriptionPanel.SetActive(false);
+        
         foreach (Transform child in ParentContent)
         {
             Destroy(child.gameObject);
@@ -157,6 +163,25 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
     private void DeactivateOtherItems(int index)
     {
         DesImageItems[index].GetComponent<RestaurantDescriptionImageItem>().OnPrevious();
+    }
+
+    public void Favorite()
+    {
+        restaurantInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(Restaurant_Root.ID, "Restaurant");
+        FavouriteImage.SetActive(true);
+        Restaurant_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        restaurantInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(Restaurant_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        Restaurant_Root.userFavorite = false;
     }
 
 }

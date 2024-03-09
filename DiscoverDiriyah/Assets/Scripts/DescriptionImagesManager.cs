@@ -25,7 +25,9 @@ public class DescriptionImagesManager : MonoBehaviour
 
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
-
+    private AttractionsRoot attractions_root;
+    private AttractionsItem attractionInstance;
+    private toggleFavorite toggleFav;
 
     private void Awake()
     {
@@ -43,9 +45,11 @@ public class DescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(AttractionsRoot attractionsRoot)
+    public void ShowDescription(AttractionsRoot attractionsRoot, AttractionsItem instance)
     {
         DescriptionPanel.SetActive(true);
+        attractions_root = attractionsRoot;
+        attractionInstance = instance;
         PlaceTitle.text = attractionsRoot.Name;
         Description.text = attractionsRoot.Description;
         LocationUrl = attractionsRoot.Location;
@@ -161,5 +165,25 @@ public class DescriptionImagesManager : MonoBehaviour
     {
         DesImageItems[index].GetComponent<DescriptionImageItem>().OnPrevious();
     }
+
+    public void Favorite()
+    {
+        attractionInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(attractions_root.ID, "Attraction");
+        FavouriteImage.SetActive(true);
+        attractions_root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        attractionInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(attractions_root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        attractions_root.userFavorite = false;
+    }
+
 
 }

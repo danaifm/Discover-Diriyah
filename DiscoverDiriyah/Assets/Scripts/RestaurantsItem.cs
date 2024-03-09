@@ -42,7 +42,7 @@ public class RestaurantsItem : MonoBehaviour
     }
     public void ShowRestaurantDetails()
     {
-        RestaurantDescriptionImagesManager.Instance.ShowDescription(Restaurant_Root);
+        RestaurantDescriptionImagesManager.Instance.ShowDescription(Restaurant_Root, this);
     }
     public void CheckImage(string name)
     {

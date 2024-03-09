@@ -42,7 +42,7 @@ public class Event_Item : MonoBehaviour
     }
     public void ShowEventDetails()
     {
-        EventsDescriptionImagesManager.Instance.ShowDescription(event_Root);
+        EventsDescriptionImagesManager.Instance.ShowDescription(event_Root, this);
     }
     public void CheckImage(string name)
     {

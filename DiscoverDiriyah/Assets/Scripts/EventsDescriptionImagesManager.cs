@@ -27,6 +27,9 @@ public class EventsDescriptionImagesManager : MonoBehaviour
 
     public GameObject FavouriteImage;
     public GameObject FavouriteDefaultImage;
+    Event_Item eventInstance;
+    private toggleFavorite toggleFav;
+    private EventRoot event_Root;
 
 
     private void Awake()
@@ -45,15 +48,16 @@ public class EventsDescriptionImagesManager : MonoBehaviour
         //currentIndex = 0;
         //GetAllChildGameObjects();
     }
-    public void ShowDescription(EventRoot eventRoot)
+    public void ShowDescription(EventRoot eventRoot, Event_Item instance)
     {
         DescriptionPanel.SetActive(true);
+        eventInstance = instance;
+        event_Root = eventRoot;
         PlaceTitle.text = eventRoot.Name;
 
         if (eventRoot.userFavorite)
         {
             FavouriteImage.SetActive(true);
-            FavouriteDefaultImage.SetActive(false);
         }
         else
         {
@@ -175,5 +179,25 @@ public class EventsDescriptionImagesManager : MonoBehaviour
     {
         DesImageItems[index].GetComponent<EventsDescriptionImageItem>().OnPrevious();
     }
+
+    public void Favorite()
+    {
+        eventInstance.FavouriteImage.SetActive(true);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.addToFavorites(event_Root.ID, "Event");
+        FavouriteImage.SetActive(true);
+        event_Root.userFavorite = true;
+    }
+
+    public void Unfavorite()
+    {
+        eventInstance.FavouriteImage.SetActive(false);
+        toggleFav = gameObject.AddComponent<toggleFavorite>();
+        toggleFav.removeFromFavorites(event_Root.ID);
+        FavouriteImage.SetActive(false);
+        FavouriteDefaultImage.SetActive(true);
+        event_Root.userFavorite = false;
+    }
+
 
 }
