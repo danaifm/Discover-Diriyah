@@ -6,11 +6,10 @@ public class AdminFunctionalityManager : MonoBehaviour
 {
     public GameObject[] AdminObjects;
     public GameObject[] UserObjects;
-    public bool IsAdminloggedin = false;
     public static bool Admin = false;
     void Start()
     {
-        Admin = IsAdminloggedin;
+        Admin = false;
         AdminObjectsManager(Admin);
     }
     private void AdminObjectsManager(bool value)
