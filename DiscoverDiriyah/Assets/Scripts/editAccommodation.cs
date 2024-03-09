@@ -1,17 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using System.Text.RegularExpressions;
-using UnityEditor;
-using System;
-using UnityEngine.UI;
+using Firebase.Extensions;
 using Firebase.Firestore;
 using Firebase.Storage;
-using System.Threading.Tasks;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 
-public class addAccommodation : MonoBehaviour
+public class EditAccommodation : MonoBehaviour
 {
 
     public TMP_InputField Name;
@@ -38,6 +40,10 @@ public class addAccommodation : MonoBehaviour
     List<string> pictures;
 
 
+    bool isValid = true;
+
+    private string accommodationId;
+    public AlertDialog alertDialog;
 
 
     void Start()
@@ -48,10 +54,30 @@ public class addAccommodation : MonoBehaviour
         storageRef = storage.GetReferenceFromUrl(storageUrl);
 
         pictures = gallerySelection.GetSelectedImagePaths();
-
+        
+        LoadData();
     }
 
-
+private void LoadData()
+    {
+        DocumentReference docRef = db.Collection("Accommodation").Document(accommodationId);
+        alertDialog.ShowLoading();
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            DocumentSnapshot snapshot = task.Result;
+            if (snapshot.Exists)
+            {
+                Debug.Log($"Document data for {snapshot.Id} document:");
+                Debug.Log($"Document data for {snapshot.Reference} document:");
+                
+            }
+            else
+            {
+                Debug.Log($"Document {snapshot.Id} does not exist!");
+                alertDialog.HideLoading();
+            }
+        });
+    }
 
     public void validate_input()
     {
