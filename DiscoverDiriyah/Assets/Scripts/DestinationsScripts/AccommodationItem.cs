@@ -33,6 +33,10 @@ public class AccommodationItem : MonoBehaviour
             else
                 FavouriteDefaultImage.SetActive(true);
         }
+        else
+        {
+            FavouriteDefaultImage.SetActive(false);
+        }
         Accommodation_Root = accommodationRoot;
         TitleName.text = accommodationRoot.Name;
         CheckImage(accommodationRoot.Picture[0]);
