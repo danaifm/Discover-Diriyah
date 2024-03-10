@@ -2233,7 +2233,8 @@ MonoBehaviour:
   m_text: Restaurants
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
-  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
+  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6285,7 +6286,10 @@ MonoBehaviour:
   PlaceTitle: {fileID: 506246780}
   CuisineType: {fileID: 44575434}
   ParentContent: {fileID: 516564594}
-  UI_Prefab: {fileID: 8037717574725971687, guid: 46ceaffeb417047d9a854272ce9f9a89, type: 3}
+  UI_Prefab: {fileID: 8037717574725971687, guid: 46ceaffeb417047d9a854272ce9f9a89,
+    type: 3}
+  FavouriteImage: {fileID: 0}
+  FavouriteDefaultImage: {fileID: 0}
 --- !u!1 &557796929
 GameObject:
   m_ObjectHideFlags: 0
@@ -6417,7 +6421,10 @@ MonoBehaviour:
   PlaceTitle: {fileID: 1651170163}
   Description: {fileID: 1322795917}
   ParentContent: {fileID: 1101982891}
-  UI_Prefab: {fileID: 8037717574725971687, guid: aa9fc152d489e46a9974c55198154bf1, type: 3}
+  UI_Prefab: {fileID: 8037717574725971687, guid: aa9fc152d489e46a9974c55198154bf1,
+    type: 3}
+  FavouriteImage: {fileID: 0}
+  FavouriteDefaultImage: {fileID: 0}
 --- !u!1 &567153716
 GameObject:
   m_ObjectHideFlags: 0
@@ -6545,7 +6552,8 @@ MonoBehaviour:
   AccommodationsData: []
   ParentTransform: {fileID: 2005123146}
   AccommodationPanel: {fileID: 2032732165}
-  UI_Prefab: {fileID: 8712406163601587674, guid: ba9238383973a497dba81cc65bd650e2, type: 3}
+  UI_Prefab: {fileID: 8712406163601587674, guid: ba9238383973a497dba81cc65bd650e2,
+    type: 3}
 --- !u!1 &595837707
 GameObject:
   m_ObjectHideFlags: 0
@@ -7554,7 +7562,8 @@ MonoBehaviour:
   AttractionsData: []
   ParentTransform: {fileID: 2076694161}
   AttractionsPanel: {fileID: 1144529774}
-  UI_Prefab: {fileID: 4592604499692390947, guid: af39099ccd25446ba9ebb47fe2c08407, type: 3}
+  UI_Prefab: {fileID: 4592604499692390947, guid: af39099ccd25446ba9ebb47fe2c08407,
+    type: 3}
   FirebaseStorageUrl: gs://diriyah-300d5.appspot.com
 --- !u!1 &720785160
 GameObject:
@@ -7677,6 +7686,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 720785160}
   m_CullTransparentMesh: 1
+--- !u!1 &738716858
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 738716859}
+  - component: {fileID: 738716860}
+  m_Layer: 0
+  m_Name: scenes manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &738716859
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738716858}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 612.58496, y: 1135.5771, z: -28.518898}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1637763926}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &738716860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738716858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 657c602a5fe57e34a9dc716485e627a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &783676413
 GameObject:
   m_ObjectHideFlags: 0
@@ -8616,7 +8669,10 @@ MonoBehaviour:
   Audience: {fileID: 790200166}
   Description: {fileID: 1714402037}
   ParentContent: {fileID: 1252727706}
-  UI_Prefab: {fileID: 8037717574725971687, guid: 7cce302bd13b643bbbb053878a2a291e, type: 3}
+  UI_Prefab: {fileID: 8037717574725971687, guid: 7cce302bd13b643bbbb053878a2a291e,
+    type: 3}
+  FavouriteImage: {fileID: 0}
+  FavouriteDefaultImage: {fileID: 0}
 --- !u!1 &885426653
 GameObject:
   m_ObjectHideFlags: 0
@@ -8773,7 +8829,8 @@ MonoBehaviour:
   EventsData: []
   ParentTransform: {fileID: 1581434178}
   EventsPanel: {fileID: 1107687230}
-  UI_Prefab: {fileID: 8712406163601587674, guid: 2bc33efc02634465d9cde0f9c7eabbdc, type: 3}
+  UI_Prefab: {fileID: 8712406163601587674, guid: 2bc33efc02634465d9cde0f9c7eabbdc,
+    type: 3}
 --- !u!1 &928457879
 GameObject:
   m_ObjectHideFlags: 0
@@ -14521,7 +14578,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1466619866}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 738716860}
+        m_TargetAssemblyTypeName: ScenesManager, Assembly-CSharp
+        m_MethodName: LoadAddAttractionsPage
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1517144827
 GameObject:
   m_ObjectHideFlags: 0
@@ -14646,7 +14715,8 @@ MonoBehaviour:
   RestaurantsData: []
   ParentTransform: {fileID: 1262693742}
   RestaurantsPanel: {fileID: 1094507959}
-  UI_Prefab: {fileID: 8712406163601587674, guid: cc0dcd7b48975425b8f05cc455d205a1, type: 3}
+  UI_Prefab: {fileID: 8712406163601587674, guid: cc0dcd7b48975425b8f05cc455d205a1,
+    type: 3}
 --- !u!1 &1546944067
 GameObject:
   m_ObjectHideFlags: 0
@@ -15874,6 +15944,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1637763926}
+  - component: {fileID: 1637763927}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -15904,9 +15975,22 @@ Transform:
   - {fileID: 880925222}
   - {fileID: 544400982}
   - {fileID: 560498791}
+  - {fileID: 738716859}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1637763927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637763925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 657c602a5fe57e34a9dc716485e627a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1651170161
 GameObject:
   m_ObjectHideFlags: 0
@@ -16288,7 +16372,8 @@ MonoBehaviour:
   m_text: Accommodations
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
-  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
+  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -17960,7 +18045,8 @@ MonoBehaviour:
   m_text: Attractions
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
-  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
+  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -19374,6 +19460,7 @@ MonoBehaviour:
   - {fileID: 41807778}
   - {fileID: 1292262807}
   - {fileID: 1336895950}
+  IsAdminloggedin: 0
 --- !u!1 &1970426177
 GameObject:
   m_ObjectHideFlags: 0
@@ -19511,7 +19598,8 @@ MonoBehaviour:
   m_text: Events
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
-  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477, type: 2}
+  m_sharedMaterial: {fileID: 6025815204364381657, guid: 6fe01b9558f57e04d89bebeb7b0a0477,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -19823,7 +19911,10 @@ MonoBehaviour:
   Routine_2_Timing: {fileID: 964180451}
   Description: {fileID: 1280951695}
   ParentContent: {fileID: 1085150830}
-  UI_Prefab: {fileID: 8037717574725971687, guid: b61962aaa865a481e8f5b551d94aeb84, type: 3}
+  UI_Prefab: {fileID: 8037717574725971687, guid: b61962aaa865a481e8f5b551d94aeb84,
+    type: 3}
+  FavouriteImage: {fileID: 0}
+  FavouriteDefaultImage: {fileID: 0}
 --- !u!1 &2005123145
 GameObject:
   m_ObjectHideFlags: 0

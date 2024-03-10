@@ -57,6 +57,9 @@ public class AddAttraction : MonoBehaviour
     string endTime;
     string workingHours; //fb
     string attractionId;
+
+    private AttractionsRoot attractions_root; //object to upload in nuhas array
+
     // Start is called before the first frame update
     void Start()
     {
@@ -351,6 +354,18 @@ public class AddAttraction : MonoBehaviour
             if (!isEdit)
             {
                 docRef = await db.Collection("Attraction").AddAsync(newDocument);
+                string newDocumentId = docRef.Id;
+
+                //upload to nuhas array 
+                attractions_root.Name = name.text;
+                attractions_root.Description = description.text;
+                attractions_root.Location = location.text;
+                attractions_root.Picture = uploadedImageNames;
+                attractions_root.ID = newDocumentId;
+                //attractions_root.userFavorite = false; 
+                AttractionsManager.Instance.AttractionsData.Add(attractions_root);
+                //AttractionsItem.Init(attractions_root);
+                //DescriptionImagesManager.Instance.ShowDescription(attractions_root, AttractionsItem.Instance);
             }
             else
             {

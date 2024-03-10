@@ -19,7 +19,8 @@ public class ScenesManager : MonoBehaviour
         userDiscoverpage,
         Map,
         ScanQR,
-        ProfilePage
+        ProfilePage,
+        AddAttraction
     }
 
     public void LoadScene(Scene scene)
@@ -54,5 +55,10 @@ public class ScenesManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-   
+    public void LoadAddAttractionsPage()
+    {
+        SceneManager.LoadScene(Scene.AddAttraction.ToString());
+    }
+
+
 }

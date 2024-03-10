@@ -8,6 +8,7 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using System.Threading.Tasks;
 
+
 public class AttractionsManager : MonoBehaviour
 {
     public static AttractionsManager Instance;
@@ -97,4 +98,5 @@ public class AttractionsManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
+
 }
