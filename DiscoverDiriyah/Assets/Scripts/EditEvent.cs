@@ -59,6 +59,11 @@ public class EditEvent : MonoBehaviour
     DateTime finalStartDate; //fb
     DateTime finalEndDate; //fb
     string price;//fb 
+
+    public TMP_Text startDateLabel;
+    public TMP_Text endDateLabel;
+
+
     public UnityEvent onCompleteAddEvent;
 
     FirebaseFirestore db;
@@ -101,8 +106,21 @@ public class EditEvent : MonoBehaviour
         Audience.characterLimit = 25;
     }
 
+/// <summary>
 
-
+/// </summary>
+/// <param name="calendar"></param>/
+// showing Date Section //
+    private void DisplayDateData(DateTime startDate, DateTime endDate)
+    {
+        var startDselection = startDatePicker.Content.Selection;
+        var endDselection = startDatePicker.Content.Selection;
+        startDselection.SelectOne(startDate);
+        endDselection.SelectOne(endDate);
+        startDateLabel.text = startDate.ToString("MM/dd/yyyy");
+        endDateLabel.text = endDate.ToString("MM/dd/yyyy");
+    }
+////////////////////////////
     public void OnDisplayChanged(DatePickerSettings calendar)
     {
         DateTime currentDate = DateTime.Now;
@@ -390,14 +408,14 @@ public class EditEvent : MonoBehaviour
         }
 
         //PICTURE VALIDATION
-        if (pictures.Count == 0)
+       /* if (pictures.Count == 0)
         {
             pictureError.text = "This field cannot be empty";
             pictureError.color = Color.red;
             pictureError.fontSize = 3;
             isValid = false;
 
-        }
+        }*/
 
 
         //if everything is valid -> upload to firebase 
@@ -522,7 +540,13 @@ public class EditEvent : MonoBehaviour
             DocumentSnapshot snapshot = task.Result;
             if (snapshot.Exists)
             {
+
                 Debug.Log($"Document data for {snapshot.Id} document:");
+                Timestamp startDateTimestamp = snapshot.GetValue<Timestamp>("StartDate");
+                Timestamp endDateTimestamp = snapshot.GetValue<Timestamp>("EndDate");
+                DateTime startDate = startDateTimestamp.ToDateTime();
+                DateTime endDate = endDateTimestamp.ToDateTime();
+                DisplayDateData(startDate,endDate);
 
                 // Map data from the snapshot to the Restaurant object
                 Name.text = snapshot.GetValue<string>("Name");
