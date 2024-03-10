@@ -624,7 +624,7 @@ MonoBehaviour:
   Location: {fileID: 1580927823}
   locationError: {fileID: 1580927822}
   pictureError: {fileID: 1559594255}
-  defaultAccommodationID: uJeWIHkqCfIToT3KlMrs
+  defaultAccommodationID: CLTzgH2IyGnH0LP2dKSI
   gallerySelection: {fileID: 1559594254}
   alertDialog: {fileID: 1649073242}
   onCompleteAddEvent:
@@ -1574,7 +1574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3409eb9f0fbe9114aae8d3aa908d09b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  errorText: {fileID: 0}
+  errorText: {fileID: 1559594255}
   imageDisplays:
   - {fileID: 1275752418}
   - {fileID: 1275752417}
@@ -2451,6 +2451,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7398230746637097820, guid: a9c62b8f667a2264c9f5fb99b391028c,
+        type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7917609156675984753, guid: a9c62b8f667a2264c9f5fb99b391028c,
         type: 3}

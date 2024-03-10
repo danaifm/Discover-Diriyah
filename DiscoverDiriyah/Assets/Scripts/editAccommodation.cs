@@ -30,7 +30,7 @@ public class EditAccommodation : MonoBehaviour
     public TMP_InputField Location;
     public TMP_Text locationError;
     public TMP_Text pictureError;
-    public string defaultAccommodationID = "uJeWIHkqCfIToT3KlMrs";
+    public string defaultAccommodationID;
     string name; //fb
     string description;//fb 
     string rating;//fb
@@ -62,8 +62,13 @@ public class EditAccommodation : MonoBehaviour
 
         pictures = gallerySelection.GetSelectedImagePaths();
 
+        Name.characterLimit = 25;
+        Description.characterLimit = 250;
+        Location.characterLimit = 35;
+        StarRating.characterLimit = 4;
+
         accommodationId = PlayerPrefs.GetString("accommodationID", defaultAccommodationID); //-- load restId if not exist. will use default data.
-        if (accommodationId == null)
+        if (accommodationId == null || accommodationId == "")
         {
             Debug.LogError("not found accommodation id");
         }
@@ -81,17 +86,20 @@ private void LoadData()
             if (snapshot.Exists)
             {
                 Debug.Log($"Document data for {snapshot.Id} document:");
-                Debug.Log($"Document data for {snapshot.Reference} document:");
 
                 Accommodation accommodation = new Accommodation();
 
                 accommodation.Name = snapshot.GetValue<string>("Name");
+                Debug.Log("1");
                 accommodation.Location = snapshot.GetValue<string>("Location");
+                Debug.Log("2");
                 accommodation.Description = snapshot.GetValue<string>("Description");
+                Debug.Log("3");
                 accommodation.StarRating = snapshot.GetValue<double>("StarRating");
+                Debug.Log("4");
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 accommodation.Pictures = pictures.ToList<string>();
-
+                Debug.Log("5");
                 DisplayAccommodationData(accommodation);
                 alertDialog.HideLoading();
             }
@@ -131,7 +139,7 @@ private void LoadData()
         {
             nameError.text = "This field cannot be empty";
             nameError.color = Color.red;
-            nameError.fontSize = 30;
+            nameError.fontSize = 3;
             isValid = false;
 
         }
@@ -146,7 +154,7 @@ private void LoadData()
         {
             descriptionError.text = "This field cannot be empty";
             descriptionError.color = Color.red;
-            descriptionError.fontSize = 30;
+            descriptionError.fontSize = 3;
             isValid = false;
 
         }
@@ -163,7 +171,7 @@ private void LoadData()
         {
             starRatingError.text = "Invalid Star Rating";
             starRatingError.color = Color.red;
-            starRatingError.fontSize = 30;
+            starRatingError.fontSize = 3;
             isValid = false;
 
         }
@@ -172,7 +180,7 @@ private void LoadData()
         {
             starRatingError.text = "This field cannot be empty";
             starRatingError.color = Color.red;
-            starRatingError.fontSize = 30;
+            starRatingError.fontSize = 3;
             isValid = false;
 
         }
@@ -190,7 +198,7 @@ private void LoadData()
         {
             locationError.text = "Invalid location URL";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -198,7 +206,7 @@ private void LoadData()
         {
             locationError.text = "This field cannot be empty";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -210,14 +218,14 @@ private void LoadData()
         pictures = gallerySelection.GetSelectedImagePaths();
 
         //PICTURE VALIDATION
-        if(pictures.Count == 0)
+        /*if(pictures.Count == 0)
         {
             pictureError.text = "This field cannot be empty";
             pictureError.color = Color.red;
-            pictureError.fontSize = 30;
+            pictureError.fontSize = 3;
             isValid = false;
 
-        }
+        }*/
 
     }//end of validations 
 

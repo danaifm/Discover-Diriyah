@@ -15,7 +15,7 @@ using System.IO;
 using Firebase.Extensions;
 using System.Linq;
 
-public class AddEvent : MonoBehaviour
+public class EditEvent : MonoBehaviour
 {
     public bool isEdit = false;
     public string defualtId = null;
