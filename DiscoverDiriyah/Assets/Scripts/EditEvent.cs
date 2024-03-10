@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.IO;
 using Firebase.Extensions;
 using System.Linq;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class EditEvent : MonoBehaviour
 {
@@ -57,6 +59,7 @@ public class EditEvent : MonoBehaviour
     DateTime finalStartDate; //fb
     DateTime finalEndDate; //fb
     string price;//fb 
+    public UnityEvent onCompleteAddEvent;
 
     FirebaseFirestore db;
     FirebaseStorage storage;

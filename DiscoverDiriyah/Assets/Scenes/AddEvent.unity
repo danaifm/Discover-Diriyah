@@ -13715,6 +13715,21 @@ MonoBehaviour:
   Price: {fileID: 174830959}
   priceError: {fileID: 668108013}
   pictureError: {fileID: 1538951346}
+  onCompleteAddEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1252904580}
+        m_TargetAssemblyTypeName: AlertDialog, Assembly-CSharp
+        m_MethodName: ShowAlertDialog
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Event details edited successfully.
+          m_BoolArgument: 0
+        m_CallState: 2
   gallerySelection: {fileID: 1295480719}
 --- !u!4 &1335336237
 Transform:
@@ -17436,7 +17451,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0, y: 43.78581}
+  m_AnchoredPosition: {x: 0, y: 43.786114}
   m_SizeDelta: {x: 22.4673, y: 3527.2695}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -18625,8 +18640,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 446633490}
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
-  m_Value: 1.0000008
-  m_Size: 0.6770106
+  m_Value: 1.0000005
+  m_Size: 0.67701036
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
