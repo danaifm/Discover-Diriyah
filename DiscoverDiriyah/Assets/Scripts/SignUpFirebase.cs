@@ -27,14 +27,10 @@ public class SignUpFirebase : MonoBehaviour
     public TMP_InputField emailField;
     public TMP_InputField passwordField;
     public TMP_Text nameError, emailError, passwordError;
-    public TMP_Text nameCounter, emailCounter, passwordCounter;
+    public TMP_Text nameCounter;
     private bool nameValid, emailValid, passwordValid;
-    private CollectionReference db, fs;
+    private CollectionReference db;
     private FirebaseApp app;
-
-    private bool isPasswordVisibleRegister = false;
-    public Image passwordStateIconRegister;
-    public Sprite showRegisterPass, hideRegisterPass;
 
     //------------ Login Part ---------------------
     [Space]
@@ -58,14 +54,16 @@ public class SignUpFirebase : MonoBehaviour
     {
         Debug.Log("STARTING APP");
         initializeFirebase();
-        nameField.characterLimit = emailField.characterLimit = passwordField.characterLimit = emailFieldLogin.characterLimit = passwordFieldLogin.characterLimit = 50;
-        fs = FirebaseFirestore.DefaultInstance.Collection("Account");
-        // no need to open/ close connection
+        nameField.characterLimit = 15;
+        emailFieldLogin.characterLimit = 50;
+        passwordFieldLogin.characterLimit = 50;
+        db = FirebaseFirestore.DefaultInstance.Collection("users");
+       // no need to open/ close connection
     }
-    //Aliyah added the following 12 lines
+
     private void Update()
     {
-        //ValidateLoginLength();
+        ValidateLoginLength();
     }
     public void Logout()
     {
@@ -74,9 +72,8 @@ public class SignUpFirebase : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
-    } //end of aliyah
-    void initializeFirebase()
-    {
+    }
+    void initializeFirebase() {
         app = FirebaseApp.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
@@ -85,10 +82,10 @@ public class SignUpFirebase : MonoBehaviour
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
-        if (auth.CurrentUser != user)
+        if(auth.CurrentUser != user)
         {
             bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
-            if (!signedIn && user != null)
+            if(!signedIn && user != null)
             {
                 Debug.Log("Signed out: " + user.UserId);
             }
@@ -128,12 +125,17 @@ public class SignUpFirebase : MonoBehaviour
     public void validateName()
     {
         Regex r = new Regex("^[a-zA-Z0-9\\s]*$");
-        nameCounter.text = nameField.text.Trim().Length + "/50";
+        nameCounter.text = nameField.text.Trim().Length + "/15";
         if (nameField.text.Trim() == "")
         {
-            nameError.text = "This field cannot be empty.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
+            nameError.text = "Name cannot be empty.";
+            nameValid = false;
+            nameField.image.color = Color.red;
+            return;
+        }
+        else if (nameField.text.Trim().Length > 15)
+        {
+            nameError.text = "Name cannot be longer than 15 characters.";
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -141,8 +143,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (!r.IsMatch(nameField.text.Trim()))
         {
             nameError.text = "Name must only contain alphabet, numbers, and spaces.";
-            nameError.color = Color.red;
-            nameError.fontSize = 3;
             nameValid = false;
             nameField.image.color = Color.red;
             return;
@@ -154,17 +154,13 @@ public class SignUpFirebase : MonoBehaviour
 
     public void validateEmail()
     {
-        emailCounter.text = emailField.text.Trim().Length + "/50";
-
         string strRegex = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                 @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                 @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
         Regex re = new(strRegex);
         if (emailField.text.Trim() == "")
         {
-            emailError.text = "This field cannot be empty.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
+            emailError.text = "Email cannot be empty.";
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -172,12 +168,17 @@ public class SignUpFirebase : MonoBehaviour
         else if (!re.IsMatch(emailField.text.Trim()))
         {
             emailError.text = "Please enter a valid email.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
         }
+        //else if (!(uniqueEmail(emailFieldLogin.text.Trim().ToLower()) == 0))
+        //{
+        //    emailError.text = "Email is already in use.";
+        //    emailValid = false;
+        //    emailFieldLogin.image.color = Color.red;
+        //    return;
+        //}
         emailError.text = "";
         emailValid = true;
         emailField.image.color = Color.gray;
@@ -186,13 +187,11 @@ public class SignUpFirebase : MonoBehaviour
 
     public async void uniqueEmailAsync(string email)
     {
-        Query query = fs.WhereEqualTo("Email", email);
+        Query query = db.WhereEqualTo("email", email);
         var qSnapshot = await query.GetSnapshotAsync();
         if (qSnapshot.Count != 0)
         {
             emailError.text = "Email is already in use.";
-            emailError.color = Color.red;
-            emailError.fontSize = 3;
             emailValid = false;
             emailField.image.color = Color.red;
             return;
@@ -203,16 +202,12 @@ public class SignUpFirebase : MonoBehaviour
 
     public void validatePassword()
     {
-        passwordCounter.text = passwordField.text.Length + "/50";
-
         var hasNumber = new Regex(@"[0-9]+");
         var hasUpperChar = new Regex(@"[A-Z]+");
         //var hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        if (passwordField.text == "")
+        if (passwordField.text.Trim() == "")
         {
-            passwordError.text = "This field cannot be empty.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
+            passwordError.text = "Password cannot be empty.";
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -220,8 +215,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (passwordField.text.Length < 8)
         {
             passwordError.text = "Password must be at least 8 characters.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -229,8 +222,6 @@ public class SignUpFirebase : MonoBehaviour
         else if (!hasNumber.IsMatch(passwordField.text) || !hasUpperChar.IsMatch(passwordField.text))
         {
             passwordError.text = "Password must contain at least one digit and one uppercase letter.";
-            passwordError.color = Color.red;
-            passwordError.fontSize = 3;
             passwordValid = false;
             passwordField.image.color = Color.red;
             return;
@@ -253,20 +244,20 @@ public class SignUpFirebase : MonoBehaviour
             Debug.LogError("Registration FAILED due to invalid inputs 1");
         }
         else
-        {
-            Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
-            yield return new WaitUntil(() => registerTask.IsCompleted);
-            if (registerTask.Exception != null)
-            {
-                Debug.LogError("exception while registering user: " + registerTask.Exception);
-                FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
-                AuthError authError = (AuthError)firebaseException.ErrorCode;
-                Debug.Log("Registration failed due to exception: " + authError);
+        { 
+                Task<AuthResult> registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
+                yield return new WaitUntil(() => registerTask.IsCompleted);
+                if (registerTask.Exception != null)
+                {
+                    Debug.LogError("exception while registering user: " + registerTask.Exception);
+                    FirebaseException firebaseException = registerTask.Exception.GetBaseException() as FirebaseException;
+                    AuthError authError = (AuthError)firebaseException.ErrorCode;
+                    Debug.Log("Registration failed due to exception: " + authError);
 
-            }
-            else
-            {
-                user = registerTask.Result.User;
+                }
+                else
+                {
+                    user = registerTask.Result.User;
                 if (user != null)
                 {
                     UserProfile userProfile = new UserProfile { DisplayName = name };
@@ -282,65 +273,29 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Dictionary<string, string> userinfo = new Dictionary<string, string>
                         {
-                            {"Name", name},
-                            {"Email", email},
-                            {"Admin", "0"}
+                            {"name", name},
+                            {"email", email},
+                            {"admin", "0"}
                         };
-
-                        Task firestoreTask = fs.Document(user.UserId).SetAsync(userinfo);
-                        yield return new WaitUntil(() => firestoreTask.IsCompleted);
-                        if (firestoreTask.Exception == null)
+                        
+                        db.Document(user.UserId).SetAsync(userinfo).ContinueWith(task =>
                         {
-                            Debug.Log("added user " + user.UserId + " to firestore");
-                            SceneManager.LoadScene("userDiscoverpage");
+                            if (task.IsCompletedSuccessfully)
+                            {
+                                Debug.Log("added user " + user.UserId + " to firestore");
+                            }
+                            else
+                            {
+                                Debug.LogError(message: $"Failed to insert into firestore with exception: {task.Exception}");
+                            }
                         }
-                        else
-                        {
-                            Debug.LogError(message: $"Failed to insert into firestore with exception: {firestoreTask.Exception}");
-                        }
-                        Debug.Log("registration success!");                    }
+                        );
+                        Debug.Log("registration success!");
+                    }
 
                 }
             }
         }
-    }
-
-    public void ChangeScene()
-    {
-        StartCoroutine(LoadScene());
-    }
-
-    public IEnumerator LoadScene()
-    {
-        Debug.Log("IENUMERATOR changing scene to profile");
-        var loadscene = SceneManager.LoadSceneAsync("EditProfile");
-        while (!loadscene.isDone)
-        {
-            Debug.Log("loading the scene...");
-            yield return null;
-        }
-        Debug.Log("after loading scene");
-
-    }
-
-    public void ShowPasswordToggleRegister()
-    {
-        if (isPasswordVisibleRegister)
-        {
-            // If password is currently visible, hide it
-            passwordField.contentType = TMP_InputField.ContentType.Password;
-            passwordStateIconRegister.sprite = showRegisterPass;
-        }
-        else
-        {
-            // If password is currently hidden, show it
-            passwordField.contentType = TMP_InputField.ContentType.Standard;
-            passwordStateIconRegister.sprite = hideRegisterPass;
-        }
-
-        // Toggle the visibility flag
-        isPasswordVisibleRegister = !isPasswordVisibleRegister;
-        passwordField.ForceLabelUpdate();
     }
 
 
@@ -358,30 +313,14 @@ public class SignUpFirebase : MonoBehaviour
         if (string.IsNullOrEmpty(email) || email.Trim() == "")
         {
             Debug.LogError("email is empty");
-            emailEmptyLogin.text = "This field cannot be empty.";
-            emailEmptyLogin.color = Color.red;
-            emailEmptyLogin.fontSize = 3;
-            emailFieldLogin.image.color = Color.red;
+            emailEmptyLogin.text = "Field cannot be empty";
             x = 1;
-        }
-        else
-        {
-            emailEmptyLogin.text = "";
-            emailFieldLogin.image.color = Color.gray;
         }
         if (string.IsNullOrEmpty(password))
         {
             Debug.LogError("password is empty");
-            passwordEmptyLogin.text = "This field cannot be empty.";
-            passwordEmptyLogin.color = Color.red;
-            passwordEmptyLogin.fontSize = 3;
-            passwordFieldLogin.image.color = Color.red;
+            passwordEmptyLogin.text = "Field cannot be empty";
             x = 1;
-        }
-        else
-        {
-            passwordEmptyLogin.text = "";
-            passwordFieldLogin.image.color = Color.gray;
         }
 
         if (x < 1)
@@ -397,11 +336,8 @@ public class SignUpFirebase : MonoBehaviour
             }
             if (signInTask.IsFaulted)
             {
-                passwordEmptyLogin.text = "Incorrect email or password.";
-                passwordEmptyLogin.color = Color.red;
-                passwordEmptyLogin.fontSize = 3;
+                passwordEmptyLogin.text = "Email - Password is wrong";
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error");
-                passwordFieldLogin.image.color = emailFieldLogin.image.color = Color.red;
                 yield break;
             }
 
@@ -415,7 +351,7 @@ public class SignUpFirebase : MonoBehaviour
     private void ValidateLoginLength()
     {
         //print("validate login length");
-       // emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
+        emailLoginLength.text = emailFieldLogin.text.Length + "/" + emailFieldLogin.characterLimit;
         passwordLoginLength.text = passwordFieldLogin.text.Length + "/" + passwordFieldLogin.characterLimit;
     }
 
@@ -424,7 +360,7 @@ public class SignUpFirebase : MonoBehaviour
         try
         {
             FirebaseFirestore db = FirebaseFirestore.DefaultInstance;
-            DocumentReference docRef = db.Collection("Account").Document(userId);
+            DocumentReference docRef = db.Collection("users").Document(userId);
             docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
             {
                 DocumentSnapshot snapshot = task.Result;
@@ -436,10 +372,10 @@ public class SignUpFirebase : MonoBehaviour
                     {
                         Debug.Log(String.Format("{0}: {1}", pair.Key, pair.Value));
                     }
-                    string admin = snapshot.GetValue<string>("Admin");
+                    string admin = snapshot.GetValue<string>("admin");
                     if (admin == "0")
                     {
-                        SceneManager.LoadScene("userDiscoverpage");
+                        SceneManager.LoadScene("user_home_page");
                     }
                     else
                     {
