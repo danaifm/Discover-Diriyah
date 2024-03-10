@@ -91,7 +91,11 @@ public class EditEvent : MonoBehaviour
             docId = PlayerPrefs.GetString("event", defualtId);
             LoadData();
         }
-        
+        Name.characterLimit = 25;
+        Description.characterLimit = 250;
+        Location.characterLimit = 35;
+        Price.characterLimit = 10;
+        Audience.characterLimit = 25;
     }
 
 
@@ -136,7 +140,7 @@ public class EditEvent : MonoBehaviour
         {
             nameError.text = "This field cannot be empty";
             nameError.color = Color.red;
-            nameError.fontSize = 30;
+            nameError.fontSize = 3;
             isValid = false;
             
         }
@@ -152,7 +156,7 @@ public class EditEvent : MonoBehaviour
         {
             descriptionError.text = "This field cannot be empty";
             descriptionError.color = Color.red;
-            descriptionError.fontSize = 30;
+            descriptionError.fontSize = 3;
             isValid = false;
 
         }
@@ -168,7 +172,7 @@ public class EditEvent : MonoBehaviour
         {
             audienceError.text = "This field cannot be empty";
             audienceError.color = Color.red;
-            audienceError.fontSize = 30;
+            audienceError.fontSize = 3;
             isValid = false;
 
         }
@@ -185,7 +189,7 @@ public class EditEvent : MonoBehaviour
         {
             locationError.text = "Invalid location URL";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -193,7 +197,7 @@ public class EditEvent : MonoBehaviour
         {
             locationError.text = "This field cannot be empty";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -207,7 +211,7 @@ public class EditEvent : MonoBehaviour
         {
             startTimeError.text = "Start hour and minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -217,7 +221,7 @@ public class EditEvent : MonoBehaviour
         {
             startTimeError.text = "Start hour cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -227,7 +231,7 @@ public class EditEvent : MonoBehaviour
         {
             startTimeError.text = "Start minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -247,7 +251,7 @@ public class EditEvent : MonoBehaviour
         {
             endTimeError.text = "End hour and minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -256,7 +260,7 @@ public class EditEvent : MonoBehaviour
         {
             endTimeError.text = "End hour cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -266,7 +270,7 @@ public class EditEvent : MonoBehaviour
         {
             endTimeError.text = "End minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -306,7 +310,7 @@ public class EditEvent : MonoBehaviour
         {
             startDateError.text = "Start date cannot be empty";
             startDateError.color = Color.red;
-            startDateError.fontSize = 30;
+            startDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -332,7 +336,7 @@ public class EditEvent : MonoBehaviour
         {
             endDateError.text = "End date cannot be empty";
             endDateError.color = Color.red;
-            endDateError.fontSize = 30;
+            endDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -343,7 +347,7 @@ public class EditEvent : MonoBehaviour
             {
                 endDateError.text = "End date cannot be before start date.";
                 endDateError.color = Color.red;
-                endDateError.fontSize = 30;
+                endDateError.fontSize = 3;
                 isValid = false;
             }
             else
@@ -364,7 +368,7 @@ public class EditEvent : MonoBehaviour
         {
             priceError.text = "Invalid price";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -372,7 +376,7 @@ public class EditEvent : MonoBehaviour
         {
             priceError.text = "This field cannot be empty";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -387,7 +391,7 @@ public class EditEvent : MonoBehaviour
         {
             pictureError.text = "This field cannot be empty";
             pictureError.color = Color.red;
-            pictureError.fontSize = 30;
+            pictureError.fontSize = 3;
             isValid = false;
 
         }
@@ -521,6 +525,16 @@ public class EditEvent : MonoBehaviour
                 Name.text = snapshot.GetValue<string>("Name");
                 Description.text = snapshot.GetValue<string>("Description");
                 Location.text = snapshot.GetValue<string>("Location");
+                Audience.text = snapshot.GetValue<string>("Audience");
+                
+                string priceString = snapshot.GetValue<string>("Price");
+                double price;
+                if (priceString.EndsWith("SAR")){
+                 priceString = priceString.Substring(0, priceString.Length - 3); // Remove "SAR" suffix
+                  }
+             double.TryParse(priceString, out price);
+             Price.text = price.ToString();
+
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
                 startTime = times[0];
