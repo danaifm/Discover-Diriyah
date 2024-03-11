@@ -78,6 +78,8 @@ public class EditEvent : MonoBehaviour
     public gallerySelection gallerySelection; 
     List<string> pictures;
 
+    bool isValid;
+
     private string docId;
 
     void Start()
@@ -119,9 +121,13 @@ public class EditEvent : MonoBehaviour
     private void DisplayDateData(DateTime startDate, DateTime endDate)
     {
         var startDselection = startDatePicker.Content.Selection;
-        var endDselection = startDatePicker.Content.Selection;
+        var endDselection = endDatePicker.Content.Selection;
         startDselection.SelectOne(startDate);
         endDselection.SelectOne(endDate);
+        Debug.Log(startDate);
+        startDate = startDate.AddDays(1);
+        Debug.Log(startDate);
+        endDate = endDate.AddDays(1);
         startDateLabel.text = startDate.ToString("MM/dd/yyyy");
         endDateLabel.text = endDate.ToString("MM/dd/yyyy");
     }
@@ -156,7 +162,7 @@ public class EditEvent : MonoBehaviour
     }
     public void validate_input()
     {
-        bool isValid = true;
+        isValid = true;
 
         //NAME FIELD VALIDATION
         name = Name.text.Trim();
@@ -411,15 +417,19 @@ public class EditEvent : MonoBehaviour
             price += " SAR";
         }
 
-        //PICTURE VALIDATION
-       /* if (pictures.Count == 0)
+        if (pictures.Count <= 0)
         {
-            pictureError.text = "This field cannot be empty";
-            pictureError.color = Color.red;
-            pictureError.fontSize = 3;
             isValid = false;
+            Debug.LogError("Images is empty");
+            pictureError.text = "A picture must be uploaded.";
+            pictureError.color = Color.red; 
+            pictureError.fontSize = 3;
+        }
+        else
+        {
+            pictureError.text = "";
+        }
 
-        }*/
 
 
         //if everything is valid -> upload to firebase 
@@ -484,6 +494,8 @@ public class EditEvent : MonoBehaviour
 
     public async Task uploadEvent()
     {
+        if (!isValid) return;
+        alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
         List<string> uploadedImageNames = await UploadImages(pictures,name); 
 
@@ -502,7 +514,6 @@ public class EditEvent : MonoBehaviour
     };
         try
         {
-            alertDialog.ShowLoading();
             DocumentReference docRef;
             if (isEdit)
             {
@@ -525,6 +536,8 @@ public class EditEvent : MonoBehaviour
                 Debug.Log("No images were uploaded.");
             }
             alertDialog.HideLoading();
+            string message = isEdit ? "Event details edited successfully." : "Event details added successfully.";
+            alertDialog.ShowAlertDialog(message);
         }
         catch (Exception ex)
         {
