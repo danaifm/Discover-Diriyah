@@ -3760,7 +3760,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1335336236}
         m_TargetAssemblyTypeName: EditEvent, Assembly-CSharp
-        m_MethodName: SubmitClickButton
+        m_MethodName: SubmitButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17504,7 +17504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0, y: 43.78664}
+  m_AnchoredPosition: {x: 0, y: 43.785545}
   m_SizeDelta: {x: 22.4673, y: 3527.2695}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -18693,8 +18693,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 446633490}
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.67698383
+  m_Value: 1.0000008
+  m_Size: 0.6770106
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

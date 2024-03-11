@@ -636,10 +636,13 @@ MonoBehaviour:
   titleForEdit: Edit Event
   Name: {fileID: 765286502}
   nameError: {fileID: 765286501}
+  nameCounter: {fileID: 0}
   Description: {fileID: 487139913}
   descriptionError: {fileID: 0}
+  descriptionCounter: {fileID: 0}
   Audience: {fileID: 0}
   audienceError: {fileID: 0}
+  audienceCounter: {fileID: 0}
   StartHour: {fileID: 0}
   StartMinute: {fileID: 0}
   StartAmPm: {fileID: 0}
@@ -650,13 +653,20 @@ MonoBehaviour:
   endTimeError: {fileID: 0}
   Location: {fileID: 0}
   locationError: {fileID: 0}
+  locationCounter: {fileID: 0}
   startDateError: {fileID: 0}
   endDateError: {fileID: 0}
   startDatePicker: {fileID: 0}
   endDatePicker: {fileID: 0}
   Price: {fileID: 0}
   priceError: {fileID: 0}
+  priceCounter: {fileID: 0}
   pictureError: {fileID: 0}
+  startDateLabel: {fileID: 0}
+  endDateLabel: {fileID: 0}
+  onCompleteAddEvent:
+    m_PersistentCalls:
+      m_Calls: []
   gallerySelection: {fileID: 0}
 --- !u!4 &25373914
 Transform:
@@ -13306,8 +13316,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1870741633}
   m_HandleRect: {fileID: 1870741631}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.6043405
+  m_Value: 1.0000007
+  m_Size: 0.60434186
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -13655,7 +13665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0.0000085831, y: 36.000908}
+  m_AnchoredPosition: {x: 0.0000085831, y: 35.999958}
   m_SizeDelta: {x: 22.4673, y: 3248.8052}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &950217426
@@ -27842,8 +27852,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AddAttraction, Assembly-CSharp
+      - m_Target: {fileID: 25373913}
+        m_TargetAssemblyTypeName: EditEvent, Assembly-CSharp
         m_MethodName: SubmitButtonClick
         m_Mode: 1
         m_Arguments:

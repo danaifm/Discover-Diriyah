@@ -149,11 +149,10 @@ public class EditEvent : MonoBehaviour
         gallerySelection.RemoveImage(index, storageFolderName, !isEdit);
     }
 
-    public void SubmitClickButton()
+    public void SubmitButtonClick()
     {
         validate_input();
         uploadEvent();
-
     }
     public void validate_input()
     {
