@@ -417,20 +417,7 @@ public class EditEvent : MonoBehaviour
             price += " SAR";
         }
 
-        if (pictures.Count <= 0)
-        {
-            isValid = false;
-            Debug.LogError("Images is empty");
-            pictureError.text = "A picture must be uploaded.";
-            pictureError.color = Color.red; 
-            pictureError.fontSize = 3;
-        }
-        else
-        {
-            pictureError.text = "";
-        }
-
-
+        pictures = gallerySelection.GetSelectedImagePaths();
 
         //if everything is valid -> upload to firebase 
         if (isValid)
@@ -485,6 +472,11 @@ public class EditEvent : MonoBehaviour
                     imageCounter++; // Increment for the next image
                 }
             }
+            else
+            {
+                imageCounter++;
+                uploadedImageNames.Add(path);
+            }
         }
 
         return uploadedImageNames;
@@ -494,6 +486,18 @@ public class EditEvent : MonoBehaviour
 
     public async Task uploadEvent()
     {
+        if (pictures.Count <= 0)
+        {
+            isValid = false;
+            Debug.LogError("Images is empty");
+            pictureError.text = "A picture must be uploaded.";
+            pictureError.color = Color.red; 
+            pictureError.fontSize = 3;
+        }
+        else
+        {
+            pictureError.text = "";
+        }
         if (!isValid) return;
         alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths

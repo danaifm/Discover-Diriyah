@@ -13710,7 +13710,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEdit: 1
-  defualtId: s8TUZfnddCgyqrSakfmo
+  defualtId: pYR4nfgaxtPGmp1KW9th
   firestoreCollectionName: Event
   storageFolderName: events
   alertDialog: {fileID: 1252904580}
@@ -17504,7 +17504,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0, y: 43.786304}
+  m_AnchoredPosition: {x: 0, y: 43.786213}
   m_SizeDelta: {x: 22.4673, y: 3527.2695}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -18694,7 +18694,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
   m_Value: 1.0000005
-  m_Size: 0.6770097
+  m_Size: 0.66455525
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -74,7 +74,7 @@ public class AddAccommodationDetails : MonoBehaviour
 
 public void validate_input()
     {
-        bool isValid = true;
+        isValid = true;
 
         //NAME FIELD VALIDATION
         name = Name.text.Trim();
@@ -264,7 +264,7 @@ public void SubmitButtonClick()
             // Assuming 'db' is already initialized Firestore instance and ready to use
             var docRef = await db.Collection("Accommodation").AddAsync(newAccommodation);
             Debug.Log($"Accommodation added successfully with ID: {docRef.Id}");
-
+            
             if (uploadedImageNames != null && uploadedImageNames.Count > 0)
             {
                 Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
@@ -276,6 +276,8 @@ public void SubmitButtonClick()
                 Debug.Log("No images were uploaded.");
                 alertDialog.HideLoading();
             }
+            
+            alertDialog.ShowAlertDialog("Accommodation details added successfully.");
         }
         catch (Exception ex)
         {
