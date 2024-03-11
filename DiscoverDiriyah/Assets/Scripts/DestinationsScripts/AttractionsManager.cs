@@ -7,7 +7,8 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Auth;
 using System.Threading.Tasks;
-
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class AttractionsManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class AttractionsManager : MonoBehaviour
 
     private void Awake()
     {
+        
+
         if (Instance != null)
         {
             Destroy(gameObject);
@@ -37,7 +40,8 @@ public class AttractionsManager : MonoBehaviour
         {
             Instance = this;
         }
-    }
+
+}
 
     void Start()
     {
@@ -96,6 +100,25 @@ public class AttractionsManager : MonoBehaviour
         {
             // Destroy the child GameObject
             Destroy(child.gameObject);
+        }
+    }
+
+    public void InitializeAndShowSpecificAttraction(AttractionsRoot attractionsRoot)
+    {
+        if (attractionsRoot != null)
+        {
+            GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+            AttractionsItem attractionsItem = temp.GetComponent<AttractionsItem>();
+
+            // Initialize the AttractionsItem with the provided AttractionsRoot object
+            attractionsItem.Init(attractionsRoot);
+
+            // Now call ShowDescription with both parameters
+            DescriptionImagesManager.Instance.ShowDescription(attractionsRoot, attractionsItem);
+
+            // Load the scene to view the description
+            Debug.Log("Loading ViewDescription scene...");
+            SceneManager.LoadScene("ViewDescription");
         }
     }
 

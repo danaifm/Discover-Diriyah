@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 
 public class AddAttraction : MonoBehaviour
@@ -58,7 +59,8 @@ public class AddAttraction : MonoBehaviour
     string workingHours; //fb
     string attractionId;
 
-    private AttractionsRoot attractions_root; //object to upload in nuhas array
+    private AttractionsRoot attractions_root = new AttractionsRoot();
+    //object to upload in nuhas array
 
     // Start is called before the first frame update
     void Start()
@@ -354,18 +356,26 @@ public class AddAttraction : MonoBehaviour
             if (!isEdit)
             {
                 docRef = await db.Collection("Attraction").AddAsync(newDocument);
-                string newDocumentId = docRef.Id;
+                string newAttractionId = docRef.Id;
 
                 //upload to nuhas array 
+                if (attractions_root == null) Debug.LogError("attractions_root is null!");
                 attractions_root.Name = name.text;
                 attractions_root.Description = description.text;
                 attractions_root.Location = location.text;
                 attractions_root.Picture = uploadedImageNames;
-                attractions_root.ID = newDocumentId;
-                //attractions_root.userFavorite = false; 
-                AttractionsManager.Instance.AttractionsData.Add(attractions_root);
-                //AttractionsItem.Init(attractions_root);
-                //DescriptionImagesManager.Instance.ShowDescription(attractions_root, AttractionsItem.Instance);
+                attractions_root.ID = newAttractionId;
+                attractions_root.userFavorite = false;
+                AttractionsManager attractionsManager = new AttractionsManager();
+                //AttractionsManager.Instance.AttractionsData.Add(attractions_root);
+                if (attractionsManager == null) Debug.LogError("AttractionsManager is null!");
+                Debug.Log("calling the methodd");
+                AttractionsManager.Instance.InitializeAndShowSpecificAttraction(attractions_root);
+
+                //PlayerPrefs.SetString("SelectedAttractionId", newAttractionId);
+                //SceneManager.LoadScene("ViewDiscription");
+
+
             }
             else
             {

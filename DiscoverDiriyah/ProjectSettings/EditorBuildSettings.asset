@@ -35,4 +35,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddAttraction.unity
     guid: 60289cd2b43bbb440969ab10c2a26368
+  - enabled: 1
+    path: Assets/Scenes/ViewDiscription.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
