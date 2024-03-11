@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/WelcomeScreen.unity
     guid: 5187067a6996b421d8290da39619143c
   - enabled: 1
-    path: Assets/Scenes/userDiscoverpage.unity
+    path: Assets/Scenes/DiscoverDiriyah.unity
     guid: 31f9869fb2a37fe409f2b5d8f616ad07
   - enabled: 1
     path: Assets/Scenes/Map.unity
