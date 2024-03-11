@@ -28,10 +28,13 @@ public class EditEvent : MonoBehaviour
     public string titleForEdit = "Edit Event";
     public TMP_InputField Name;
     public TMP_Text nameError;
+    public TMP_Text nameCounter;
     public TMP_InputField Description;
     public TMP_Text descriptionError;
+    public TMP_Text descriptionCounter;
     public TMP_InputField Audience;
     public TMP_Text audienceError;
+    public TMP_Text audienceCounter;
     public TMP_Dropdown StartHour;
     public TMP_Dropdown StartMinute;
     public TMP_Dropdown StartAmPm;
@@ -42,12 +45,14 @@ public class EditEvent : MonoBehaviour
     public TMP_Text endTimeError;
     public TMP_InputField Location;
     public TMP_Text locationError;
+    public TMP_Text locationCounter;
     public TMP_Text startDateError;
     public TMP_Text endDateError;
     public DatePickerSettings startDatePicker;
     public DatePickerSettings endDatePicker;
     public TMP_InputField Price;
     public TMP_Text priceError;
+    public TMP_Text priceCounter;
     public TMP_Text pictureError;
     string name; //fb
     string description;//fb 
@@ -82,6 +87,11 @@ public class EditEvent : MonoBehaviour
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
         storageRef = storage.GetReferenceFromUrl(storageUrl);
 
+        Name.characterLimit = 25;
+        Description.characterLimit = 250;
+        Location.characterLimit = 35;
+        Price.characterLimit = 10;
+        Audience.characterLimit = 25;
 
         //DISABLE DATES FROM PAST 6 MONTHS
         /*if (endDatePicker != null)
@@ -99,11 +109,6 @@ public class EditEvent : MonoBehaviour
             docId = PlayerPrefs.GetString("event", defualtId);
             LoadData();
         }
-        Name.characterLimit = 25;
-        Description.characterLimit = 250;
-        Location.characterLimit = 35;
-        Price.characterLimit = 10;
-        Audience.characterLimit = 25;
     }
 
 /// <summary>
@@ -593,7 +598,14 @@ public class EditEvent : MonoBehaviour
             }
         });
     }
-
+    private void Update()
+    {
+        nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
+        descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
+        locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
+        priceCounter.text = Price.text.Length + "/" + Price.characterLimit;
+        audienceCounter.text = Audience.text.Length + "/" + Audience.characterLimit;
+    }
 
 
 

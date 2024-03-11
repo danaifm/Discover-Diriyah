@@ -13706,10 +13706,13 @@ MonoBehaviour:
   titleForEdit: Edit Event
   Name: {fileID: 2104263564}
   nameError: {fileID: 837336989}
+  nameCounter: {fileID: 1159019535}
   Description: {fileID: 1115480854}
   descriptionError: {fileID: 308681455}
+  descriptionCounter: {fileID: 1684468239}
   Audience: {fileID: 982179602}
   audienceError: {fileID: 859369877}
+  audienceCounter: {fileID: 1226894151}
   StartHour: {fileID: 469135072}
   StartMinute: {fileID: 1807818231}
   StartAmPm: {fileID: 1763503853}
@@ -13720,12 +13723,14 @@ MonoBehaviour:
   endTimeError: {fileID: 1271216551}
   Location: {fileID: 1314622211}
   locationError: {fileID: 48607960}
+  locationCounter: {fileID: 458496664}
   startDateError: {fileID: 1590501154}
   endDateError: {fileID: 881258527}
   startDatePicker: {fileID: 636861124}
   endDatePicker: {fileID: 1884589768}
   Price: {fileID: 174830959}
   priceError: {fileID: 668108013}
+  priceCounter: {fileID: 930060067}
   pictureError: {fileID: 1538951346}
   startDateLabel: {fileID: 1448437641}
   endDateLabel: {fileID: 538630030}
@@ -17172,7 +17177,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -400, y: -1593}
+  m_AnchoredPosition: {x: -386, y: -1534}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1695518221
@@ -17487,7 +17492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.9816639}
   m_AnchorMax: {x: 1, y: 0.9816639}
-  m_AnchoredPosition: {x: 0, y: 43.786114}
+  m_AnchoredPosition: {x: 0, y: 43.78636}
   m_SizeDelta: {x: 22.4673, y: 3527.2695}
   m_Pivot: {x: 0, y: 1}
 --- !u!210 &1752113781
@@ -18676,8 +18681,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 446633490}
   m_HandleRect: {fileID: 446633489}
   m_Direction: 2
-  m_Value: 1.0000005
-  m_Size: 0.6770109
+  m_Value: 1.0000002
+  m_Size: 0.66459715
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
