@@ -105,21 +105,19 @@ public class AttractionsManager : MonoBehaviour
 
     public void InitializeAndShowSpecificAttraction(AttractionsRoot attractionsRoot)
     {
-        if (attractionsRoot != null)
-        {
-            GameObject temp = Instantiate(UI_Prefab, ParentTransform);
-            AttractionsItem attractionsItem = temp.GetComponent<AttractionsItem>();
+        Debug.Log("in manager method");
 
-            // Initialize the AttractionsItem with the provided AttractionsRoot object
-            attractionsItem.Init(attractionsRoot);
+            GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+            temp.GetComponent<AttractionsItem>().Init(attractionsRoot);
+
 
             // Now call ShowDescription with both parameters
-            DescriptionImagesManager.Instance.ShowDescription(attractionsRoot, attractionsItem);
+            //DescriptionImagesManager.Instance.ShowDescription(attractionsRoot, attractionsItem);
 
             // Load the scene to view the description
-            Debug.Log("Loading ViewDescription scene...");
-            SceneManager.LoadScene("ViewDescription");
+            //Debug.Log("Loading ViewDescription scene...");
+            //SceneManager.LoadScene("ViewDescription");
         }
-    }
+    
 
 }

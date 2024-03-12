@@ -22,7 +22,7 @@ public class AddAttraction : MonoBehaviour
     public string titleForEdit = "Edit Attraction";
     public string storageFolderName = "attractions";
     public string firestoreCollectionName = "Attraction";
-    public TMP_Text titleText;
+    //public TMP_Text titleText;
     public TMP_InputField name;
     public TMP_Text nameError;
     public TMP_Text nameCounter;
@@ -77,21 +77,21 @@ public class AddAttraction : MonoBehaviour
         location.characterLimit = 35;
         description.characterLimit = 250;
 
-        if (isEdit)
-        {
-            titleText.text = titleForEdit;
-            attractionId = PlayerPrefs.GetString("restId", defaultId); //-- load restId if not exist. will use default data.
-            if (attractionId == null)
-            {
-                Debug.LogError("not found attraction id");
-            }
-            else
-            {
-                LoadData();
-            }
-        }
-        else
-            titleText.text = titleForAdd;
+        //if (isEdit)
+        //{
+        //    titleText.text = titleForEdit;
+        //    attractionId = PlayerPrefs.GetString("restId", defaultId); //-- load restId if not exist. will use default data.
+        //    if (attractionId == null)
+        //    {
+        //        Debug.LogError("not found attraction id");
+        //    }
+        //    else
+        //    {
+        //        LoadData();
+        //    }
+        //}
+        //else
+        //    titleText.text = titleForAdd;
     }
 
     // Update is called once per frame
@@ -366,11 +366,6 @@ public class AddAttraction : MonoBehaviour
                 attractions_root.Picture = uploadedImageNames;
                 attractions_root.ID = newAttractionId;
                 attractions_root.userFavorite = false;
-                AttractionsManager attractionsManager = new AttractionsManager();
-                //AttractionsManager.Instance.AttractionsData.Add(attractions_root);
-                if (attractionsManager == null) Debug.LogError("AttractionsManager is null!");
-                Debug.Log("calling the methodd");
-                AttractionsManager.Instance.InitializeAndShowSpecificAttraction(attractions_root);
 
                 //PlayerPrefs.SetString("SelectedAttractionId", newAttractionId);
                 //SceneManager.LoadScene("ViewDiscription");
@@ -404,52 +399,61 @@ public class AddAttraction : MonoBehaviour
             Debug.LogError($"Error adding Restaurant: {ex.Message}");
             alertDialog.HideLoading();
         }
+        addToUI(attractions_root);
     }
-    private void LoadData()
+    //private void LoadData()
+    //{
+    //    DocumentReference docRef = db.Collection(firestoreCollectionName).Document(attractionId);
+    //    alertDialog.ShowLoading();
+    //    docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+    //    {
+    //        DocumentSnapshot snapshot = task.Result;
+    //        if (snapshot.Exists)
+    //        {
+    //            Debug.Log($"Document data for {snapshot.Id} document:");
+
+    //            // Map data from the snapshot to the Restaurant object
+    //            name.text = snapshot.GetValue<string>("Name");
+    //            location.text = snapshot.GetValue<string>("Location");
+    //            string[] pictures = snapshot.GetValue<string[]>("Picture");
+    //            string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
+    //            startTime = times[0];
+    //            endTime = times[1];
+    //            // Splitting the start time string by ':' to get hours and minutes
+    //            string[] startParts = startTime.Split(':');
+    //            StartHour.value = int.Parse(startParts[0]);
+
+    //            // Splitting the second part of start time string by ' ' to get minutes and AM/PM
+    //            string[] minAmPmParts = startParts[1].Split(' ');
+    //            StartMinute.value = int.Parse(minAmPmParts[0]) + 1;
+    //            StartAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1;
+
+    //            // Splitting the end time string by ':' to get hours and minutes
+    //            string[] endParts = endTime.Split(':');
+    //            EndHour.value = int.Parse(endParts[0]);
+
+    //            // Splitting the second part of end time string by ' ' to get minutes and AM/PM
+    //            minAmPmParts = endParts[1].Split(' ');
+    //            EndMinute.value = int.Parse(minAmPmParts[0])+1;
+    //            EndAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1; ;
+    //            gallerySelection.DisplayLoadedImages(pictures.ToList<string>(), "attractions");
+    //            alertDialog.HideLoading();
+    //        }
+    //        else
+    //        {
+    //            Debug.Log($"Document {snapshot.Id} does not exist!");
+    //            alertDialog.HideLoading();
+    //        }
+    //    });
+    //}
+
+    private void addToUI(AttractionsRoot root)
     {
-        DocumentReference docRef = db.Collection(firestoreCollectionName).Document(attractionId);
-        alertDialog.ShowLoading();
-        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            DocumentSnapshot snapshot = task.Result;
-            if (snapshot.Exists)
-            {
-                Debug.Log($"Document data for {snapshot.Id} document:");
+        Debug.Log("in add to ui");
+        AttractionsManager attractionsManager = gameObject.AddComponent<AttractionsManager>();
+        if (attractionsManager == null) Debug.LogError("AttractionsManager is null!");
+        Debug.Log("calling the manager method");
+        attractionsManager.InitializeAndShowSpecificAttraction(attractions_root);
 
-                // Map data from the snapshot to the Restaurant object
-                name.text = snapshot.GetValue<string>("Name");
-                location.text = snapshot.GetValue<string>("Location");
-                string[] pictures = snapshot.GetValue<string[]>("Picture");
-                string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
-                startTime = times[0];
-                endTime = times[1];
-                // Splitting the start time string by ':' to get hours and minutes
-                string[] startParts = startTime.Split(':');
-                StartHour.value = int.Parse(startParts[0]);
-
-                // Splitting the second part of start time string by ' ' to get minutes and AM/PM
-                string[] minAmPmParts = startParts[1].Split(' ');
-                StartMinute.value = int.Parse(minAmPmParts[0]) + 1;
-                StartAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1;
-
-                // Splitting the end time string by ':' to get hours and minutes
-                string[] endParts = endTime.Split(':');
-                EndHour.value = int.Parse(endParts[0]);
-
-                // Splitting the second part of end time string by ' ' to get minutes and AM/PM
-                minAmPmParts = endParts[1].Split(' ');
-                EndMinute.value = int.Parse(minAmPmParts[0])+1;
-                EndAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1; ;
-                gallerySelection.DisplayLoadedImages(pictures.ToList<string>(), "attractions");
-                alertDialog.HideLoading();
-            }
-            else
-            {
-                Debug.Log($"Document {snapshot.Id} does not exist!");
-                alertDialog.HideLoading();
-            }
-        });
     }
-
-
 }
