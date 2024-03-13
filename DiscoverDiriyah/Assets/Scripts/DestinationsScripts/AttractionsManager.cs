@@ -14,7 +14,7 @@ public class AttractionsManager : MonoBehaviour
 {
     public static AttractionsManager Instance;
 
-    public List<AttractionsRoot> AttractionsData = new List<AttractionsRoot>();
+    public static List<AttractionsRoot> AttractionsData = new List<AttractionsRoot>();
     public RectTransform ParentTransform;
     public GameObject AttractionsPanel;
     public GameObject UI_Prefab;
@@ -50,6 +50,11 @@ public class AttractionsManager : MonoBehaviour
     public void GetAttractionsData()
     {
         AttractionsPanel.SetActive(true);
+        if (AttractionsData.Count != 0)
+        {
+            DataHandler();
+            return;
+        }
         Debug.Log("fffff");
         toggleFav = gameObject.AddComponent<toggleFavorite>();
         db = FirebaseFirestore.DefaultInstance;
@@ -107,17 +112,23 @@ public class AttractionsManager : MonoBehaviour
     {
         Debug.Log("in manager method");
 
-            GameObject temp = Instantiate(UI_Prefab, ParentTransform);
-            temp.GetComponent<AttractionsItem>().Init(attractionsRoot);
-
-
-            // Now call ShowDescription with both parameters
-            //DescriptionImagesManager.Instance.ShowDescription(attractionsRoot, attractionsItem);
-
-            // Load the scene to view the description
-            //Debug.Log("Loading ViewDescription scene...");
-            //SceneManager.LoadScene("ViewDescription");
+        AttractionsData.Add(attractionsRoot);
+    AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("admin_home_page");
+        asyncOperation.allowSceneActivation = false;
+        while (!asyncOperation.isDone)
+        {
+            if(asyncOperation.progress >= 0.9f)
+            {
+                asyncOperation.allowSceneActivation = true;
+                DescriptionImagesManager.Instance.ShowDescription(attractionsRoot);
+            }
         }
-    
+        Debug.Log("before attractions item");
+
+        //DescriptionImagesManager desc = gameObject.AddComponent<DescriptionImagesManager>();
+        //desc.ShowDescription(attractionsRoot);
+
+    }
+
 
 }

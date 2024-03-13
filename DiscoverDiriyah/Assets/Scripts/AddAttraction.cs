@@ -385,7 +385,7 @@ public class AddAttraction : MonoBehaviour
             if (uploadedImageNames != null && uploadedImageNames.Count > 0)
             {
                 Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
-                onCompleteAddEvent.Invoke();
+                //onCompleteAddEvent.Invoke();
                 alertDialog.HideLoading();
             }
             else
@@ -401,51 +401,6 @@ public class AddAttraction : MonoBehaviour
         }
         addToUI(attractions_root);
     }
-    //private void LoadData()
-    //{
-    //    DocumentReference docRef = db.Collection(firestoreCollectionName).Document(attractionId);
-    //    alertDialog.ShowLoading();
-    //    docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-    //    {
-    //        DocumentSnapshot snapshot = task.Result;
-    //        if (snapshot.Exists)
-    //        {
-    //            Debug.Log($"Document data for {snapshot.Id} document:");
-
-    //            // Map data from the snapshot to the Restaurant object
-    //            name.text = snapshot.GetValue<string>("Name");
-    //            location.text = snapshot.GetValue<string>("Location");
-    //            string[] pictures = snapshot.GetValue<string[]>("Picture");
-    //            string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
-    //            startTime = times[0];
-    //            endTime = times[1];
-    //            // Splitting the start time string by ':' to get hours and minutes
-    //            string[] startParts = startTime.Split(':');
-    //            StartHour.value = int.Parse(startParts[0]);
-
-    //            // Splitting the second part of start time string by ' ' to get minutes and AM/PM
-    //            string[] minAmPmParts = startParts[1].Split(' ');
-    //            StartMinute.value = int.Parse(minAmPmParts[0]) + 1;
-    //            StartAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1;
-
-    //            // Splitting the end time string by ':' to get hours and minutes
-    //            string[] endParts = endTime.Split(':');
-    //            EndHour.value = int.Parse(endParts[0]);
-
-    //            // Splitting the second part of end time string by ' ' to get minutes and AM/PM
-    //            minAmPmParts = endParts[1].Split(' ');
-    //            EndMinute.value = int.Parse(minAmPmParts[0])+1;
-    //            EndAmPm.value = minAmPmParts[1] == "AM" ? 0 : 1; ;
-    //            gallerySelection.DisplayLoadedImages(pictures.ToList<string>(), "attractions");
-    //            alertDialog.HideLoading();
-    //        }
-    //        else
-    //        {
-    //            Debug.Log($"Document {snapshot.Id} does not exist!");
-    //            alertDialog.HideLoading();
-    //        }
-    //    });
-    //}
 
     private void addToUI(AttractionsRoot root)
     {
@@ -453,7 +408,7 @@ public class AddAttraction : MonoBehaviour
         AttractionsManager attractionsManager = gameObject.AddComponent<AttractionsManager>();
         if (attractionsManager == null) Debug.LogError("AttractionsManager is null!");
         Debug.Log("calling the manager method");
-        attractionsManager.InitializeAndShowSpecificAttraction(attractions_root);
+        attractionsManager.InitializeAndShowSpecificAttraction(root);
 
     }
 }

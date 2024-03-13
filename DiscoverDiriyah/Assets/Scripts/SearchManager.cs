@@ -31,9 +31,9 @@ public class SearchManager : MonoBehaviour
         // Get the current text entered in the input field
         string searchText = AttractionsSearchInputField.text.ToLower();
 
-        for (int i = 0; i < AttractionsManager.Instance.AttractionsData.Count; i++)
+        for (int i = 0; i < AttractionsManager.AttractionsData.Count; i++)
         {
-            name = AttractionsManager.Instance.AttractionsData[i].Name;
+            name = AttractionsManager.AttractionsData[i].Name;
             if (name.ToLower().Contains(searchText))
             {
                 AttractionsContentParent.transform.GetChild(i).gameObject.SetActive(true);

@@ -45,6 +45,12 @@ public class AttractionsItem : MonoBehaviour
     {
         DescriptionImagesManager.Instance.ShowDescription(attractions_Root, this);
     }
+
+    public static void ShowAttractionDetails(AttractionsRoot root)
+    {
+        Debug.Log("in attractions item");
+        DescriptionImagesManager.Instance.ShowDescription(root);
+    }
     public void CheckImage(string name)
     {
         ResetImage();

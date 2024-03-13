@@ -31,7 +31,7 @@ public class DescriptionImagesManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance!=null)
+        if (Instance != null)
         {
             Destroy(gameObject);
         }
@@ -39,6 +39,7 @@ public class DescriptionImagesManager : MonoBehaviour
         {
             Instance = this;
         }
+        //DontDestroyOnLoad(gameObject);
     }
     void Start()
     {
@@ -74,6 +75,31 @@ public class DescriptionImagesManager : MonoBehaviour
         currentIndex = 0;
         GetAllChildGameObjects();
     }
+
+    public void ShowDescription(AttractionsRoot attractionsRoot)
+    {
+        Debug.Log("in description images manager");
+        DescriptionPanel.SetActive(true);
+
+        Debug.Log("after set active");
+        //DescriptionPanel.SetActive(true);
+        attractions_root = attractionsRoot;
+        PlaceTitle.text = attractionsRoot.Name;
+        Description.text = attractionsRoot.Description;
+        LocationUrl = attractionsRoot.Location;
+
+        GameObject temp;
+        for (int i = 0; i < attractionsRoot.Picture.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentContent);
+            temp.GetComponent<DescriptionImageItem>().ItemIndex = i;
+            temp.GetComponent<DescriptionImageItem>().Init(attractionsRoot.Picture[i]);
+        }
+        currentIndex = 0;
+        GetAllChildGameObjects();
+        Debug.Log("end of description images manager");
+    }
+
     public void OpenLocationUrl()
     {
         Application.OpenURL(LocationUrl);
