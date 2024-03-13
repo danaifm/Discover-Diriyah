@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/admin_home_page.unity
     guid: 2e7daf707c8f84ef48bfefab473f405e
+  - enabled: 1
+    path: Assets/Scenes/userDiscoverpage.unity
+    guid: b7c4c598ae6824b738a825a9839c3da3
   m_configObjects: {}
