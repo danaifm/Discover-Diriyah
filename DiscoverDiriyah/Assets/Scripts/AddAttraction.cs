@@ -399,16 +399,16 @@ public class AddAttraction : MonoBehaviour
             Debug.LogError($"Error adding Restaurant: {ex.Message}");
             alertDialog.HideLoading();
         }
-        addToUI(attractions_root);
+        addToUI(attractions_root); //STEP 1 CALLED HERE
     }
+
+    //STEP 1
 
     private void addToUI(AttractionsRoot root)
     {
-        Debug.Log("in add to ui");
         AttractionsManager attractionsManager = gameObject.AddComponent<AttractionsManager>();
         if (attractionsManager == null) Debug.LogError("AttractionsManager is null!");
-        Debug.Log("calling the manager method");
-        attractionsManager.InitializeAndShowSpecificAttraction(root);
+        attractionsManager.InitializeAndShowSpecificAttraction(root); //STEP 2
 
     }
 }

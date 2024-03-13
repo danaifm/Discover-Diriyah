@@ -38,4 +38,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ViewDiscription.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/NEWadminhome.unity
+    guid: 4c424cfd5258e4150819d749f8025009
   m_configObjects: {}

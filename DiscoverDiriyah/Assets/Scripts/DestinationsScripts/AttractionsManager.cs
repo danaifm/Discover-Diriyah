@@ -83,9 +83,10 @@ public class AttractionsManager : MonoBehaviour
                 // Log the JSON string
                 Debug.Log("JSON data: " + json);
                 //documentsList.Add(data);
+                ShowSpecificAttraction(AttractionsRoot);
                 Debug.Log("/////////////////////////////////");
             }
-            DataHandler();
+            //DataHandler();
         });
     }
     public void DataHandler()
@@ -99,6 +100,13 @@ public class AttractionsManager : MonoBehaviour
             temp.GetComponent<AttractionsItem>().Init(AttractionsData[i]);
         }
     }
+
+    public void ShowSpecificAttraction(AttractionsRoot root)
+    {
+        GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+        temp.GetComponent<AttractionsItem>().Init(root);
+
+    }
     public void DiscardData()
     {
         foreach (Transform child in ParentTransform)
@@ -108,26 +116,13 @@ public class AttractionsManager : MonoBehaviour
         }
     }
 
-    public void InitializeAndShowSpecificAttraction(AttractionsRoot attractionsRoot)
+    public void InitializeAndShowSpecificAttraction(AttractionsRoot attractionsRoot) //STEP 2
     {
-        Debug.Log("in manager method");
-
-        AttractionsData.Add(attractionsRoot);
-    AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("admin_home_page");
-        asyncOperation.allowSceneActivation = false;
-        while (!asyncOperation.isDone)
-        {
-            if(asyncOperation.progress >= 0.9f)
-            {
-                asyncOperation.allowSceneActivation = true;
-                DescriptionImagesManager.Instance.ShowDescription(attractionsRoot);
-            }
-        }
-        Debug.Log("before attractions item");
-
-        //DescriptionImagesManager desc = gameObject.AddComponent<DescriptionImagesManager>();
-        //desc.ShowDescription(attractionsRoot);
-
+        AttractionsData.Add(attractionsRoot); //important to add to the list for search (it searches from the list and uses Count())
+        SceneManager.UnloadSceneAsync("AddAttraction"); //unload the add attraction scene
+        ShowSpecificAttraction(attractionsRoot); //shows the attraction in the attractionx list ui
+        DescriptionImagesManager.Instance.ShowDescription(attractionsRoot); //STEP 3: show the attraction details
+        Debug.Log("end of initialize and show method");
     }
 
 

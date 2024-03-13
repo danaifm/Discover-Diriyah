@@ -76,13 +76,10 @@ public class DescriptionImagesManager : MonoBehaviour
         GetAllChildGameObjects();
     }
 
-    public void ShowDescription(AttractionsRoot attractionsRoot)
+    public void ShowDescription(AttractionsRoot attractionsRoot) //STEP 3 : this is different from the one above because the one above has the list item as a parameter which i needed in the favorite/unfavorite code to change the value of the heart in the list when favoriting/unfavoriting from inside the details
     {
-        Debug.Log("in description images manager");
+        //make sure to copy this method in your branch!!!!
         DescriptionPanel.SetActive(true);
-
-        Debug.Log("after set active");
-        //DescriptionPanel.SetActive(true);
         attractions_root = attractionsRoot;
         PlaceTitle.text = attractionsRoot.Name;
         Description.text = attractionsRoot.Description;
@@ -97,7 +94,6 @@ public class DescriptionImagesManager : MonoBehaviour
         }
         currentIndex = 0;
         GetAllChildGameObjects();
-        Debug.Log("end of description images manager");
     }
 
     public void OpenLocationUrl()

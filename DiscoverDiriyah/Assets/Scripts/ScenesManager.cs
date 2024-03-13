@@ -57,7 +57,7 @@ public class ScenesManager : MonoBehaviour
 
     public void LoadAddAttractionsPage()
     {
-        SceneManager.LoadScene(Scene.AddAttraction.ToString());
+        SceneManager.LoadScene(Scene.AddAttraction.ToString(), LoadSceneMode.Additive);
     }
 
 
