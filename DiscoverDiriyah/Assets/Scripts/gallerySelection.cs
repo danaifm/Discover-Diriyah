@@ -102,6 +102,7 @@ public class gallerySelection : MonoBehaviour
         {
             if (selectedImagePaths.Count == 1 && !allowRemoveFinalImage)
             {
+                Debug.Log("no " + index);
                 errorText.text = "You can't delete all images";
                 errorText.color = Color.red;
                 return;

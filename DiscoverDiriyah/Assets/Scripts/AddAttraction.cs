@@ -363,6 +363,7 @@ public class AddAttraction : MonoBehaviour
                 attractions_root.Name = name.text;
                 attractions_root.Description = description.text;
                 attractions_root.Location = location.text;
+                //working hours !!!!
                 attractions_root.Picture = uploadedImageNames;
                 attractions_root.ID = newAttractionId;
                 attractions_root.userFavorite = false;

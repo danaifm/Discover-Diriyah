@@ -1,60 +1,58 @@
-using Firebase.Extensions;
 using Firebase.Firestore;
 using Firebase.Storage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.PlayerLoop;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 
-public class EditAccommodation : MonoBehaviour
+public class AddAccommodationDetails : MonoBehaviour
 {
-
     public TMP_InputField Name;
     public TMP_Text nameError;
     public TMP_Text nameCounter;
-    public TMP_Text descriptionCounter;
-    public TMP_Text locationCounter;
-    public TMP_Text starRatingCounter;
     public TMP_InputField Description;
     public TMP_Text descriptionError;
+    public TMP_Text descriptionCounter;
     public TMP_InputField StarRating;
     public TMP_Text starRatingError;
+    public TMP_Text starRatingCounter;
     public TMP_InputField Location;
     public TMP_Text locationError;
-    public TMP_Text pictureError;
-    public string defaultAccommodationID;
+    public TMP_Text locationCounter;
+    public TMP_Text picturesError;
     string name; //fb
     string description;//fb 
     string rating;//fb
     double starRating; 
     string location;//fb
-    
-
+    // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
-    Dictionary<string, object> Accommodation;
+    Dictionary<string, object> Event;
     public gallerySelection gallerySelection;
+    
     List<string> pictures;
-
-
     bool isValid = true;
-
-    private string accommodationId;
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
+    // Start is called before the first frame update
 
-
+    private AccommodationRoot accommodations_root = new AccommodationRoot();
+    //object to upload in nuhas array
     void Start()
     {
+        alertDialog = FindObjectOfType<AlertDialog>();
         db = FirebaseFirestore.DefaultInstance;
         storage = FirebaseStorage.DefaultInstance;
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
@@ -66,72 +64,20 @@ public class EditAccommodation : MonoBehaviour
         Description.characterLimit = 250;
         Location.characterLimit = 35;
         StarRating.characterLimit = 4;
-
-        accommodationId = PlayerPrefs.GetString("accommodationID", defaultAccommodationID); //-- load restId if not exist. will use default data.
-        if (accommodationId == null || accommodationId == "")
-        {
-            Debug.LogError("not found accommodation id");
-        }
-        
-        LoadData();
     }
 
-private void LoadData()
-    {
-        DocumentReference docRef = db.Collection("Accommodation").Document(accommodationId);
-        alertDialog.ShowLoading();
-        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
-        {
-            DocumentSnapshot snapshot = task.Result;
-            if (snapshot.Exists)
-            {
-                Debug.Log($"Document data for {snapshot.Id} document:");
-
-                Accommodation accommodation = new Accommodation();
-
-                accommodation.Name = snapshot.GetValue<string>("Name");
-                Debug.Log("1");
-                accommodation.Location = snapshot.GetValue<string>("Location");
-                Debug.Log("2");
-                accommodation.Description = snapshot.GetValue<string>("Description");
-                Debug.Log("3");
-                accommodation.StarRating = snapshot.GetValue<double>("StarRating");
-                Debug.Log("4");
-                string[] pictures = snapshot.GetValue<string[]>("Picture");
-                accommodation.Pictures = pictures.ToList<string>();
-                Debug.Log("5");
-                DisplayAccommodationData(accommodation);
-                alertDialog.HideLoading();
-            }
-            else
-            {
-                Debug.Log($"Document {snapshot.Id} does not exist!");
-                alertDialog.HideLoading();
-            }
-        });
-    }
-
-    private void DisplayAccommodationData(Accommodation accommodation)
-    {
-        Name.text = accommodation.Name;
-        Location.text = accommodation.Location;
-        gallerySelection.DisplayLoadedImages(accommodation.Pictures, "accommodations");
-        Description.text = accommodation.Description;
-        StarRating.text = accommodation.StarRating.ToString();
-        // Handle pictures if needed
-    }
-
+    // Update is called once per frame
     void Update()
     {
-        nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
+       nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
         descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
         locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
-        starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit;
+        starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit; 
     }
 
-    public void validate_input()
+public void validate_input()
     {
-        bool isValid = true;
+        isValid = true;
 
         //NAME FIELD VALIDATION
         name = Name.text.Trim();
@@ -229,14 +175,12 @@ private void LoadData()
 
     }//end of validations 
 
-    public void RemoveImage(int index)
+public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
-        gallerySelection.RemoveImage(index, "accommodations", false);
+        gallerySelection.RemoveImage(index, "accommodations");
     }
-
-
-    public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
+public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
     {
         if (imagePaths == null) return null;
 
@@ -279,66 +223,93 @@ private void LoadData()
                     imageCounter++; // Increment for the next image
                 }
             }
-            else
-            {
-                uploadedImageNames.Add(path);
-            }
         }
 
         return uploadedImageNames;
     }
 
-
-    public void SubmitButtonClick()
+public void SubmitButtonClick()
     {
         validate_input();
         uploadEvent();
     }
+
     public async Task uploadEvent()
     {
         if (pictures.Count <= 0)
         {
             isValid = false;
             Debug.LogError("Images is empty");
-            pictureError.text = "A picture must be uploaded.";
-            pictureError.color = Color.red;
-            pictureError.fontSize = 3;
+            picturesError.text = "A picture must be uploaded.";
+            picturesError.color = Color.red;
+            picturesError.fontSize = 3;
         }
         else
         {
-            pictureError.text = "";
+            picturesError.text = "";
         }
         if (!isValid) return;
         alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
-        List<string> uploadedImageNames = await UploadImages(pictures, Name.text); // Call your UploadImages method
+        List<string> uploadedImageNames = await UploadImages(pictures, name);
 
         var newAccommodation = new Dictionary<string, object>
-        {
-            {"Name", Name.text},
-            {"Location", Location.text},
-            {"Description", Description.text},
-            {"StarRating", StarRating.text},
-            // Add an empty array if uploadedImageNames is null or empty
-            {"Picture", uploadedImageNames.ToArray()}
-        };
+    {
+        {"Name", name},
+        {"Description", description},
+        {"StarRating", starRating},
+        {"Location", location},
+        // Add an empty array if uploadedImageNames is null or empty
+        {"Picture", uploadedImageNames ?? new List<string>()}
+    };
         try
         {
             // Assuming 'db' is already initialized Firestore instance and ready to use
+            var docRef = await db.Collection("Accommodation").AddAsync(newAccommodation);
+            Debug.Log($"Accommodation added successfully with ID: {docRef.Id}");
 
-            var docRef = db.Collection("Accommodation").Document(accommodationId);
+            string newAccommodationId = docRef.Id;
 
-            await docRef.UpdateAsync(newAccommodation);
-            Debug.Log($"Accommodation updated successfully with ID: {docRef.Id}");
-            onCompleteAddEvent.Invoke();
-            alertDialog.HideLoading();
+            //upload to nuhas array 
+            if (accommodations_root == null) Debug.LogError("attractions_root is null!");
+            accommodations_root.Name = name;
+            accommodations_root.Description = description;
+            accommodations_root.Location = location;
+            accommodations_root.StarRating = (float)starRating;
+            accommodations_root.Picture = uploadedImageNames;
+            accommodations_root.ID = newAccommodationId;
+            accommodations_root.userFavorite = false;
 
-
+            if (uploadedImageNames != null && uploadedImageNames.Count > 0)
+            {
+                Debug.Log($"Uploaded {uploadedImageNames.Count} images successfully.");
+                onCompleteAddEvent.Invoke();
+                alertDialog.HideLoading();
+            }
+            else
+            {
+                Debug.Log("No images were uploaded.");
+                alertDialog.HideLoading();
+            }
+            
+            alertDialog.ShowAlertDialog("Accommodation details added successfully.");
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Error adding Accommodation: {ex.Message}");
+            Debug.LogError($"Error adding Restaurant: {ex.Message}");
             alertDialog.HideLoading();
         }
+        addToUI(accommodations_root);
+
+    }
+
+    //STEP 1
+
+    private void addToUI(AccommodationRoot root)
+    {
+        AccommodationManager accommodationsManager = gameObject.AddComponent<AccommodationManager>();
+        if (accommodationsManager == null) Debug.LogError("accommodationsManager is null!");
+        accommodationsManager.InitializeAndShowSpecificAccommodation(root); //STEP 2
+
     }
 }

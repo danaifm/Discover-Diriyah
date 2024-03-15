@@ -54,6 +54,8 @@ public class AlertDialog : MonoBehaviour
         confirmMessage.text = message;
         confirmObject.SetActive(true);
     }
+
+
     public void OnYesButtonClicked()
     {
         confirmObject.SetActive(false);

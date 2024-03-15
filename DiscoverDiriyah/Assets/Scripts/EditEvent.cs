@@ -14,8 +14,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Firebase.Extensions;
 using System.Linq;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
-public class AddEvent : MonoBehaviour
+public class EditEvent : MonoBehaviour
 {
     public bool isEdit = false;
     public string defualtId = null;
@@ -26,10 +28,13 @@ public class AddEvent : MonoBehaviour
     public string titleForEdit = "Edit Event";
     public TMP_InputField Name;
     public TMP_Text nameError;
+    public TMP_Text nameCounter;
     public TMP_InputField Description;
     public TMP_Text descriptionError;
+    public TMP_Text descriptionCounter;
     public TMP_InputField Audience;
     public TMP_Text audienceError;
+    public TMP_Text audienceCounter;
     public TMP_Dropdown StartHour;
     public TMP_Dropdown StartMinute;
     public TMP_Dropdown StartAmPm;
@@ -40,12 +45,14 @@ public class AddEvent : MonoBehaviour
     public TMP_Text endTimeError;
     public TMP_InputField Location;
     public TMP_Text locationError;
+    public TMP_Text locationCounter;
     public TMP_Text startDateError;
     public TMP_Text endDateError;
     public DatePickerSettings startDatePicker;
     public DatePickerSettings endDatePicker;
     public TMP_InputField Price;
     public TMP_Text priceError;
+    public TMP_Text priceCounter;
     public TMP_Text pictureError;
     string name; //fb
     string description;//fb 
@@ -58,6 +65,12 @@ public class AddEvent : MonoBehaviour
     DateTime finalEndDate; //fb
     string price;//fb 
 
+    public TMP_Text startDateLabel;
+    public TMP_Text endDateLabel;
+
+
+    public UnityEvent onCompleteAddEvent;
+
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -65,10 +78,9 @@ public class AddEvent : MonoBehaviour
     public gallerySelection gallerySelection; 
     List<string> pictures;
 
-    private string docId;
+    bool isValid;
 
-    private EventRoot events_root = new EventRoot();
-    //object to upload in nuhas array
+    private string docId;
 
     void Start()
     {
@@ -77,6 +89,11 @@ public class AddEvent : MonoBehaviour
         string storageUrl = "gs://discover-diriyah-96e5d.appspot.com";
         storageRef = storage.GetReferenceFromUrl(storageUrl);
 
+        Name.characterLimit = 25;
+        Description.characterLimit = 250;
+        Location.characterLimit = 35;
+        Price.characterLimit = 10;
+        Audience.characterLimit = 25;
 
         //DISABLE DATES FROM PAST 6 MONTHS
         /*if (endDatePicker != null)
@@ -94,11 +111,27 @@ public class AddEvent : MonoBehaviour
             docId = PlayerPrefs.GetString("event", defualtId);
             LoadData();
         }
-        
     }
 
+/// <summary>
 
-
+/// </summary>
+/// <param name="calendar"></param>/
+// showing Date Section //
+    private void DisplayDateData(DateTime startDate, DateTime endDate)
+    {
+        var startDselection = startDatePicker.Content.Selection;
+        var endDselection = endDatePicker.Content.Selection;
+        startDselection.SelectOne(startDate);
+        endDselection.SelectOne(endDate);
+        Debug.Log(startDate);
+        startDate = startDate.AddDays(1);
+        Debug.Log(startDate);
+        endDate = endDate.AddDays(1);
+        startDateLabel.text = startDate.ToString("MM/dd/yyyy");
+        endDateLabel.text = endDate.ToString("MM/dd/yyyy");
+    }
+////////////////////////////
     public void OnDisplayChanged(DatePickerSettings calendar)
     {
         DateTime currentDate = DateTime.Now;
@@ -122,15 +155,14 @@ public class AddEvent : MonoBehaviour
         gallerySelection.RemoveImage(index, storageFolderName, !isEdit);
     }
 
-    public void SubmitClickButton()
+    public void SubmitButtonClick()
     {
         validate_input();
         uploadEvent();
-
     }
     public void validate_input()
     {
-        bool isValid = true;
+        isValid = true;
 
         //NAME FIELD VALIDATION
         name = Name.text.Trim();
@@ -139,7 +171,7 @@ public class AddEvent : MonoBehaviour
         {
             nameError.text = "This field cannot be empty";
             nameError.color = Color.red;
-            nameError.fontSize = 30;
+            nameError.fontSize = 3;
             isValid = false;
             
         }
@@ -155,7 +187,7 @@ public class AddEvent : MonoBehaviour
         {
             descriptionError.text = "This field cannot be empty";
             descriptionError.color = Color.red;
-            descriptionError.fontSize = 30;
+            descriptionError.fontSize = 3;
             isValid = false;
 
         }
@@ -171,7 +203,7 @@ public class AddEvent : MonoBehaviour
         {
             audienceError.text = "This field cannot be empty";
             audienceError.color = Color.red;
-            audienceError.fontSize = 30;
+            audienceError.fontSize = 3;
             isValid = false;
 
         }
@@ -188,7 +220,7 @@ public class AddEvent : MonoBehaviour
         {
             locationError.text = "Invalid location URL";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -196,7 +228,7 @@ public class AddEvent : MonoBehaviour
         {
             locationError.text = "This field cannot be empty";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -210,7 +242,7 @@ public class AddEvent : MonoBehaviour
         {
             startTimeError.text = "Start hour and minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -220,7 +252,7 @@ public class AddEvent : MonoBehaviour
         {
             startTimeError.text = "Start hour cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -230,7 +262,7 @@ public class AddEvent : MonoBehaviour
         {
             startTimeError.text = "Start minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -250,7 +282,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End hour and minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -259,7 +291,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End hour cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -269,7 +301,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -309,7 +341,7 @@ public class AddEvent : MonoBehaviour
         {
             startDateError.text = "Start date cannot be empty";
             startDateError.color = Color.red;
-            startDateError.fontSize = 30;
+            startDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -335,7 +367,7 @@ public class AddEvent : MonoBehaviour
         {
             endDateError.text = "End date cannot be empty";
             endDateError.color = Color.red;
-            endDateError.fontSize = 30;
+            endDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -346,7 +378,7 @@ public class AddEvent : MonoBehaviour
             {
                 endDateError.text = "End date cannot be before start date.";
                 endDateError.color = Color.red;
-                endDateError.fontSize = 30;
+                endDateError.fontSize = 3;
                 isValid = false;
             }
             else
@@ -367,7 +399,7 @@ public class AddEvent : MonoBehaviour
         {
             priceError.text = "Invalid price";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -375,7 +407,7 @@ public class AddEvent : MonoBehaviour
         {
             priceError.text = "This field cannot be empty";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -385,16 +417,7 @@ public class AddEvent : MonoBehaviour
             price += " SAR";
         }
 
-        //PICTURE VALIDATION
-        if (pictures.Count == 0)
-        {
-            pictureError.text = "This field cannot be empty";
-            pictureError.color = Color.red;
-            pictureError.fontSize = 30;
-            isValid = false;
-
-        }
-
+        pictures = gallerySelection.GetSelectedImagePaths();
 
         //if everything is valid -> upload to firebase 
         if (isValid)
@@ -449,6 +472,11 @@ public class AddEvent : MonoBehaviour
                     imageCounter++; // Increment for the next image
                 }
             }
+            else
+            {
+                imageCounter++;
+                uploadedImageNames.Add(path);
+            }
         }
 
         return uploadedImageNames;
@@ -458,6 +486,20 @@ public class AddEvent : MonoBehaviour
 
     public async Task uploadEvent()
     {
+        if (pictures.Count <= 0)
+        {
+            isValid = false;
+            Debug.LogError("Images is empty");
+            pictureError.text = "A picture must be uploaded.";
+            pictureError.color = Color.red; 
+            pictureError.fontSize = 3;
+        }
+        else
+        {
+            pictureError.text = "";
+        }
+        if (!isValid) return;
+        alertDialog.ShowLoading();
         // Assuming you have a List<string> imagePaths filled with your image paths
         List<string> uploadedImageNames = await UploadImages(pictures,name); 
 
@@ -476,7 +518,6 @@ public class AddEvent : MonoBehaviour
     };
         try
         {
-            alertDialog.ShowLoading();
             DocumentReference docRef;
             if (isEdit)
             {
@@ -487,23 +528,6 @@ public class AddEvent : MonoBehaviour
             {
 
                 docRef = await db.Collection(firestoreCollectionName).AddAsync(newEvent);
-
-                string neweventId = docRef.Id;
-
-                //upload to nuhas array 
-                if (events_root == null) Debug.LogError("attractions_root is null!");
-                events_root.Name = name;
-                events_root.Description = description;
-                events_root.Location = location;
-                events_root.Audience = audience;
-                events_root.StartDate = finalStartDate.ToString();
-                events_root.EndDate = finalEndDate.ToString();
-                events_root.Price = price;
-                events_root.WorkingHours = workingHours;
-                events_root.Picture = uploadedImageNames;
-                events_root.ID = neweventId;
-                events_root.userFavorite = false;
-
             }
             Debug.Log($"Event added successfully with ID: {docRef.Id}");
 
@@ -516,22 +540,14 @@ public class AddEvent : MonoBehaviour
                 Debug.Log("No images were uploaded.");
             }
             alertDialog.HideLoading();
+            string message = isEdit ? "Event details edited successfully." : "Event details added successfully.";
+            alertDialog.ShowAlertDialog(message);
         }
         catch (Exception ex)
         {
             alertDialog.HideLoading();
             Debug.LogError($"Error adding event: {ex.Message}");
         }
-
-        addToUI(events_root);
-    }
-
-    private void addToUI(EventRoot root)
-    {
-        EventsManager eventsManager = gameObject.AddComponent<EventsManager>();
-        if (eventsManager == null) Debug.LogError("EventsManager is null!");
-        eventsManager.InitializeAndShowSpecificEvent(root); //STEP 2
-
     }
 
 
@@ -545,12 +561,28 @@ public class AddEvent : MonoBehaviour
             DocumentSnapshot snapshot = task.Result;
             if (snapshot.Exists)
             {
+
                 Debug.Log($"Document data for {snapshot.Id} document:");
+                Timestamp startDateTimestamp = snapshot.GetValue<Timestamp>("StartDate");
+                Timestamp endDateTimestamp = snapshot.GetValue<Timestamp>("EndDate");
+                DateTime startDate = startDateTimestamp.ToDateTime();
+                DateTime endDate = endDateTimestamp.ToDateTime();
+                DisplayDateData(startDate,endDate);
 
                 // Map data from the snapshot to the Restaurant object
                 Name.text = snapshot.GetValue<string>("Name");
                 Description.text = snapshot.GetValue<string>("Description");
                 Location.text = snapshot.GetValue<string>("Location");
+                Audience.text = snapshot.GetValue<string>("Audience");
+                
+                string priceString = snapshot.GetValue<string>("Price");
+                double price;
+                if (priceString.EndsWith("SAR")){
+                 priceString = priceString.Substring(0, priceString.Length - 3); // Remove "SAR" suffix
+                  }
+             double.TryParse(priceString, out price);
+             Price.text = price.ToString();
+
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
                 startTime = times[0];
@@ -582,7 +614,14 @@ public class AddEvent : MonoBehaviour
             }
         });
     }
-
+    private void Update()
+    {
+        nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
+        descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
+        locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
+        priceCounter.text = Price.text.Length + "/" + Price.characterLimit;
+        audienceCounter.text = Audience.text.Length + "/" + Audience.characterLimit;
+    }
 
 
 

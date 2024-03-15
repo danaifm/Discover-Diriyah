@@ -72,6 +72,28 @@ public class AccommodationDescriptionImagesManager : MonoBehaviour
         currentIndex = 0;
         GetAllChildGameObjects();
     }
+
+    public void ShowDescription(AccommodationRoot accommodationRoot) //STEP 3 : this is different from the one above because the one above has the list item as a parameter which i needed in the favorite/unfavorite code to change the value of the heart in the list when favoriting/unfavoriting from inside the details
+    {
+        //make sure to copy this method in your branch!!!!
+        DescriptionPanel.SetActive(true);
+        accommodation_root = accommodationRoot;
+        PlaceTitle.text = accommodationRoot.Name;
+        Description.text = accommodationRoot.Description;
+        LocationUrl = accommodationRoot.Location;
+
+        GameObject temp;
+        SetRating(accommodationRoot.StarRating);
+        for (int i = 0; i < accommodationRoot.Picture.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentContent);
+            temp.GetComponent<DescriptionImageItem>().ItemIndex = i;
+            temp.GetComponent<DescriptionImageItem>().Init(accommodationRoot.Picture[i]);
+        }
+        currentIndex = 0;
+        GetAllChildGameObjects();
+    }
+
     public void SetRating(float rating)
     {
         int fullStars = Mathf.FloorToInt(rating); // Get the integer part of the rating

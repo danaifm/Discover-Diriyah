@@ -26,7 +26,7 @@ public class EditResaurant : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
-    public string defualtRestId = "01IjVvdcAvWI21VCaiq4";
+    public string defualtRestId = "2ZKPS0X91f3mN0o7C9bH";
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;

@@ -39,6 +39,9 @@ public class AddRestaurant : MonoBehaviour
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
     // Start is called before the first frame update
+
+    private RestaurantsRoot restaurants_root = new RestaurantsRoot();
+    //object to upload in nuhas array
     void Start()
     {
         alertDialog = FindObjectOfType<AlertDialog>();
@@ -220,6 +223,18 @@ public class AddRestaurant : MonoBehaviour
             // Assuming 'db' is already initialized Firestore instance and ready to use
             var docRef = await db.Collection("Restaurant").AddAsync(newRestaurant);
             Debug.Log($"Restaurant added successfully with ID: {docRef.Id}");
+
+            string newRestaurantId = docRef.Id;
+
+            //upload to nuhas array 
+            if (restaurants_root == null) Debug.LogError("attractions_root is null!");
+            restaurants_root.Name = name.text;
+            restaurants_root.Location = location.text;
+            restaurants_root.CuisineType = cuisineType.text;
+            restaurants_root.Picture = uploadedImageNames;
+            restaurants_root.ID = newRestaurantId;
+            restaurants_root.userFavorite = false;
+
 #if UNITY_EDITOR
             PlayerPrefs.SetString("restId", docRef.Id); //-- for testing purpose should remove it.
 #endif
@@ -241,6 +256,16 @@ public class AddRestaurant : MonoBehaviour
             Debug.LogError($"Error adding Restaurant: {ex.Message}");
             alertDialog.HideLoading();
         }
+
+        addToUI(restaurants_root);
+    }
+
+    private void addToUI(RestaurantsRoot root)
+    {
+        RestaurantsManager restaurantsManager = gameObject.AddComponent<RestaurantsManager>();
+        if (restaurantsManager == null) Debug.LogError("restaurantsManager is null!");
+        restaurantsManager.InitializeAndShowSpecificRestaurant(root); //STEP 2
+
     }
 
 }

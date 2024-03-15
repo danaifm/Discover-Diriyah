@@ -3,6 +3,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using UnityEngine.SceneManagement;
 
 public class RestaurantsManager : MonoBehaviour
 {
@@ -87,6 +88,13 @@ public class RestaurantsManager : MonoBehaviour
             temp.GetComponent<RestaurantsItem>().Init(RestaurantsData[i]);
         }
     }
+
+    public void ShowSpecificRestaurant(RestaurantsRoot root)
+    {
+        GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+        temp.GetComponent<RestaurantsItem>().Init(root);
+
+    }
     public void DiscardData()
     {
         foreach (Transform child in ParentTransform)
@@ -106,5 +114,14 @@ public class RestaurantsManager : MonoBehaviour
             temp.GetComponent<RestaurantsItem>().Init(RestaurantsData[i]);
         }
 
+    }
+
+    public void InitializeAndShowSpecificRestaurant(RestaurantsRoot restaurantsRoot) //STEP 2
+    {
+        RestaurantsData.Add(restaurantsRoot); //important to add to the list for search (it searches from the list and uses Count())
+        SceneManager.UnloadSceneAsync("AddRestaurant"); //unload the add attraction scene
+        ShowSpecificRestaurant(restaurantsRoot); //shows the attraction in the attractionx list ui
+        RestaurantDescriptionImagesManager.Instance.ShowDescription(restaurantsRoot); //STEP 3: show the attraction details
+        Debug.Log("end of initialize and show method");
     }
 }

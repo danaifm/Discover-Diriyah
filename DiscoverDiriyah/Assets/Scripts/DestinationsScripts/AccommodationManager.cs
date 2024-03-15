@@ -7,6 +7,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Auth;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class AccommodationManager : MonoBehaviour
 {
@@ -83,6 +84,13 @@ public class AccommodationManager : MonoBehaviour
             temp.GetComponent<AccommodationItem>().Init(AccommodationsData[i]);
         }
     }
+
+    public void ShowSpecificAccommodation(AccommodationRoot root)
+    {
+        GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+        temp.GetComponent<AccommodationItem>().Init(root);
+
+    }
     public void DiscardData()
     {
         foreach (Transform child in ParentTransform)
@@ -90,5 +98,14 @@ public class AccommodationManager : MonoBehaviour
             // Destroy the child GameObject
             Destroy(child.gameObject);
         }
+    }
+
+    public void InitializeAndShowSpecificAccommodation(AccommodationRoot accommodationsRoot) //STEP 2
+    {
+        AccommodationsData.Add(accommodationsRoot); //important to add to the list for search (it searches from the list and uses Count())
+        SceneManager.UnloadSceneAsync("AddAccommodation"); //unload the add attraction scene
+        ShowSpecificAccommodation(accommodationsRoot); //shows the attraction in the attractionx list ui
+        AccommodationDescriptionImagesManager.Instance.ShowDescription(accommodationsRoot); //STEP 3: show the attraction details
+        Debug.Log("end of initialize and show method");
     }
 }

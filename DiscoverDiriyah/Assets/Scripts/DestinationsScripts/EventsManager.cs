@@ -7,6 +7,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Auth;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 public class EventsManager : MonoBehaviour
 {
@@ -105,6 +106,13 @@ public class EventsManager : MonoBehaviour
             temp.GetComponent<Event_Item>().Init(EventsData[i]);
         }
     }
+
+    public void ShowSpecificEvent(EventRoot root)
+    {
+        GameObject temp = Instantiate(UI_Prefab, ParentTransform);
+        temp.GetComponent<Event_Item>().Init(root);
+
+    }
     public void DiscardData()
     {
         foreach (Transform child in ParentTransform)
@@ -112,5 +120,14 @@ public class EventsManager : MonoBehaviour
             // Destroy the child GameObject
             Destroy(child.gameObject);
         }
+    }
+
+    public void InitializeAndShowSpecificEvent(EventRoot eventsRoot) //STEP 2
+    {
+        EventsData.Add(eventsRoot); //important to add to the list for search (it searches from the list and uses Count())
+        SceneManager.UnloadSceneAsync("AddEventDetails"); //unload the add attraction scene
+        ShowSpecificEvent(eventsRoot); //shows the attraction in the attractionx list ui
+        EventsDescriptionImagesManager.Instance.ShowDescription(eventsRoot); //STEP 3: show the attraction details
+        Debug.Log("end of initialize and show method");
     }
 }

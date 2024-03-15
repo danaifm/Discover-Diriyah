@@ -88,6 +88,36 @@ public class EventsDescriptionImagesManager : MonoBehaviour
         currentIndex = 0;
         GetAllChildGameObjects();
     }
+
+    public void ShowDescription(EventRoot eventRoot) //STEP 3 : this is different from the one above because the one above has the list item as a parameter which i needed in the favorite/unfavorite code to change the value of the heart in the list when favoriting/unfavoriting from inside the details
+    {
+        //make sure to copy this method in your branch!!!!
+        DescriptionPanel.SetActive(true);
+        event_Root = eventRoot;
+        PlaceTitle.text = eventRoot.Name;
+        Description.text = eventRoot.Description;
+        LocationUrl = eventRoot.Location;
+        DateTime dateTime = DateTime.Parse(eventRoot.StartDate);
+        StartDate.text = dateTime.Day + "/" + dateTime.Month + "/" + dateTime.Year;
+
+        dateTime = DateTime.Parse(eventRoot.EndDate);
+        EndDate.text = dateTime.Day + "/" + dateTime.Month + "/" + dateTime.Year;
+
+        WorkingHours.text = eventRoot.WorkingHours;
+        Price.text = eventRoot.Price + " SAR";
+        Audience.text = eventRoot.Audience;
+
+        GameObject temp;
+        for (int i = 0; i < eventRoot.Picture.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentContent);
+            temp.GetComponent<DescriptionImageItem>().ItemIndex = i;
+            temp.GetComponent<DescriptionImageItem>().Init(eventRoot.Picture[i]);
+        }
+        currentIndex = 0;
+        GetAllChildGameObjects();
+    }
+
     public void OpenLocationUrl()
     {
         Application.OpenURL(LocationUrl);

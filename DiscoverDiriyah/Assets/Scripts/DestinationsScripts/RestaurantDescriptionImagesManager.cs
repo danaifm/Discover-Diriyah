@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,6 +69,26 @@ public class RestaurantDescriptionImagesManager : MonoBehaviour
         {
             temp = Instantiate(UI_Prefab, ParentContent);
             temp.GetComponent<RestaurantDescriptionImageItem>().Init(restaurantsRoot.Picture[i]);
+        }
+        currentIndex = 0;
+        GetAllChildGameObjects();
+    }
+
+    public void ShowDescription(RestaurantsRoot RestaurantRoot) //STEP 3 : this is different from the one above because the one above has the list item as a parameter which i needed in the favorite/unfavorite code to change the value of the heart in the list when favoriting/unfavoriting from inside the details
+    {
+        //make sure to copy this method in your branch!!!!
+        DescriptionPanel.SetActive(true);
+        Restaurant_Root = RestaurantRoot;
+        PlaceTitle.text = RestaurantRoot.Name;
+        LocationUrl = RestaurantRoot.Location;
+        CuisineType.text = RestaurantRoot.CuisineType;
+
+        GameObject temp;
+        for (int i = 0; i < RestaurantRoot.Picture.Count; i++)
+        {
+            temp = Instantiate(UI_Prefab, ParentContent);
+            temp.GetComponent<DescriptionImageItem>().ItemIndex = i;
+            temp.GetComponent<DescriptionImageItem>().Init(RestaurantRoot.Picture[i]);
         }
         currentIndex = 0;
         GetAllChildGameObjects();

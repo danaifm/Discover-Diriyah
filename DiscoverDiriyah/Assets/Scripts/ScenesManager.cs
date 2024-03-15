@@ -20,7 +20,10 @@ public class ScenesManager : MonoBehaviour
         Map,
         ScanQR,
         ProfilePage,
-        AddAttraction
+        AddAttraction,
+        AddRestaurant,
+        AddEventDetails,
+        AddAccommodation
     }
 
     public void LoadScene(Scene scene)
@@ -58,6 +61,21 @@ public class ScenesManager : MonoBehaviour
     public void LoadAddAttractionsPage()
     {
         SceneManager.LoadScene(Scene.AddAttraction.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadAddAccommodationsPage()
+    {
+        SceneManager.LoadScene(Scene.AddAccommodation.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadAddRestaurantsPage()
+    {
+        SceneManager.LoadScene(Scene.AddRestaurant.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadAddEventsPage()
+    {
+        SceneManager.LoadScene(Scene.AddEventDetails.ToString(), LoadSceneMode.Additive);
     }
 
 
