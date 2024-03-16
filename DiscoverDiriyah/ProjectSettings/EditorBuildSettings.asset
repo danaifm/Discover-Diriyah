@@ -50,4 +50,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AddRestaurant.unity
     guid: 8626102222a140043a862cacea2d0c8d
+  - enabled: 1
+    path: Assets/Scenes/EditAccommodation.unity
+    guid: 01bcf9eab8ed7454db322c606bd05d49
+  - enabled: 1
+    path: Assets/Scenes/EditAttraction.unity
+    guid: 3363f761d59259f499b9a0ee61627ea8
+  - enabled: 1
+    path: Assets/Scenes/EditEvent.unity
+    guid: 48128a400ea1b4ab79b19576ce338542
+  - enabled: 1
+    path: Assets/Scenes/EditRestaurant.unity
+    guid: 90fbf4dfd5443de48884a1bae2731e04
   m_configObjects: {}

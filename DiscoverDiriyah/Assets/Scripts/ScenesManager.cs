@@ -23,7 +23,12 @@ public class ScenesManager : MonoBehaviour
         AddAttraction,
         AddRestaurant,
         AddEventDetails,
-        AddAccommodation
+        AddAccommodation,
+        EditAccommodation,
+        EditRestaurant, 
+        EditAttraction,
+        EditEvent,
+        EditProfile
     }
 
     public void LoadScene(Scene scene)
@@ -73,9 +78,30 @@ public class ScenesManager : MonoBehaviour
         SceneManager.LoadScene(Scene.AddRestaurant.ToString(), LoadSceneMode.Additive);
     }
 
+
     public void LoadAddEventsPage()
     {
         SceneManager.LoadScene(Scene.AddEventDetails.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadEditAttractionsPage()
+    {
+        SceneManager.LoadScene(Scene.EditAttraction.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadEditAccommodationsPage()
+    {
+        SceneManager.LoadScene(Scene.EditAccommodation.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadEditRestaurantsPage()
+    {
+        SceneManager.LoadScene(Scene.EditRestaurant.ToString(), LoadSceneMode.Additive);
+    }
+
+    public void LoadEditEventsPage()
+    {
+        SceneManager.LoadScene(Scene.EditEvent.ToString(), LoadSceneMode.Additive);
     }
 
 
