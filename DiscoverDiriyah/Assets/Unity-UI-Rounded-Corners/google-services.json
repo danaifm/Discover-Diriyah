@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "96322513396",
+    "project_id": "discover-diriyah-96e5d",
+    "storage_bucket": "discover-diriyah-96e5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:96322513396:android:b3fb5e06f52e9c043631a1",
+        "android_client_info": {
+          "package_name": "com.example.DiscoverDiriyah"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQBbfVgwufsFfon0673MhPV4DdOJYyu-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
