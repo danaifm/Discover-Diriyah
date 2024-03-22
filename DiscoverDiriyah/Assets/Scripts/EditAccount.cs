@@ -8,12 +8,12 @@ using Firebase.Firestore;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class EditAccountcript : MonoBehaviour
 {
     public FirebaseAuth auth;
     public FirebaseUser user;
+    private FirebaseApp app;
     private CollectionReference fs;
     private DocumentReference userinfo;
     private DocumentSnapshot snapshot;
@@ -60,6 +60,7 @@ public class EditAccountcript : MonoBehaviour
     void initializeFirebase()
     {
         Debug.Log("2. in initialize firebase");
+        app = FirebaseApp.DefaultInstance;
         auth = FirebaseAuth.DefaultInstance;
         user = auth.CurrentUser;
         Debug.Log("3. end of initialize firebase");
@@ -352,9 +353,4 @@ public class EditAccountcript : MonoBehaviour
     {
         openConfirmationWindow("Are you sure you want to edit your information?");
     }
-
-    public void Back()
-    {
-        SceneManager.LoadScene("ProfilePage");
-    } 
 }
