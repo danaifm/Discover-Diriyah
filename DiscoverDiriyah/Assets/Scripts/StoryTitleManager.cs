@@ -55,7 +55,7 @@ public class StoryTitleManager : MonoBehaviour
                     Debug.Log($"Document {document.Id} does not exist!");
                 }
             }
+            alertDialog.HideLoading();
         });
-        alertDialog.HideLoading();
     }
 }

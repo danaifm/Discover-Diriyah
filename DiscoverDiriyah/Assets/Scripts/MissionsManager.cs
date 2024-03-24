@@ -10,8 +10,11 @@ public class MissionsManager : MonoBehaviour
     public GameObject missionPrefab;
     FirebaseFirestore db;
     QuerySnapshot snapshot;
+    public AlertDialog alertDialog;
     private void Start()
     {
+        alertDialog = FindObjectOfType<AlertDialog>();
+        alertDialog.ShowLoading();
         db = FirebaseFirestore.DefaultInstance;
         LoadMissions();
     }
@@ -49,6 +52,7 @@ public class MissionsManager : MonoBehaviour
                     Debug.Log($"Document {document.Id} does not exist!");
                 }
             }
+            alertDialog.HideLoading();
         });
 
     }

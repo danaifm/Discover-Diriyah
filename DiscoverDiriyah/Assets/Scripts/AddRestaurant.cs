@@ -17,6 +17,7 @@ using Debug = UnityEngine.Debug;
 
 public class AddRestaurant : MonoBehaviour
 {
+    /*
     public TMP_InputField title;
     public TMP_Text titleError;
     public TMP_Text titleCounter;
@@ -160,5 +161,5 @@ public class AddRestaurant : MonoBehaviour
 
             
      }
-
+    */
 }
