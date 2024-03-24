@@ -1,10 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using Firebase.Extensions;
-using Firebase.Firestore;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ViewMissions : MonoBehaviour
