@@ -16,18 +16,19 @@ public class userMission : MonoBehaviour
     public TMP_Text message;
     public TMP_Text question;
     public TMP_Text title;
+    public TMP_Text attemptsLeft;
     public Button choice1Button;
     public Button choice2Button;
     public Button choice3Button;
     private string correctAnswer;
     public Image checkmarkImage;
     public Image xmarkImage;
-
-
+    public Image xmarkImage2;
+    private int attemptsRemaining = 2;
 
 
     FirebaseFirestore db;
-    private string missionId = "xmWSOx43MZ6UFWsPr2py";
+    private string missionId = "M09VqxzPfF9VuAs22kZj";
 
     void Start()
     {
@@ -35,45 +36,77 @@ public class userMission : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         LoadMission();
         InitializeButtonListeners();
+        UpdateAttemptsText();
 
+    }
+
+    private void UpdateAttemptsText()
+    {
+        attemptsLeft.text = "Attempts Left: " + attemptsRemaining.ToString();
     }
 
     private void InitializeButtonListeners()
     {
-        // Add click listeners to buttons
+        // Add listeners to buttons
         choice1Button.onClick.AddListener(() => OnChoiceSelected(choice1.text, choice1Button));
         choice2Button.onClick.AddListener(() => OnChoiceSelected(choice2.text, choice2Button));
         choice3Button.onClick.AddListener(() => OnChoiceSelected(choice3.text, choice3Button));
     }
 
+    
+
     private void OnChoiceSelected(string selectedAnswer, Button selectedButton)
     {
-        // Reset all buttons to default colors (white with black text)
+        // Return early if no attempts left. 
+        if (attemptsRemaining <= 0) return;
+
+        // Decrease attempts if choice has been made.
+        attemptsRemaining--;
+        UpdateAttemptsText(); 
+
+        // Reset button colors to default before coloring the selected one.
         ResetButtonColors();
 
-        // Change the selected button's color to brown and text to white
-        selectedButton.image.color = new Color(0.247f, 0.212f, 0.188f); 
+        
+        selectedButton.image.color = new Color(0.247f, 0.212f, 0.188f);
         selectedButton.GetComponentInChildren<TMP_Text>().color = Color.white;
 
-        // Check if the selected answer is correct
+        
         if (selectedAnswer == correctAnswer)
         {
             message.text = "Correct Answer! \n Mission Successfully Done";
-            message.color = new Color(3f / 255f, 147f / 255f, 123f / 255f); //green color
+            message.color = new Color(3f / 255f, 147f / 255f, 123f / 255f); // Green color
             checkmarkImage.gameObject.SetActive(true); // Show the checkmark
-            xmarkImage.gameObject.SetActive(false); // disable the x 
-
-
+            xmarkImage.gameObject.SetActive(false); // Hide the first x
+            xmarkImage2.gameObject.SetActive(false); // hide the second x 
+            attemptsLeft.text = "";
+            DisableButtons(); 
         }
-        else
+        else // wrong answer:
         {
-            message.text = "Wrong Answer. Try again!";
-            message.color = new Color(200f / 255f, 6f / 255f, 6f / 255f); // Red color
-            checkmarkImage.gameObject.SetActive(false); // disable the checkmark
-            xmarkImage.gameObject.SetActive(true); // show the x
-
+            
+            if (attemptsRemaining > 0)
+            {
+                // If there are attempts left, prompt to try again.
+                message.text = "Wrong Answer. Try again!";
+                message.color = new Color(200f / 255f, 6f / 255f, 6f / 255f); // Red color
+                checkmarkImage.gameObject.SetActive(false); // Hide the checkmark
+                xmarkImage.gameObject.SetActive(true); // Show the first x
+                xmarkImage2.gameObject.SetActive(false); // hide the second x 
+            }
+            else
+            {
+                // If no attempts left after the wrong answer:
+                message.text = "No attempts left!";
+                message.color = new Color(200f / 255f, 6f / 255f, 6f / 255f); // Red color
+                checkmarkImage.gameObject.SetActive(false); // Hide the checkmark
+                xmarkImage.gameObject.SetActive(false); // hide the first x
+                xmarkImage2.gameObject.SetActive(true); // Show the second x 
+                DisableButtons(); 
+            }
         }
-    }
+    } 
+
 
     private void ResetButtonColors()
     {
@@ -85,6 +118,14 @@ public class userMission : MonoBehaviour
             button.GetComponentInChildren<TMP_Text>().color = Color.black; // Reset text color
         }
     }
+
+    private void DisableButtons()
+    {
+        choice1Button.interactable = false;
+        choice2Button.interactable = false;
+        choice3Button.interactable = false;
+    }
+
     private void LoadMission()
     {
         DocumentReference docRef = db.Collection("AR Mission").Document(missionId);
