@@ -615,7 +615,7 @@ MonoBehaviour:
   wrongAnswer2Error: {fileID: 1049166577}
   wrongAnswer2Counter: {fileID: 1468250930}
   alertDialog: {fileID: 2086231789}
-  onCompleteAddMission:
+  onCompleteAddEvent:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2086231789}
@@ -2114,6 +2114,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1335336238}
+    - target: {fileID: 2659060576997844924, guid: 4d23cbc8181dd924a8e7498f902d3889,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5294252987602943343, guid: 4d23cbc8181dd924a8e7498f902d3889,
         type: 3}
       propertyPath: m_IsActive

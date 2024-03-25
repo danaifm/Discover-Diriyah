@@ -41,7 +41,7 @@ public class AddMission : MonoBehaviour
     
     bool isValid = true;
     public AlertDialog alertDialog;
-    public UnityEvent onCompleteAddMission;
+    public UnityEvent onCompleteAddEvent;
     
 
     // Start is called before the first frame update
@@ -107,7 +107,7 @@ public class AddMission : MonoBehaviour
 
     public void SubmitButtonClick()
     {
-       // Validation();
+        //Validation();
         uploadMission();
     }
     public async Task uploadMission()
@@ -129,7 +129,7 @@ public class AddMission : MonoBehaviour
 #if UNITY_EDITOR
             PlayerPrefs.SetString("MissionId", docRef.Id); //-- for testing purpose should remove it.
 #endif
-
+            alertDialog.ShowAlertDialog("Mission details added successfully.");
             
      }
     
