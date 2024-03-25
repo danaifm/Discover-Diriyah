@@ -50,11 +50,11 @@ public class AddMission : MonoBehaviour
         alertDialog = FindObjectOfType<AlertDialog>();
         db = FirebaseFirestore.DefaultInstance;
       
-        title.characterLimit = 25;
-        question.characterLimit = 25;
-        correctAnswer.characterLimit = 25;
-        wrongAnswer1.characterLimit = 25;
-        wrongAnswer2.characterLimit = 25;
+        title.characterLimit = 30;
+        question.characterLimit = 40;
+        correctAnswer.characterLimit = 20;
+        wrongAnswer1.characterLimit = 20;
+        wrongAnswer2.characterLimit = 20;
 
     }
 

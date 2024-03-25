@@ -496,6 +496,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back Button
       objectReference: {fileID: 0}
+    - target: {fileID: 3758802476688322411, guid: f9d5e9b847cba9e4fb8034d47df544b6,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: ViewMissions
+      objectReference: {fileID: 0}
     - target: {fileID: 6192729411202694095, guid: f9d5e9b847cba9e4fb8034d47df544b6,
         type: 3}
       propertyPath: m_Sprite

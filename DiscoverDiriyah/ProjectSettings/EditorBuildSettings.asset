@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Story.unity
     guid: baf8f5a2b74d94959a0ddef08ce80c08
+  - enabled: 1
+    path: Assets/Scenes/AddMission.unity
+    guid: 8626102222a140043a862cacea2d0c8d
+  - enabled: 1
+    path: Assets/Scenes/ViewMissions.unity
+    guid: ee9e0597490da4201a6a6825d56fb38f
   m_configObjects: {}
