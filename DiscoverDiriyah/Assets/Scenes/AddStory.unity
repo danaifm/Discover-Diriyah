@@ -313,7 +313,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1335336238}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AddRestaurant, Assembly-CSharp
         m_MethodName: SubmitButtonClick
         m_Mode: 1
@@ -499,7 +499,7 @@ PrefabInstance:
     - target: {fileID: 3758802476688322411, guid: f9d5e9b847cba9e4fb8034d47df544b6,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: ViewMissions
+      value: ViewStory
       objectReference: {fileID: 0}
     - target: {fileID: 6192729411202694095, guid: f9d5e9b847cba9e4fb8034d47df544b6,
         type: 3}
@@ -595,24 +595,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 1335336235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f625664147b12b64298cf9f43bec6695, type: 3}
+  m_Script: {fileID: 11500000, guid: 8be42c66038144a5f9792b3b3fd134b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 3080799660843136012}
   titleError: {fileID: 1935700517}
   titleCounter: {fileID: 1972981670}
-  question: {fileID: 1776349186}
-  questionError: {fileID: 1718633330}
-  questionCounter: {fileID: 788634610}
-  correctAnswer: {fileID: 1488892921}
-  correctAnswerError: {fileID: 130545939}
-  correctAnswerCounter: {fileID: 681144285}
-  wrongAnswer1: {fileID: 1685121700}
-  wrongAnswer1Error: {fileID: 130545939}
-  wrongAnswer1Counter: {fileID: 882432083}
-  wrongAnswer2: {fileID: 0}
-  wrongAnswer2Error: {fileID: 0}
-  wrongAnswer2Counter: {fileID: 0}
+  storyPart1: {fileID: 1776349186}
+  storyPart1Error: {fileID: 1718633330}
+  storyPart1Counter: {fileID: 788634610}
+  storyPart2: {fileID: 1488892921}
+  storyPart2Error: {fileID: 1488892922}
+  storyPart2Counter: {fileID: 681144285}
+  storyPart3: {fileID: 1685121700}
+  storyPart3Error: {fileID: 130545939}
+  storyPart3Counter: {fileID: 882432083}
   alertDialog: {fileID: 2086231789}
   onCompleteAddEvent:
     m_PersistentCalls:
@@ -626,7 +623,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Mission details added successfully.
+          m_StringArgument: Story details added successfully.
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1001 &1488892919
@@ -667,7 +664,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1335336238}
+      objectReference: {fileID: 0}
     - target: {fileID: 6308140612036147125, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -769,6 +766,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1488892922 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1488892919}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &1573603683 stripped
@@ -970,7 +979,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1335336238}
+      objectReference: {fileID: 0}
     - target: {fileID: 6308140612036147125, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1124,7 +1133,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1335336238}
+      objectReference: {fileID: 0}
     - target: {fileID: 6308140612036147125, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1784,7 +1793,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1335336238}
+      objectReference: {fileID: 0}
     - target: {fileID: 6308140612036147125, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1937,7 +1946,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1335336238}
+      objectReference: {fileID: 0}
     - target: {fileID: 2659060576997844924, guid: 4d23cbc8181dd924a8e7498f902d3889,
         type: 3}
       propertyPath: m_IsActive

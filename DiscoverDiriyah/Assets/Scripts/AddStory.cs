@@ -15,29 +15,26 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
-public class AddMission : MonoBehaviour
+public class AddStory : MonoBehaviour
 {
     
     public TMP_InputField title;
     public TMP_Text titleError;
     public TMP_Text titleCounter;
-    public TMP_InputField question;
-    public TMP_Text questionError;
-    public TMP_Text questionCounter;
-    public TMP_InputField correctAnswer;
-    public TMP_Text correctAnswerError;
-    public TMP_Text correctAnswerCounter;
-    public TMP_InputField wrongAnswer1;
-    public TMP_Text wrongAnswer1Error;
-    public TMP_Text wrongAnswer1Counter;
-    public TMP_InputField wrongAnswer2;
-    public TMP_Text wrongAnswer2Error;
-    public TMP_Text wrongAnswer2Counter;
+    public TMP_InputField storyPart1;
+    public TMP_Text storyPart1Error;
+    public TMP_Text storyPart1Counter;
+    public TMP_InputField storyPart2;
+    public TMP_Text storyPart2Error;
+    public TMP_Text storyPart2Counter;
+    public TMP_InputField storyPart3;
+    public TMP_Text storyPart3Error;
+    public TMP_Text storyPart3Counter;
     
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     
-    Dictionary<string, object> Mission;
+    Dictionary<string, object> Story;
     
     bool isValid = true;
     public AlertDialog alertDialog;
@@ -51,20 +48,17 @@ public class AddMission : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
       
         title.characterLimit = 30;
-        question.characterLimit = 40;
-        correctAnswer.characterLimit = 20;
-        wrongAnswer1.characterLimit = 20;
-        wrongAnswer2.characterLimit = 20;
-
+        storyPart1.characterLimit = 50;
+        storyPart2.characterLimit = 50;
+        storyPart3.characterLimit = 50;
     }
 
     private void Update()
     {
         titleCounter.text = title.text.Length + "/" + title.characterLimit;
-        questionCounter.text = question.text.Length + "/" + question.characterLimit;
-        correctAnswerCounter.text = correctAnswer.text.Length + "/" + correctAnswer.characterLimit;
-        wrongAnswer1Counter.text = wrongAnswer1.text.Length + "/" + wrongAnswer1.characterLimit;
-        wrongAnswer2Counter.text = wrongAnswer2.text.Length + "/" + wrongAnswer2.characterLimit;
+        storyPart1Counter.text = storyPart1.text.Length + "/" + storyPart1.characterLimit;
+        storyPart2Counter.text = storyPart2.text.Length + "/" + storyPart2.characterLimit;
+        storyPart3Counter.text = storyPart3.text.Length + "/" + storyPart3.characterLimit;
     }
     public void Validation()
     {
@@ -72,7 +66,7 @@ public class AddMission : MonoBehaviour
         ValidateInput(title, titleError);
         
         string pattern3 = @"^[a-zA-Z ]*$";
-        ValidateInput(question, questionError, pattern3);
+        ValidateInput(title, titleError, pattern3);
         
     }
     
@@ -108,27 +102,26 @@ public class AddMission : MonoBehaviour
     public void SubmitButtonClick()
     {
         //Validation();
-        uploadMission();
+        uploadStory();
     }
-    public async Task uploadMission()
+    public async Task uploadStory()
     {
 
-        var newMission = new Dictionary<string, object>
+        var newStory = new Dictionary<string, object>
         {
             {"Title", title.text},
-            {"Question", question.text},
-            {"CorrectAnswer", correctAnswer.text},
-            {"WrongAnswer1", wrongAnswer1.text},
-            {"WrongAnswer2", wrongAnswer2.text},
+            {"StoryPart1", storyPart1.text},
+            {"StoryPart2", storyPart2.text},
+            {"StoryPart3", storyPart3.text},
         };
         
             // Assuming 'db' is already initialized Firestore instance and ready to use
-            var docRef = await db.Collection("AR Mission").AddAsync(newMission);
-            Debug.Log($"Mission added successfully with ID: {docRef.Id}");
+            var docRef = await db.Collection("AR Story").AddAsync(newStory);
+            Debug.Log($"Story is added successfully with ID: {docRef.Id}");
 #if UNITY_EDITOR
-            PlayerPrefs.SetString("MissionId", docRef.Id); //-- for testing purpose should remove it.
+            PlayerPrefs.SetString("StoryId", docRef.Id); //-- for testing purpose should remove it.
 #endif
-            alertDialog.ShowAlertDialog("Mission details added successfully.");
+            alertDialog.ShowAlertDialog("Story details added successfully.");
             
      }
     
