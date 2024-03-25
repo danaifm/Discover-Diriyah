@@ -972,6 +972,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53812970}
   m_CullTransparentMesh: 1
+--- !u!1 &54421504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 54421505}
+  - component: {fileID: 54421506}
+  m_Layer: 0
+  m_Name: EvManagerFav
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &54421505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54421504}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1637763926}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &54421506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54421504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de07a9330dd73294c8f689dea40d3cb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventsData: []
+  ParentTransform: {fileID: 0}
+  EventsPanel: {fileID: 0}
+  UI_Prefab: {fileID: 0}
 --- !u!1 &54682491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1732,7 +1780,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 525114605}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SearchManager, Assembly-CSharp
         m_MethodName: SearchFromAttractions
         m_Mode: 1
@@ -3580,7 +3628,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 909811434}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EventsManager, Assembly-CSharp
         m_MethodName: DiscardData
         m_Mode: 1
@@ -3901,7 +3949,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 711707896}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AttractionsManager, Assembly-CSharp
         m_MethodName: GetAttractionsData
         m_Mode: 1
@@ -5828,58 +5876,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
---- !u!1 &525114603
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 525114604}
-  - component: {fileID: 525114605}
-  m_Layer: 0
-  m_Name: SearchManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &525114604
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 525114603}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637763926}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &525114605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 525114603}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ac2f99c04bb44bf580b1f254e5c1a36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AttractionsContentParent: {fileID: 0}
-  AttractionsSearchInputField: {fileID: 0}
-  EventsContentParent: {fileID: 0}
-  EventsSearchInputField: {fileID: 0}
-  RestaurantsContentParent: {fileID: 1262693741}
-  RestaurantsSearchInputField: {fileID: 0}
-  AccommodationContentParent: {fileID: 2005123145}
-  AccommodationSearchInputField: {fileID: 1455889464}
 --- !u!1 &531357899
 GameObject:
   m_ObjectHideFlags: 0
@@ -6228,55 +6224,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 567153716}
   m_CullTransparentMesh: 1
---- !u!1 &574325172
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 574325173}
-  - component: {fileID: 574325174}
-  m_Layer: 0
-  m_Name: AccommodationManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &574325173
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 574325172}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637763926}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &574325174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 574325172}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191c76d687b7d40b78320e46ef1ec34d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AccommodationsData: []
-  ParentTransform: {fileID: 2005123146}
-  AccommodationPanel: {fileID: 2032732165}
-  UI_Prefab: {fileID: 8712406163601587674, guid: ba9238383973a497dba81cc65bd650e2,
-    type: 3}
 --- !u!1 &602992696
 GameObject:
   m_ObjectHideFlags: 0
@@ -7072,7 +7019,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 711707896}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AttractionsManager, Assembly-CSharp
         m_MethodName: DiscardData
         m_Mode: 1
@@ -7213,56 +7160,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &711707894
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 711707895}
-  - component: {fileID: 711707896}
-  m_Layer: 0
-  m_Name: AttractionsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &711707895
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711707894}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637763926}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &711707896
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 711707894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6d8506b6c1124dc99af26f5c8c3f37b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AttractionsData: []
-  ParentTransform: {fileID: 0}
-  AttractionsPanel: {fileID: 0}
-  UI_Prefab: {fileID: 4592604499692390947, guid: af39099ccd25446ba9ebb47fe2c08407,
-    type: 3}
-  FirebaseStorageUrl: gs://diriyah-300d5.appspot.com
 --- !u!1 &720785160
 GameObject:
   m_ObjectHideFlags: 0
@@ -8828,55 +8725,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894484055}
   m_CullTransparentMesh: 1
---- !u!1 &909811432
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 909811433}
-  - component: {fileID: 909811434}
-  m_Layer: 0
-  m_Name: EventsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &909811433
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909811432}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637763926}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &909811434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909811432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb0c9e4ef376c4970865693fb302d3be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EventsData: []
-  ParentTransform: {fileID: 0}
-  EventsPanel: {fileID: 0}
-  UI_Prefab: {fileID: 8712406163601587674, guid: 2bc33efc02634465d9cde0f9c7eabbdc,
-    type: 3}
 --- !u!1 &928457879
 GameObject:
   m_ObjectHideFlags: 0
@@ -9961,6 +9809,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1014868902}
   m_CullTransparentMesh: 1
+--- !u!1 &1021920505
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1021920506}
+  - component: {fileID: 1021920507}
+  m_Layer: 0
+  m_Name: AccManagerFav
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1021920506
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021920505}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1637763926}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1021920507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021920505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0f3c8b13029834f8fe8dc03b8179f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AccommodationsData: []
+  ParentTransform: {fileID: 0}
+  AccommodationPanel: {fileID: 0}
+  UI_Prefab: {fileID: 0}
 --- !u!1 &1035454033
 GameObject:
   m_ObjectHideFlags: 0
@@ -13865,7 +13761,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 909811434}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: EventsManager, Assembly-CSharp
         m_MethodName: GetEventsData
         m_Mode: 1
@@ -14000,7 +13896,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1520083826}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: RestaurantsManager, Assembly-CSharp
         m_MethodName: DiscardData
         m_Mode: 1
@@ -14466,7 +14362,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 525114605}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SearchManager, Assembly-CSharp
         m_MethodName: SearchFromAccommodations
         m_Mode: 1
@@ -14722,55 +14618,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1517144827}
   m_CullTransparentMesh: 1
---- !u!1 &1520083824
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1520083825}
-  - component: {fileID: 1520083826}
-  m_Layer: 0
-  m_Name: RestaurantsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1520083825
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1520083824}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1637763926}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1520083826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1520083824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba9e3d07f48c644e0b65ac1a283e8ba1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  RestaurantsData: []
-  ParentTransform: {fileID: 1262693742}
-  RestaurantsPanel: {fileID: 1977935215}
-  UI_Prefab: {fileID: 8712406163601587674, guid: cc0dcd7b48975425b8f05cc455d205a1,
-    type: 3}
 --- !u!1 &1521238988
 GameObject:
   m_ObjectHideFlags: 0
@@ -15603,7 +15450,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 525114605}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SearchManager, Assembly-CSharp
         m_MethodName: SearchFromEvents
         m_Mode: 1
@@ -16572,11 +16419,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 711707895}
-  - {fileID: 525114604}
-  - {fileID: 909811433}
-  - {fileID: 1520083825}
-  - {fileID: 574325173}
+  - {fileID: 1712224343}
+  - {fileID: 54421505}
+  - {fileID: 2116438286}
+  - {fileID: 1021920506}
   - {fileID: 1969106429}
   - {fileID: 1993597987}
   - {fileID: 880925222}
@@ -17125,7 +16971,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 574325174}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AccommodationManager, Assembly-CSharp
         m_MethodName: GetAccommodationsData
         m_Mode: 1
@@ -17650,6 +17496,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709304591}
   m_CullTransparentMesh: 0
+--- !u!1 &1712224342
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1712224343}
+  - component: {fileID: 1712224344}
+  m_Layer: 0
+  m_Name: AttManagerFav
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1712224343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712224342}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1637763926}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1712224344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1712224342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 190d1653934daef49b0ef6869d76c304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttractionsData: []
+  ParentTransform: {fileID: 2076694161}
+  AttractionsPanel: {fileID: 1144529774}
+  UI_Prefab: {fileID: 4592604499692390947, guid: af39099ccd25446ba9ebb47fe2c08407,
+    type: 3}
+  FirebaseStorageUrl: 
 --- !u!1 &1714402035
 GameObject:
   m_ObjectHideFlags: 0
@@ -17893,8 +17789,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1520083826}
-        m_TargetAssemblyTypeName: RestaurantsManager, Assembly-CSharp
+      - m_Target: {fileID: 2116438287}
+        m_TargetAssemblyTypeName: ResManagerFav, Assembly-CSharp
         m_MethodName: GetRestaurantsData
         m_Mode: 1
         m_Arguments:
@@ -22995,6 +22891,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106364062}
   m_CullTransparentMesh: 1
+--- !u!1 &2116438284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116438286}
+  - component: {fileID: 2116438287}
+  m_Layer: 0
+  m_Name: ResManagerFav
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2116438286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116438284}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1637763926}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2116438287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116438284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d39609df09c55149aed902911754718, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RestaurantsData: []
+  ParentTransform: {fileID: 1262693742}
+  RestaurantsPanel: {fileID: 1977935215}
+  UI_Prefab: {fileID: 8712406163601587674, guid: cc0dcd7b48975425b8f05cc455d205a1,
+    type: 3}
 --- !u!1 &2121132647
 GameObject:
   m_ObjectHideFlags: 0
@@ -23351,7 +23296,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 574325174}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: AccommodationManager, Assembly-CSharp
         m_MethodName: DiscardData
         m_Mode: 1
