@@ -15,9 +15,9 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
-public class AddRestaurant : MonoBehaviour
+public class AddMission : MonoBehaviour
 {
-    /*
+    
     public TMP_InputField title;
     public TMP_Text titleError;
     public TMP_Text titleCounter;
@@ -27,7 +27,6 @@ public class AddRestaurant : MonoBehaviour
     public TMP_InputField correctAnswer;
     public TMP_Text correctAnswerError;
     public TMP_Text correctAnswerCounter;
-    //public TMP_InputField CAnswer;
     public TMP_InputField wrongAnswer1;
     public TMP_Text wrongAnswer1Error;
     public TMP_Text wrongAnswer1Counter;
@@ -43,6 +42,8 @@ public class AddRestaurant : MonoBehaviour
     bool isValid = true;
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddMission;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,19 +60,19 @@ public class AddRestaurant : MonoBehaviour
 
     private void Update()
     {
-        title.text = title.text.Length + "/" + title.characterLimit;
-        question.text = cuisineType.text.Length + "/" + cuisineType.characterLimit;
-        locationCounter.text = location.text.Length + "/" + location.characterLimit;
+        titleCounter.text = title.text.Length + "/" + title.characterLimit;
+        questionCounter.text = question.text.Length + "/" + question.characterLimit;
+        correctAnswerCounter.text = correctAnswer.text.Length + "/" + correctAnswer.characterLimit;
+        wrongAnswer1Counter.text = wrongAnswer1.text.Length + "/" + wrongAnswer1.characterLimit;
+        wrongAnswer2Counter.text = wrongAnswer2.text.Length + "/" + wrongAnswer2.characterLimit;
     }
     public void Validation()
     {
         isValid = true;
-        ValidateInput(name, nameError);
-        string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
-        ValidateLocation(location, locationError, urlPattern);
-
+        ValidateInput(title, titleError);
+        
         string pattern3 = @"^[a-zA-Z ]*$";
-        ValidateInput(cuisineType, cuisineError, pattern3);
+        ValidateInput(question, questionError, pattern3);
         
     }
     
@@ -104,62 +105,32 @@ public class AddRestaurant : MonoBehaviour
         }
     }
 
-  public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
-    {
-        int x = 0;
-        if (string.IsNullOrEmpty(inputField.text) || inputField.text.Trim() == "")
-        {
-            Debug.LogError(inputField.name + " is empty");
-            errorText.text = "This field cannot be empty.";
-            errorText.color = Color.red;
-            errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
-            isValid = false;
-        }else if (pattern != null && !Regex.IsMatch(inputField.text, pattern))
-        {
-            Debug.LogError(inputField.name + " Invalid location URL");
-            errorText.text = "Invalid location URL";
-            errorText.color = Color.red;
-            errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
-            isValid = false;
-        }
-        else
-        {
-            errorText.text = "";
-            inputField.image.color = Color.gray;
-        }
-    }
-
-
     public void SubmitButtonClick()
     {
-        Validation();
-        uploadEvent();
+       // Validation();
+        uploadMission();
     }
-    public async Task uploadEvent()
+    public async Task uploadMission()
     {
 
-        var newRestaurant = new Dictionary<string, object>
+        var newMission = new Dictionary<string, object>
         {
-            {"Title", name.text},
-            {"Question", location.text},
-            {"CorrectAnswer", cuisineType.text},
-            {"WrongAnswer1", WAnswer1.text},
-            {"WrongAnswer2", WAnswer2.text},
+            {"Title", title.text},
+            {"Question", question.text},
+            {"CorrectAnswer", correctAnswer.text},
+            {"WrongAnswer1", wrongAnswer1.text},
+            {"WrongAnswer2", wrongAnswer2.text},
             
         };
         
             // Assuming 'db' is already initialized Firestore instance and ready to use
-            var docRef = await db.Collection("AR Mission").AddAsync(newRestaurant);
+            var docRef = await db.Collection("AR Mission").AddAsync(newMission);
             Debug.Log($"Restaurant added successfully with ID: {docRef.Id}");
 #if UNITY_EDITOR
-            PlayerPrefs.SetString("restId", docRef.Id); //-- for testing purpose should remove it.
+            PlayerPrefs.SetString("MissionId", docRef.Id); //-- for testing purpose should remove it.
 #endif
 
             
      }
-    */
+    
 }

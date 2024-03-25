@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &130545939 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1685121698}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &230436867
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,37 +507,54 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 481725886}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &590935181
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!114 &681144285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1488892919}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 590935182}
-  m_Layer: 0
-  m_Name: add mission
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &590935182
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &788634610 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1776349184}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590935181}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 631.854, y: 1529.2804, z: -3.4541273}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &882432083 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1685121698}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1049166577 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1741386862}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1335336235
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,12 +566,12 @@ GameObject:
   - component: {fileID: 1335336237}
   - component: {fileID: 1335336238}
   m_Layer: 0
-  m_Name: add restaurant
+  m_Name: add mission
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1335336237
 Transform:
   m_ObjectHideFlags: 0
@@ -570,22 +599,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f625664147b12b64298cf9f43bec6695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: {fileID: 3080799660843136012}
-  nameError: {fileID: 0}
-  nameCounter: {fileID: 0}
-  cuisineType: {fileID: 1776349186}
-  cuisineError: {fileID: 0}
-  cuisineCounter: {fileID: 0}
-  location: {fileID: 1488892921}
-  locationError: {fileID: 0}
-  locationCounter: {fileID: 0}
-  WAnswer1: {fileID: 1685121700}
-  WAnswer2: {fileID: 1741386864}
-  picturesError: {fileID: 0}
-  alertDialog: {fileID: 0}
-  onCompleteAddEvent:
+  title: {fileID: 3080799660843136012}
+  titleError: {fileID: 1935700517}
+  titleCounter: {fileID: 1972981670}
+  question: {fileID: 1776349186}
+  questionError: {fileID: 1718633330}
+  questionCounter: {fileID: 788634610}
+  correctAnswer: {fileID: 1488892921}
+  correctAnswerError: {fileID: 130545939}
+  correctAnswerCounter: {fileID: 681144285}
+  wrongAnswer1: {fileID: 1685121700}
+  wrongAnswer1Error: {fileID: 130545939}
+  wrongAnswer1Counter: {fileID: 882432083}
+  wrongAnswer2: {fileID: 1741386864}
+  wrongAnswer2Error: {fileID: 1049166577}
+  wrongAnswer2Counter: {fileID: 1468250930}
+  alertDialog: {fileID: 2086231789}
+  onCompleteAddMission:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2086231789}
+        m_TargetAssemblyTypeName: AlertDialog, Assembly-CSharp
+        m_MethodName: ShowAlertDialog
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Mission details added successfully.
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1468250930 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1741386862}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1488892919
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -602,7 +658,7 @@ PrefabInstance:
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_text
-      value: Location
+      value: Correct Answer
       objectReference: {fileID: 0}
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
@@ -904,6 +960,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
+      propertyPath: m_text
+      value: Wrong Answer 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
+        type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee,
@@ -1026,6 +1087,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1718633330 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1776349184}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1741386862
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1058,6 +1131,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Input Field (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
+        type: 3}
+      propertyPath: m_text
+      value: Wrong Answer 2
       objectReference: {fileID: 0}
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
@@ -1199,7 +1277,7 @@ PrefabInstance:
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
       propertyPath: m_text
-      value: Cuisine Type
+      value: Question
       objectReference: {fileID: 0}
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
@@ -1435,7 +1513,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1852766867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1597,6 +1675,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1935700517 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 3080799660843136010}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1972981670 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 3080799660843136010}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2020630124
 GameObject:
   m_ObjectHideFlags: 0
@@ -1655,7 +1757,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Resturant Details
+  m_text: Add Mission Details
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -1808,6 +1910,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2079035524}
   m_CullTransparentMesh: 1
+--- !u!114 &2086231789 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7262892552335151967, guid: 4d23cbc8181dd924a8e7498f902d3889,
+    type: 3}
+  m_PrefabInstance: {fileID: 8534685200032012658}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7c0350ad7bed845a5024f979b7639b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3080799660843136010
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1820,6 +1934,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Input Field
+      objectReference: {fileID: 0}
+    - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
+        type: 3}
+      propertyPath: m_text
+      value: Title
       objectReference: {fileID: 0}
     - target: {fileID: 3380022731648185798, guid: b3eead29950d66946b2537ad30c5fe19,
         type: 3}
