@@ -7,6 +7,7 @@ using Firebase.Auth;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Net.NetworkInformation;
 
 public class ResManagerFav : MonoBehaviour
 {
@@ -65,10 +66,11 @@ public class ResManagerFav : MonoBehaviour
         string userID = user.UserId;
         RestaurantsPanel.SetActive(true);
         Debug.Log("fffff");
+        string restaurantID = null;
         toggleFav = gameObject.AddComponent<toggleFavorite>();
         // Retrieve the favorites collection for the current user
         db = FirebaseFirestore.DefaultInstance;
-        CollectionReference favoritesCollectionRef = db.Collection("Account").Document(userID).Collection("Favorites");
+        CollectionReference favoritesCollectionRef =  db.Collection("Account").Document(userID).Collection("Favorites");
 
         // Query the favorites collection to filter documents where the "type" attribute is equal to "restaurant"
         QuerySnapshot favoritesSnapshot = await favoritesCollectionRef.WhereEqualTo("Type", "Restaurant").GetSnapshotAsync();
@@ -78,40 +80,59 @@ public class ResManagerFav : MonoBehaviour
       
             foreach (var favoriteDocument in favoritesSnapshot.Documents)
         {
-            string restaurantId = favoriteDocument.Id;
-           
+
+            // Retrieve the value of the "ID" field from the document
+            object restaurantIDObject = favoriteDocument.GetValue<object>("ID");
+
+            // Check if the retrieved value is not null
+            if (restaurantIDObject == null)
+            {
+                Debug.Log("restaurantIDObject == null");
+            }
+            else
+            {
+
+
+                // Convert the value to a string and assign it to the restaurantID variable
+                restaurantID = restaurantIDObject.ToString();
+                Debug.Log("Favorite Document ID: " + restaurantID);
+            }
+            Debug.Log("Favorite Document ID: " + favoriteDocument.Id);
+            Debug.Log("Favorite Document ID: " + restaurantID);
+
+
             // Retrieve the document from the "Restaurant" collection using the ID
-            DocumentSnapshot restaurantDocument = await db.Collection("Restaurant").Document(restaurantId).GetSnapshotAsync();
-            Debug.Log("here 1");
+            DocumentSnapshot restaurantDocument = await db.Collection("Restaurant").Document(restaurantID).GetSnapshotAsync();
+            Debug.Log("Restaurant Document ID: " + restaurantID);
 
 
-            if (restaurantDocument.Exists)
+            if (!restaurantDocument.Exists)
+            {
+                Debug.Log("Restaurant document does not exist");
+            }
+            else
             {
                 Dictionary<string, object> restaurantData = restaurantDocument.ToDictionary();
-                Debug.Log("Restaurant document does not exist");
 
                 if (restaurantData.ContainsKey("Pictures"))
                 {
                     List<object> yourArray = (List<object>)restaurantData["Pictures"];
                     Debug.Log("here 3");
-                 
                 }
+
                 isFav = await toggleFav.isFavorite(favoriteDocument.Id);
                 restaurantData.Add("ID", favoriteDocument.Id);
                 restaurantData.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(restaurantData);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
                 RestaurantsData.Add(EventsRoot);
-                // Log the JSON string
                 Debug.Log("JSON data: " + json);
-                //documentsList.Add(data);
                 Debug.Log("here");
+
             }
-             else
-             {
-            Debug.Log("Restaurant document does not exist");
-              }
+
         }
+
         DataHandler();
        
 
@@ -127,6 +148,7 @@ public class ResManagerFav : MonoBehaviour
             temp.GetComponent<RestaurantsItem>().Init(RestaurantsData[i]);
         }
     }
+
     public void DiscardData()
     {
         foreach (Transform child in ParentTransform)
