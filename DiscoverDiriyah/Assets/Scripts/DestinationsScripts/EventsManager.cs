@@ -82,6 +82,7 @@ public class EventsManager : MonoBehaviour
                    
                 }
                 isFav = await toggleFav.isFavorite(document.Id);
+                data.Add("ID", document.Id);
                 data.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(data);
                 EventRoot EventsRoot = JsonUtility.FromJson<EventRoot>(json);
