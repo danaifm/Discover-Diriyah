@@ -139,6 +139,7 @@ public class AddMission : MonoBehaviour
             {"CorrectAnswer", correctAnswer.text},
             {"WrongAnswer1", wrongAnswer1.text},
             {"WrongAnswer2", wrongAnswer2.text},
+            {"Time", DateTime.Now.ToString("dd-MM-yyyy, HH:mm:ss")}
         };
         
             // Assuming 'db' is already initialized Firestore instance and ready to use
