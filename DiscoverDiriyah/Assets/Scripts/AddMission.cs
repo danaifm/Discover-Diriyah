@@ -33,6 +33,13 @@ public class AddMission : MonoBehaviour
     public TMP_InputField wrongAnswer2;
     public TMP_Text wrongAnswer2Error;
     public TMP_Text wrongAnswer2Counter;
+
+    //for validation
+    string Title;
+    string Question;
+    string CorrectAnswer;
+    string WrongAnswer1;
+    string WrongAnswer2;
     
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
@@ -68,46 +75,142 @@ public class AddMission : MonoBehaviour
     }
     public void Validation()
     {
-        isValid = true;
-        ValidateInput(title, titleError);
-        
-        string pattern3 = @"^[a-zA-Z ]*$";
-        ValidateInput(question, questionError, pattern3);
-        
-    }
-    
-    public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
-    {
-        int x = 0;
-        if (string.IsNullOrEmpty(inputField.text) || inputField.text.Trim() == "")
+         bool isValid = true;
+
+        //TITLE FIELD VALIDATION
+        Title = title.text.Trim();
+        if (string.IsNullOrWhiteSpace(Title))
         {
-            Debug.LogError(inputField.name + " is empty");
-            errorText.text = "This field cannot be empty.";
-            errorText.color = Color.red;
-            errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
-            isValid = false;
-        }else if (pattern != null && !Regex.IsMatch(inputField.text, pattern))
-        {
-            Debug.LogError(inputField.name + " only string allwed");
-            errorText.text = "Only string allowed";
-            errorText.color = Color.red;
-            errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
+            titleError.text = "This field cannot be empty";
+            titleError.color = Color.red;
+            titleError.fontSize = 3;
             isValid = false;
         }
         else
         {
-            errorText.text = "";
-            inputField.image.color = Color.gray;
+            titleError.text = "";
         }
-    }
+
+        //QUESTION FIELD VALIDATION
+        Question = question.text.Trim();
+        if (string.IsNullOrWhiteSpace(Question))
+        {
+            questionError.text = "This field cannot be empty";
+            questionError.color = Color.red;
+            questionError.fontSize = 3;
+            isValid = false;
+        }
+        else
+        {
+            questionError.text = "";
+        }
+
+        //CorrectAnswer FIELD VALIDATION
+        CorrectAnswer = correctAnswer.text.Trim();
+        if (string.IsNullOrWhiteSpace(CorrectAnswer))
+        {
+            correctAnswerError.text = "This field cannot be empty";
+            correctAnswerError.color = Color.red;
+            correctAnswerError.fontSize = 3;
+            isValid = false;
+        }
+        else
+        {
+            correctAnswerError.text = "";
+        }
+
+        //wrongAnswer1 FIELD VALIDATION
+        WrongAnswer1 = wrongAnswer1.text.Trim();
+        if (string.IsNullOrWhiteSpace(WrongAnswer1))
+        {
+            wrongAnswer1Error.text = "This field cannot be empty";
+            wrongAnswer1Error.color = Color.red;
+            wrongAnswer1Error.fontSize = 3;
+            isValid = false;
+        }
+        else
+        {
+            wrongAnswer1Error.text = "";
+        }
+
+        //wrongAnswer2 FIELD VALIDATION
+        WrongAnswer2 = wrongAnswer2.text.Trim();
+        if (string.IsNullOrWhiteSpace(WrongAnswer2))
+        {
+            wrongAnswer2Error.text = "This field cannot be empty";
+            wrongAnswer2Error.color = Color.red;
+            wrongAnswer2Error.fontSize = 3;
+            isValid = false;
+        }
+        else
+        {
+            wrongAnswer2Error.text = "";
+        }
+
+        //if everything is valid -> upload to firebase 
+        if (isValid)
+        {
+            uploadMission();
+        }
+/*
+        //STAR RATING FIELD VALIDATION
+        rating = StarRating.text.Trim();
+        string ratingPattern = @"^(5(\.0)?|[0-4](\.\d)?)$";
+
+        if (!Regex.IsMatch(rating, ratingPattern))
+        {
+            starRatingError.text = "Invalid Star Rating";
+            starRatingError.color = Color.red;
+            starRatingError.fontSize = 30;
+            isValid = false;
+
+        }
+
+        else if (string.IsNullOrWhiteSpace(rating))
+        {
+            starRatingError.text = "This field cannot be empty";
+            starRatingError.color = Color.red;
+            starRatingError.fontSize = 30;
+            isValid = false;
+
+        }
+        else
+        {
+            starRatingError.text = "";
+            starRating = double.Parse(rating);
+        }
+
+        //LOCATION FIELD VALIDATION
+        location = Location.text.Trim();
+        string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
+
+        if (!Regex.IsMatch(location, urlPattern))
+        {
+            locationError.text = "Invalid location URL";
+            locationError.color = Color.red;
+            locationError.fontSize = 30;
+            isValid = false;
+
+        }
+        else if (string.IsNullOrWhiteSpace(location))
+        {
+            locationError.text = "This field cannot be empty";
+            locationError.color = Color.red;
+            locationError.fontSize = 30;
+            isValid = false;
+
+        }
+        else
+        {
+            locationError.text = "";
+        }*/
+   
+    }//end of validation
+    
 
     public void SubmitButtonClick()
     {
-        //Validation();
+        Validation();
         uploadMission();
     }
     public async Task uploadMission()

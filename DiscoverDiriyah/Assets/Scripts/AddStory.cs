@@ -31,6 +31,12 @@ public class AddStory : MonoBehaviour
     public TMP_Text storyPart3Error;
     public TMP_Text storyPart3Counter;
     
+    //for validation
+    string Title;
+    string StoryPart1;
+    string StoryPart2;
+    string StoryPart3;
+    
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     

@@ -314,8 +314,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1335336238}
-        m_TargetAssemblyTypeName: AddRestaurant, Assembly-CSharp
-        m_MethodName: SubmitButtonClick
+        m_TargetAssemblyTypeName: AddMission, Assembly-CSharp
+        m_MethodName: Validation
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -617,7 +617,7 @@ MonoBehaviour:
   questionError: {fileID: 1718633330}
   questionCounter: {fileID: 788634610}
   correctAnswer: {fileID: 1488892921}
-  correctAnswerError: {fileID: 130545939}
+  correctAnswerError: {fileID: 1986823491}
   correctAnswerCounter: {fileID: 681144285}
   wrongAnswer1: {fileID: 1685121700}
   wrongAnswer1Error: {fileID: 130545939}
@@ -1703,6 +1703,18 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5635521836117001420, guid: b3eead29950d66946b2537ad30c5fe19,
     type: 3}
   m_PrefabInstance: {fileID: 3080799660843136010}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1986823491 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1919782471306516288, guid: b3eead29950d66946b2537ad30c5fe19,
+    type: 3}
+  m_PrefabInstance: {fileID: 1488892919}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
