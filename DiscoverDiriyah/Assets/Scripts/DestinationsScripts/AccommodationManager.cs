@@ -61,6 +61,7 @@ public class AccommodationManager : MonoBehaviour
                 }
                 isFav = await toggleFav.isFavorite(document.Id);
                 data.Add("userFavorite", isFav);
+                data.Add("ID", document.Id);
                 string json = JsonConvert.SerializeObject(data);
                 AccommodationRoot AccommodationsRoot = JsonUtility.FromJson<AccommodationRoot>(json);
                 AccommodationsData.Add(AccommodationsRoot);
