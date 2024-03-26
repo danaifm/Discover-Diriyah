@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Auth;
+using System.Threading.Tasks;
+using System.Linq;
+using System;
 
 public class ResManagerFav : MonoBehaviour
 {
@@ -36,52 +39,78 @@ public class ResManagerFav : MonoBehaviour
     {
 
     }
-    public void GetRestaurantsData()
+
+    public void OnButtonClick()
+    {
+        StartOnButtonClickAsync();
+    }
+
+    private async void StartOnButtonClickAsync()
+    {
+        try
+        {
+            await GetRestaurantsDataAsync();
+
+            // Rest of your code
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("An error occurred: " + ex.Message);
+        }
+    }
+    public async Task GetRestaurantsDataAsync()
     {
         auth = FirebaseAuth.DefaultInstance;
         user = auth.CurrentUser;
-
+        string userID = user.UserId;
         RestaurantsPanel.SetActive(true);
         Debug.Log("fffff");
         toggleFav = gameObject.AddComponent<toggleFavorite>();
+        // Retrieve the favorites collection for the current user
         db = FirebaseFirestore.DefaultInstance;
-        CollectionReference favoritesCollectionRef = db.Collection("Account").Document("user_id").Collection("Favorites");
-        db.Collection("Restaurant").GetSnapshotAsync().ContinueWithOnMainThread(async task =>
+        CollectionReference favoritesCollectionRef = db.Collection("Account").Document(userID).Collection("Favorites");
+
+        // Query the favorites collection to filter documents where the "type" attribute is equal to "restaurant"
+        QuerySnapshot favoritesSnapshot = await favoritesCollectionRef.WhereEqualTo("Type", "Restaurant").GetSnapshotAsync();
+        Debug.Log("here 0");
+
+        RestaurantsData.Clear();
+        await Task.Run(async () =>
         {
-            if (task.IsFaulted)
+            foreach (var favoriteDocument in favoritesSnapshot.Documents)
+        {
+            string restaurantId = favoriteDocument.Id;
+           
+            // Retrieve the document from the "Restaurant" collection using the ID
+            DocumentSnapshot restaurantDocument = await db.Collection("Restaurant").Document(restaurantId).GetSnapshotAsync();
+            Debug.Log("here 1");
+
+
+            if (restaurantDocument.Exists)
             {
-                Debug.LogError("Error fetching data: " + task.Exception);
-                return;
-            }
-            RestaurantsData.Clear();
-            foreach (var document in task.Result.Documents)
-            {
-                Dictionary<string, object> data = document.ToDictionary();
-                //foreach (var pair in data)
-                //{
-                //    Debug.Log(pair.Key + ": " + pair.Value);
-                //}
-                if (data.ContainsKey("Pictures"))
+                Dictionary<string, object> restaurantData = restaurantDocument.ToDictionary();
+                Debug.Log("here 2");
+
+                if (restaurantData.ContainsKey("Pictures"))
                 {
-                    List<object> yourArray = (List<object>)data["Pictures"];
-                    //foreach (var item in yourArray)
-                    //{
-                    //    Debug.Log("Image url : " + item.ToString());
-                    //}
+                    List<object> yourArray = (List<object>)restaurantData["Pictures"];
+                    Debug.Log("here 3");
+                 
                 }
-                isFav = await toggleFav.isFavorite(document.Id);
-                data.Add("ID", document.Id);
-                data.Add("userFavorite", isFav);
-                string json = JsonConvert.SerializeObject(data);
+                isFav = await toggleFav.isFavorite(favoriteDocument.Id);
+                restaurantData.Add("ID", favoriteDocument.Id);
+                restaurantData.Add("userFavorite", isFav);
+                string json = JsonConvert.SerializeObject(restaurantData);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
                 RestaurantsData.Add(EventsRoot);
                 // Log the JSON string
                 Debug.Log("JSON data: " + json);
                 //documentsList.Add(data);
-                Debug.Log("/////////////////////////////////");
-            }
+                Debug.Log("here");
+            }}
             DataHandler();
         });
+
     }
     private void DataHandler()
     {
