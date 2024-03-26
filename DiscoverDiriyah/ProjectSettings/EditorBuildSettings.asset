@@ -50,4 +50,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ViewStory.unity
     guid: 1d595670e169743f3853a2eac958d273
+  - enabled: 1
+    path: Assets/Scenes/Mission.unity
+    guid: 42b7b7288f5994db5b9bdbe7fe8da2ab
   m_configObjects: {}

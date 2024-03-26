@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2019457253167463283}
   m_Layer: 5
-  m_Name: Story
+  m_Name: Mission
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,9 +49,9 @@ GameObject:
   - component: {fileID: 4145162502169485200}
   - component: {fileID: 6806309759084243115}
   - component: {fileID: 541566880845891912}
-  - component: {fileID: 219720935541766696}
+  - component: {fileID: 2882276434084999927}
   m_Layer: 5
-  m_Name: StoryButton
+  m_Name: MissionButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,9 +157,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 219720935541766696}
-        m_TargetAssemblyTypeName: ViewStory, Assembly-CSharp
-        m_MethodName: LoadStory
+      - m_Target: {fileID: 2882276434084999927}
+        m_TargetAssemblyTypeName: ViewMissions, Assembly-CSharp
+        m_MethodName: LoadMission
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -169,7 +169,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &219720935541766696
+--- !u!114 &2882276434084999927
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -178,15 +178,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2569450032989169396}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 058e2d52a9cd3456591485bf04bf10c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 184171e78ad5244b9844330cc7adb0c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   titleText: {fileID: 1501131646898493269}
   title: 
-  storyPart1: 
-  storyPart2: 
-  storyPart3: 
-  storyInstance: {fileID: 0}
+  question: 
+  correctAnswer: 
+  wrongAnswer1: 
+  wrongAnswer2: 
+  missionInstance: {fileID: 0}
 --- !u!1 &5284229806137212031
 GameObject:
   m_ObjectHideFlags: 0

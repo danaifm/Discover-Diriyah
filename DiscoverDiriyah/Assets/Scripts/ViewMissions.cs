@@ -2,22 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ViewMissions : MonoBehaviour
 {
     public TMP_Text titleText;
-    public TMP_Text questionText;
-    public TMP_Text correctAnswerText;
-    public TMP_Text wrongAnswer1Text;
-    public TMP_Text wrongAnswer2Text;
+    public string title;
+    public string question;
+    public string correctAnswer;
+    public string wrongAnswer1;
+    public string wrongAnswer2;
+    public MissionInstance missionInstance;
 
-    public void SetTexts(string title, string question, string correct, string wrong1, string wrong2)
+    private void Start() {
+        missionInstance = FindObjectOfType<MissionInstance>();
+    }
+
+    public void SetTitle(string title)
     {
         titleText.text = title;
-        questionText.text = question;
-        correctAnswerText.text = correct;
-        wrongAnswer1Text.text = wrong1;
-        wrongAnswer2Text.text = wrong2;
+        this.title = title;
         Debug.Log(title);
+    }
+
+    public void SaveTexts(string title, string question, string correctAnswer, string wrongAnswer1, string wrongAnswer2)
+    {
+        this.title = title;
+        this.question = question;
+        this.correctAnswer = correctAnswer;
+        this.wrongAnswer1 = wrongAnswer1;
+        this.wrongAnswer2 = wrongAnswer2;
+    }
+
+    public void LoadMission()
+    {
+        missionInstance.SetInstance(this);
+        Debug.Log("Loading..");
+        SceneManager.LoadScene("Mission");
     }
 }
