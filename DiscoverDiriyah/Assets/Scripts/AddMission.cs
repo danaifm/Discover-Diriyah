@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
@@ -40,13 +41,15 @@ public class AddMission : MonoBehaviour
     string CorrectAnswer;
     string WrongAnswer1;
     string WrongAnswer2;
+    string Input;
+    bool isValid = true;
     
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     
     Dictionary<string, object> Mission;
     
-    bool isValid = true;
+    
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
     
@@ -73,145 +76,57 @@ public class AddMission : MonoBehaviour
         wrongAnswer1Counter.text = wrongAnswer1.text.Length + "/" + wrongAnswer1.characterLimit;
         wrongAnswer2Counter.text = wrongAnswer2.text.Length + "/" + wrongAnswer2.characterLimit;
     }
-    public void Validation()
+
+    public void Validation() {
+         isValid = true;
+         ValidateInput(title, titleError);
+         ValidateInput(question, questionError);
+         ValidateInput(correctAnswer, correctAnswerError);
+         ValidateInput(wrongAnswer1, wrongAnswer1Error);
+         ValidateInput(wrongAnswer2, wrongAnswer2Error);   
+    }
+    public void ValidateInput(TMP_InputField input, TMP_Text errorText)
     {
-         bool isValid = true;
+        Input = input.text.Trim();
+        bool containsSpecialChar = Input.All(c => char.IsLetterOrDigit(c) || "!%^*()-_+=?/.;,:".Contains(c));
+        //bool containsLink = Input.Contains("http://") || Input.Contains("https://");
+        // List of known protocols
+        string[] protocols = { "http://", "https://", "ftp://", "mailto:", "file://" };
+        bool containsLink = protocols.Any(p => Input.ToLower().Contains(p.ToLower()));
 
-        //TITLE FIELD VALIDATION
-        Title = title.text.Trim();
-        if (string.IsNullOrWhiteSpace(Title))
+        if (string.IsNullOrWhiteSpace(Input))
         {
-            titleError.text = "This field cannot be empty";
-            titleError.color = Color.red;
-            titleError.fontSize = 3;
+            errorText.text = "This field cannot be empty";
+            errorText.color = Color.red;
+            errorText.fontSize = 3;
             isValid = false;
-        }
-        else
-        {
-            titleError.text = "";
-        }
-
-        //QUESTION FIELD VALIDATION
-        Question = question.text.Trim();
-        if (string.IsNullOrWhiteSpace(Question))
-        {
-            questionError.text = "This field cannot be empty";
-            questionError.color = Color.red;
-            questionError.fontSize = 3;
+        }else if (containsLink){
+            errorText.text = "Links are not allowed";
+            errorText.color = Color.red;
+            errorText.fontSize = 3;
             isValid = false;
-        }
-        else
-        {
-            questionError.text = "";
-        }
-
-        //CorrectAnswer FIELD VALIDATION
-        CorrectAnswer = correctAnswer.text.Trim();
-        if (string.IsNullOrWhiteSpace(CorrectAnswer))
-        {
-            correctAnswerError.text = "This field cannot be empty";
-            correctAnswerError.color = Color.red;
-            correctAnswerError.fontSize = 3;
+        }else if(!containsSpecialChar){
+            errorText.text = "Only ,.:;/?!()_-*+^=% are allowed";
+            errorText.color = Color.red;
+            errorText.fontSize = 3;
             isValid = false;
-        }
-        else
+        }else
         {
-            correctAnswerError.text = "";
+            errorText.text = "";
         }
-
-        //wrongAnswer1 FIELD VALIDATION
-        WrongAnswer1 = wrongAnswer1.text.Trim();
-        if (string.IsNullOrWhiteSpace(WrongAnswer1))
-        {
-            wrongAnswer1Error.text = "This field cannot be empty";
-            wrongAnswer1Error.color = Color.red;
-            wrongAnswer1Error.fontSize = 3;
-            isValid = false;
-        }
-        else
-        {
-            wrongAnswer1Error.text = "";
-        }
-
-        //wrongAnswer2 FIELD VALIDATION
-        WrongAnswer2 = wrongAnswer2.text.Trim();
-        if (string.IsNullOrWhiteSpace(WrongAnswer2))
-        {
-            wrongAnswer2Error.text = "This field cannot be empty";
-            wrongAnswer2Error.color = Color.red;
-            wrongAnswer2Error.fontSize = 3;
-            isValid = false;
-        }
-        else
-        {
-            wrongAnswer2Error.text = "";
-        }
-
-        //if everything is valid -> upload to firebase 
-        if (isValid)
-        {
-            uploadMission();
-        }
-/*
-        //STAR RATING FIELD VALIDATION
-        rating = StarRating.text.Trim();
-        string ratingPattern = @"^(5(\.0)?|[0-4](\.\d)?)$";
-
-        if (!Regex.IsMatch(rating, ratingPattern))
-        {
-            starRatingError.text = "Invalid Star Rating";
-            starRatingError.color = Color.red;
-            starRatingError.fontSize = 30;
-            isValid = false;
-
-        }
-
-        else if (string.IsNullOrWhiteSpace(rating))
-        {
-            starRatingError.text = "This field cannot be empty";
-            starRatingError.color = Color.red;
-            starRatingError.fontSize = 30;
-            isValid = false;
-
-        }
-        else
-        {
-            starRatingError.text = "";
-            starRating = double.Parse(rating);
-        }
-
-        //LOCATION FIELD VALIDATION
-        location = Location.text.Trim();
-        string urlPattern = @"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$";
-
-        if (!Regex.IsMatch(location, urlPattern))
-        {
-            locationError.text = "Invalid location URL";
-            locationError.color = Color.red;
-            locationError.fontSize = 30;
-            isValid = false;
-
-        }
-        else if (string.IsNullOrWhiteSpace(location))
-        {
-            locationError.text = "This field cannot be empty";
-            locationError.color = Color.red;
-            locationError.fontSize = 30;
-            isValid = false;
-
-        }
-        else
-        {
-            locationError.text = "";
-        }*/
-   
     }//end of validation
     
 
     public void SubmitButtonClick()
     {
+        Debug.Log($"isValid");
         Validation();
-        uploadMission();
+        Debug.Log(isValid);
+        //if everything is valid -> upload to firebase 
+        if (isValid)
+        {
+            uploadMission();
+        }
     }
     public async Task uploadMission()
     {
@@ -234,5 +149,4 @@ public class AddMission : MonoBehaviour
             alertDialog.ShowAlertDialog("Mission details added successfully.");
             
      }
-    
-}
+} 

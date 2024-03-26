@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
@@ -36,13 +37,14 @@ public class AddStory : MonoBehaviour
     string StoryPart1;
     string StoryPart2;
     string StoryPart3;
+    string Input;
+    bool isValid = true;
     
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     
     Dictionary<string, object> Story;
     
-    bool isValid = true;
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
     
@@ -68,47 +70,54 @@ public class AddStory : MonoBehaviour
     }
     public void Validation()
     {
-        isValid = true;
-        ValidateInput(title, titleError);
-        
-        string pattern3 = @"^[a-zA-Z ]*$";
-        ValidateInput(title, titleError, pattern3);
-        
+         isValid = true;
+         ValidateInput(title, titleError);
+         ValidateInput(storyPart1, storyPart1Error);
+         ValidateInput(storyPart2, storyPart2Error);
+         ValidateInput(storyPart3, storyPart3Error);  
     }
     
-    public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
+   public void ValidateInput(TMP_InputField input, TMP_Text errorText)
     {
-        int x = 0;
-        if (string.IsNullOrEmpty(inputField.text) || inputField.text.Trim() == "")
+        Input = input.text.Trim();
+        bool containsSpecialChar = Input.All(c => char.IsLetterOrDigit(c) || "!%^*()-_+=?/.;,:".Contains(c));
+        // List of known protocols
+        string[] protocols = { "http://", "https://", "ftp://", "mailto:", "file://" };
+        bool containsLink = protocols.Any(p => Input.ToLower().Contains(p.ToLower()));
+
+        if (string.IsNullOrWhiteSpace(Input))
         {
-            Debug.LogError(inputField.name + " is empty");
-            errorText.text = "This field cannot be empty.";
+            errorText.text = "This field cannot be empty";
             errorText.color = Color.red;
             errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
             isValid = false;
-        }else if (pattern != null && !Regex.IsMatch(inputField.text, pattern))
-        {
-            Debug.LogError(inputField.name + " only string allwed");
-            errorText.text = "Only string allowed";
+        }else if (containsLink){
+            errorText.text = "Links are not allowed";
             errorText.color = Color.red;
             errorText.fontSize = 3;
-            inputField.image.color = Color.red;
-            x = 1;
             isValid = false;
-        }
-        else
+        }else if(!containsSpecialChar){
+            errorText.text = "Only ,.:;/?!()_-*+^=% are allowed";
+            errorText.color = Color.red;
+            errorText.fontSize = 3;
+            isValid = false;
+        }else
         {
             errorText.text = "";
-            inputField.image.color = Color.gray;
         }
-    }
+    }//end of validation
+    
 
     public void SubmitButtonClick()
     {
-        //Validation();
-        uploadStory();
+        Debug.Log($"isValid");
+        Validation();
+        Debug.Log(isValid);
+        //if everything is valid -> upload to firebase 
+        if (isValid)
+        {
+            uploadStory();
+        }
     }
     public async Task uploadStory()
     {

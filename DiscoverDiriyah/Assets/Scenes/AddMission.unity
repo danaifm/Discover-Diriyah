@@ -315,7 +315,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1335336238}
         m_TargetAssemblyTypeName: AddMission, Assembly-CSharp
-        m_MethodName: Validation
+        m_MethodName: SubmitButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
