@@ -28,4 +28,8 @@ public class BackButton : MonoBehaviour
             }
         });
     }
+    public void LoadSceneWithNoConfirm(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
 }

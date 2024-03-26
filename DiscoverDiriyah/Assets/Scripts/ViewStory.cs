@@ -7,20 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class ViewStory : MonoBehaviour
 {
-    public static ViewStory instance;
     public TMP_Text titleText;
     public string title;
     public string storyPart1;
     public string storyPart2;
     public string storyPart3;
+    public StoryInstance storyInstance;
 
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+    private void Start() {
+        storyInstance = FindObjectOfType<StoryInstance>();
     }
 
     public void SetTitle(string title)
@@ -40,6 +35,7 @@ public class ViewStory : MonoBehaviour
 
     public void LoadStory()
     {
+        storyInstance.SetInstance(this);
         Debug.Log("Loading..");
         SceneManager.LoadScene("Story");
     }

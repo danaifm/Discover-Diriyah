@@ -125,6 +125,7 @@ public class AddMission : MonoBehaviour
         //if everything is valid -> upload to firebase 
         if (isValid)
         {
+            alertDialog.ShowLoading();
             uploadMission();
         }
     }
@@ -146,6 +147,7 @@ public class AddMission : MonoBehaviour
 #if UNITY_EDITOR
             PlayerPrefs.SetString("MissionId", docRef.Id); //-- for testing purpose should remove it.
 #endif
+            alertDialog.HideLoading();
             alertDialog.ShowAlertDialog("Mission details added successfully.");
             
      }

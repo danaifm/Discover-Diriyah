@@ -1,3 +1,4 @@
+using Firebase.Extensions;
 using Firebase.Firestore;
 using Firebase.Storage;
 using System;
@@ -116,27 +117,32 @@ public class AddStory : MonoBehaviour
         //if everything is valid -> upload to firebase 
         if (isValid)
         {
+            alertDialog.ShowLoading();
             uploadStory();
         }
     }
+
     public async Task uploadStory()
     {
-
+        
         var newStory = new Dictionary<string, object>
         {
             {"Title", title.text},
             {"StoryPart1", storyPart1.text},
             {"StoryPart2", storyPart2.text},
             {"StoryPart3", storyPart3.text},
+            {"Time", DateTime.Now.ToString("dd-MM-yyyy, HH:mm:ss")}
         };
         
-            // Assuming 'db' is already initialized Firestore instance and ready to use
-            var docRef = await db.Collection("AR Story").AddAsync(newStory);
-            Debug.Log($"Story is added successfully with ID: {docRef.Id}");
-#if UNITY_EDITOR
-            PlayerPrefs.SetString("StoryId", docRef.Id); //-- for testing purpose should remove it.
-#endif
-            alertDialog.ShowAlertDialog("Story details added successfully.");
+        Debug.Log(DateTime.Now.ToString("dd-MM-yyyy, HH:mm:ss"));
+        // Assuming 'db' is already initialized Firestore instance and ready to use
+        var docRef = await db.Collection("AR Story").AddAsync(newStory);
+        Debug.Log($"Story is added successfully with ID: {docRef.Id}");
+        #if UNITY_EDITOR
+        PlayerPrefs.SetString("StoryId", docRef.Id); //-- for testing purpose should remove it.
+        #endif
+        alertDialog.HideLoading();
+        alertDialog.ShowAlertDialog("Story details added successfully.");
             
      }
     

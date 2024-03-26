@@ -20,11 +20,17 @@ public class StoryManager : MonoBehaviour
 
     public void LoadStories()
     {
-        var storyData = ViewStory.instance;
+        var storyData = StoryInstance.instance;
         
         titleText.text = storyData.title;
         storyPart1Text.text = storyData.storyPart1;
         storyPart2Text.text = storyData.storyPart2;
         storyPart3Text.text = storyData.storyPart3;
+    }
+
+    public void ClearInstance()
+    {
+        Destroy(StoryInstance.instance);
+        Destroy(StoryInstance.self);
     }
 }
