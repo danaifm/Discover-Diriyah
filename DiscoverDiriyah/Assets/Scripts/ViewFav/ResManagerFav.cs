@@ -58,7 +58,7 @@ public class ResManagerFav : MonoBehaviour
             Debug.LogError("An error occurred: " + ex.Message);
         }
     }
-    public async Task GetRestaurantsDataAsync()
+    public async Task  GetRestaurantsDataAsync()
     {
         auth = FirebaseAuth.DefaultInstance;
         user = auth.CurrentUser;
@@ -74,9 +74,8 @@ public class ResManagerFav : MonoBehaviour
         QuerySnapshot favoritesSnapshot = await favoritesCollectionRef.WhereEqualTo("Type", "Restaurant").GetSnapshotAsync();
         Debug.Log("here 0");
 
-        RestaurantsData.Clear();
-        await Task.Run(async () =>
-        {
+       // RestaurantsData.Clear();
+      
             foreach (var favoriteDocument in favoritesSnapshot.Documents)
         {
             string restaurantId = favoriteDocument.Id;
@@ -89,7 +88,7 @@ public class ResManagerFav : MonoBehaviour
             if (restaurantDocument.Exists)
             {
                 Dictionary<string, object> restaurantData = restaurantDocument.ToDictionary();
-                Debug.Log("here 2");
+                Debug.Log("Restaurant document does not exist");
 
                 if (restaurantData.ContainsKey("Pictures"))
                 {
@@ -107,9 +106,14 @@ public class ResManagerFav : MonoBehaviour
                 Debug.Log("JSON data: " + json);
                 //documentsList.Add(data);
                 Debug.Log("here");
-            }}
-            DataHandler();
-        });
+            }
+             else
+             {
+            Debug.Log("Restaurant document does not exist");
+              }
+        }
+        DataHandler();
+       
 
     }
     private void DataHandler()
