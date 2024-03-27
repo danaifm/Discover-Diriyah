@@ -120,7 +120,7 @@ public class ResManagerFav : MonoBehaviour
                     Debug.Log("here 3");
                 }
 
-                isFav = await toggleFav.isFavorite(favoriteDocument.Id);
+                isFav = true;
                 restaurantData.Add("ID", favoriteDocument.Id);
                 restaurantData.Add("userFavorite", isFav);
                 string json = JsonConvert.SerializeObject(restaurantData);
