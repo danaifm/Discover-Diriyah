@@ -29,12 +29,33 @@ public class AddAccommodationDetails : MonoBehaviour
     public TMP_InputField Location;
     public TMP_Text locationError;
     public TMP_Text locationCounter;
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
     public TMP_Text picturesError;
     string name; //fb
     string description;//fb 
     string rating;//fb
     double starRating; 
     string location;//fb
+    double latitude;//fb
+    double longitude;//fb
+
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -72,7 +93,10 @@ public class AddAccommodationDetails : MonoBehaviour
        nameCounter.text = Name.text.Length + "/" + Name.characterLimit;
         descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
         locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
-        starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit; 
+        starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit;
+
+        LatitudeCounter.text = Latitude.text.Length + "/" + Latitude.characterLimit;
+        LongitudeCounter.text = Longitude.text.Length + "/" + Longitude.characterLimit;
     }
 
 public void validate_input()
@@ -160,7 +184,35 @@ public void validate_input()
         {
             locationError.text = "";
         }
-        
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
         pictures = gallerySelection.GetSelectedImagePaths();
 
         //PICTURE VALIDATION
@@ -174,8 +226,61 @@ public void validate_input()
         }*/
 
     }//end of validations 
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
 
-public void RemoveImage(int index)
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90.";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180.";
+        }
+
+        return "Valid";
+    }
+    public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
         gallerySelection.RemoveImage(index, "accommodations");
@@ -259,6 +364,8 @@ public void SubmitButtonClick()
         {"Description", description},
         {"StarRating", starRating},
         {"Location", location},
+        {"Latitude", latitude},
+        {"Longitude", longitude},
         // Add an empty array if uploadedImageNames is null or empty
         {"Picture", uploadedImageNames ?? new List<string>()}
     };
@@ -275,6 +382,8 @@ public void SubmitButtonClick()
             accommodations_root.Name = name;
             accommodations_root.Description = description;
             accommodations_root.Location = location;
+            accommodations_root.Latitude = latitude;
+            accommodations_root.Longitude = longitude;
             accommodations_root.StarRating = (float)starRating;
             accommodations_root.Picture = uploadedImageNames;
             accommodations_root.ID = newAccommodationId;

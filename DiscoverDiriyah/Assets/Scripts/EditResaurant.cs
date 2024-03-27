@@ -27,6 +27,27 @@ public class EditResaurant : MonoBehaviour
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
     public string defualtRestId = "2ZKPS0X91f3mN0o7C9bH";
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
+    double latitude;//fb
+    double longitude;//fb
+
     FirebaseFirestore db;
     FirebaseStorage storage;
     StorageReference storageRef;
@@ -79,6 +100,25 @@ public class EditResaurant : MonoBehaviour
                 // Map data from the snapshot to the Restaurant object
                 restaurant.Name = snapshot.GetValue<string>("Name");
                 restaurant.Location = snapshot.GetValue<string>("Location");
+                try
+                {
+                    restaurant.Latitude = snapshot.GetValue<double>("Latitude");
+                    latitude = restaurant.Latitude;
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("Latitude not exist "+ ex.Message);
+                }
+                try
+                {
+                    restaurant.Longitude = snapshot.GetValue<double>("Longitude");
+                    longitude = restaurant.Longitude;
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("Longitude not exist "+ ex.Message);
+                }
+                
                 restaurant.CuisineType = snapshot.GetValue<string>("CuisineType");
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 restaurant.Pictures = pictures.ToList<string>();
@@ -98,6 +138,8 @@ public class EditResaurant : MonoBehaviour
     {
         name.text = restaurant.Name;
         location.text = restaurant.Location;
+        Latitude.text = restaurant.Latitude.ToString();
+        Longitude.text = restaurant.Longitude.ToString();
         cuisineType.text = restaurant.CuisineType;
         gallerySelection.DisplayLoadedImages(restaurant.Pictures, "restaurant");
         // Handle pictures if needed
@@ -108,6 +150,9 @@ public class EditResaurant : MonoBehaviour
         nameCounter.text = name.text.Length + "/" + name.characterLimit;
         cuisineCounter.text = cuisineType.text.Length + "/" + cuisineType.characterLimit;
         locationCounter.text = location.text.Length + "/" + location.characterLimit;
+
+        LatitudeCounter.text = Latitude.text.Length + "/" + Latitude.characterLimit;
+        LongitudeCounter.text = Longitude.text.Length + "/" + Longitude.characterLimit;
     }
     public void Validation()
     {
@@ -182,8 +227,92 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
             errorText.text = "";
             inputField.image.color = Color.gray;
         }
-    }
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            Latitude.image.color = Color.red;
+            isValid = false;
 
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            Longitude.image.color = Color.red;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
+    }
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a Floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180";
+        }
+
+        return "Valid";
+    }
     public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
     {
         if (imagePaths == null) return null;
@@ -264,6 +393,8 @@ public void ValidateLocation(TMP_InputField inputField, TMP_Text errorText, stri
         {
             {"Name", name.text},
             {"Location", location.text},
+            {"Latitude", latitude},
+            {"Longitude", longitude},
             {"CuisineType", cuisineType.text},
             // Add an empty array if uploadedImageNames is null or empty
             {"Picture", uploadedImageNames.ToArray()}

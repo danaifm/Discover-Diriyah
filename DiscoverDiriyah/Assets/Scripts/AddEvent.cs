@@ -47,6 +47,25 @@ public class AddEvent : MonoBehaviour
     public TMP_InputField Price;
     public TMP_Text priceError;
     public TMP_Text pictureError;
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
+
     string name; //fb
     string description;//fb 
     string audience;//fb
@@ -56,7 +75,9 @@ public class AddEvent : MonoBehaviour
     string workingHours; //fb
     DateTime finalStartDate; //fb
     DateTime finalEndDate; //fb
-    string price;//fb 
+    string price;//fb
+    double latitude;//fb
+    double longitude;//fb
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -139,7 +160,7 @@ public class AddEvent : MonoBehaviour
         {
             nameError.text = "This field cannot be empty";
             nameError.color = Color.red;
-            nameError.fontSize = 30;
+            nameError.fontSize = 3;
             isValid = false;
             
         }
@@ -155,7 +176,7 @@ public class AddEvent : MonoBehaviour
         {
             descriptionError.text = "This field cannot be empty";
             descriptionError.color = Color.red;
-            descriptionError.fontSize = 30;
+            descriptionError.fontSize = 3;
             isValid = false;
 
         }
@@ -171,7 +192,7 @@ public class AddEvent : MonoBehaviour
         {
             audienceError.text = "This field cannot be empty";
             audienceError.color = Color.red;
-            audienceError.fontSize = 30;
+            audienceError.fontSize = 3;
             isValid = false;
 
         }
@@ -188,7 +209,7 @@ public class AddEvent : MonoBehaviour
         {
             locationError.text = "Invalid location URL";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -196,7 +217,7 @@ public class AddEvent : MonoBehaviour
         {
             locationError.text = "This field cannot be empty";
             locationError.color = Color.red;
-            locationError.fontSize = 30;
+            locationError.fontSize = 3;
             isValid = false;
 
         }
@@ -205,12 +226,43 @@ public class AddEvent : MonoBehaviour
             locationError.text = "";
         }
 
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
+        Debug.Log("Latitude "+ Latitude.text);
+        Debug.Log("Longitude " + Longitude.text);
         //START TIME VALIDATION
-        if(StartHour.value == 0 && StartMinute.value == 0)
+        if (StartHour.value == 0 && StartMinute.value == 0)
         {
             startTimeError.text = "Start hour and minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -220,7 +272,7 @@ public class AddEvent : MonoBehaviour
         {
             startTimeError.text = "Start hour cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -230,7 +282,7 @@ public class AddEvent : MonoBehaviour
         {
             startTimeError.text = "Start minute cannot be empty";
             startTimeError.color = Color.red;
-            startTimeError.fontSize = 30;
+            startTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -250,7 +302,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End hour and minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -259,7 +311,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End hour cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -269,7 +321,7 @@ public class AddEvent : MonoBehaviour
         {
             endTimeError.text = "End minute cannot be empty";
             endTimeError.color = Color.red;
-            endTimeError.fontSize = 30;
+            endTimeError.fontSize = 3;
             isValid = false;
 
         }
@@ -301,7 +353,7 @@ public class AddEvent : MonoBehaviour
             {
                 startDateError.text = "Start date cannot be in the past.";
                 startDateError.color = Color.red;
-                startDateError.fontSize = 30;
+                startDateError.fontSize = 3;
                 isValid = false;
             }*/
         }
@@ -309,7 +361,7 @@ public class AddEvent : MonoBehaviour
         {
             startDateError.text = "Start date cannot be empty";
             startDateError.color = Color.red;
-            startDateError.fontSize = 30;
+            startDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -327,7 +379,7 @@ public class AddEvent : MonoBehaviour
             {
                 endDateError.text = "End date cannot be in the past.";
                 endDateError.color = Color.red;
-                endDateError.fontSize = 30;
+                endDateError.fontSize = 3;
                 isValid = false;
             }*/
         }
@@ -335,7 +387,7 @@ public class AddEvent : MonoBehaviour
         {
             endDateError.text = "End date cannot be empty";
             endDateError.color = Color.red;
-            endDateError.fontSize = 30;
+            endDateError.fontSize = 3;
             isValid = false;
         }
 
@@ -346,7 +398,7 @@ public class AddEvent : MonoBehaviour
             {
                 endDateError.text = "End date cannot be before start date.";
                 endDateError.color = Color.red;
-                endDateError.fontSize = 30;
+                endDateError.fontSize = 3;
                 isValid = false;
             }
             else
@@ -367,7 +419,7 @@ public class AddEvent : MonoBehaviour
         {
             priceError.text = "Invalid price";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -375,7 +427,7 @@ public class AddEvent : MonoBehaviour
         {
             priceError.text = "This field cannot be empty";
             priceError.color = Color.red;
-            priceError.fontSize = 30;
+            priceError.fontSize = 3;
             isValid = false;
 
         }
@@ -390,7 +442,7 @@ public class AddEvent : MonoBehaviour
         {
             pictureError.text = "This field cannot be empty";
             pictureError.color = Color.red;
-            pictureError.fontSize = 30;
+            pictureError.fontSize = 3;
             isValid = false;
 
         }
@@ -404,7 +456,60 @@ public class AddEvent : MonoBehaviour
 
     }//end of validations 
 
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
 
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90.";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180.";
+        }
+
+        return "Valid";
+    }
     //upload pictures in storage
     public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
     {
@@ -469,6 +574,8 @@ public class AddEvent : MonoBehaviour
         {"StartDate", finalStartDate},
         {"EndDate", finalEndDate},
         {"Location", location},
+        {"Latitude", latitude},
+        {"Longitude", longitude},
         {"Price", price},
         {"WorkingHours", workingHours},
         // Add an empty array if uploadedImageNames is null or empty
@@ -495,6 +602,8 @@ public class AddEvent : MonoBehaviour
                 events_root.Name = name;
                 events_root.Description = description;
                 events_root.Location = location;
+                events_root.Latitude = latitude;
+                events_root.Longitude = longitude;
                 events_root.Audience = audience;
                 events_root.StartDate = finalStartDate.ToString();
                 events_root.EndDate = finalEndDate.ToString();
@@ -551,6 +660,8 @@ public class AddEvent : MonoBehaviour
                 Name.text = snapshot.GetValue<string>("Name");
                 Description.text = snapshot.GetValue<string>("Description");
                 Location.text = snapshot.GetValue<string>("Location");
+                Latitude.text = snapshot.GetValue<string>("Latitude");
+                Longitude.text = snapshot.GetValue<string>("Longitude");
                 string[] pictures = snapshot.GetValue<string[]>("Picture");
                 string[] times = snapshot.GetValue<string>("WorkingHours").Split('-');
                 startTime = times[0];

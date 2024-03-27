@@ -31,12 +31,32 @@ public class EditAccommodation : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text pictureError;
     public string defaultAccommodationID;
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
     string name; //fb
     string description;//fb 
     string rating;//fb
     double starRating; 
     string location;//fb
-    
+    double latitude;//fb
+    double longitude;//fb
+
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -48,7 +68,7 @@ public class EditAccommodation : MonoBehaviour
 
     bool isValid = true;
 
-    private string accommodationId;
+    private string accommodationId ;
     public AlertDialog alertDialog;
     public UnityEvent onCompleteAddEvent;
 
@@ -92,6 +112,25 @@ private void LoadData()
                 accommodation.Name = snapshot.GetValue<string>("Name");
                 Debug.Log("1");
                 accommodation.Location = snapshot.GetValue<string>("Location");
+                try
+                {
+                    accommodation.Latitude = snapshot.GetValue<double>("Latitude");
+                    latitude = accommodation.Latitude;
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("Latitude not exist " + ex.Message);
+                }
+                try
+                {
+                    accommodation.Longitude = snapshot.GetValue<double>("Longitude");
+                    longitude = accommodation.Longitude;
+                }
+                catch (Exception ex)
+                {
+                    Debug.Log("Longitude not exist " + ex.Message);
+                }
+                
                 Debug.Log("2");
                 accommodation.Description = snapshot.GetValue<string>("Description");
                 Debug.Log("3");
@@ -115,6 +154,8 @@ private void LoadData()
     {
         Name.text = accommodation.Name;
         Location.text = accommodation.Location;
+        Latitude.text = accommodation.Latitude.ToString();
+        Longitude.text = accommodation.Longitude.ToString();
         gallerySelection.DisplayLoadedImages(accommodation.Pictures, "accommodations");
         Description.text = accommodation.Description;
         StarRating.text = accommodation.StarRating.ToString();
@@ -127,6 +168,9 @@ private void LoadData()
         descriptionCounter.text = Description.text.Length + "/" + Description.characterLimit;
         locationCounter.text = Location.text.Length + "/" + Location.characterLimit;
         starRatingCounter.text = StarRating.text.Length + "/" + StarRating.characterLimit;
+
+        LatitudeCounter.text = Latitude.text.Length + "/" + Latitude.characterLimit;
+        LongitudeCounter.text = Longitude.text.Length + "/" + Longitude.characterLimit;
     }
 
     public void validate_input()
@@ -214,7 +258,35 @@ private void LoadData()
         {
             locationError.text = "";
         }
-        
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
         pictures = gallerySelection.GetSelectedImagePaths();
 
         //PICTURE VALIDATION
@@ -228,7 +300,60 @@ private void LoadData()
         }*/
 
     }//end of validations 
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
 
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90.";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180.";
+        }
+
+        return "Valid";
+    }
     public void RemoveImage(int index)
     {
         //pictures.RemoveAt(index);
@@ -317,6 +442,8 @@ private void LoadData()
         {
             {"Name", Name.text},
             {"Location", Location.text},
+            {"Latitude", latitude},
+            {"Longitude", longitude},
             {"Description", Description.text},
             {"StarRating", StarRating.text},
             // Add an empty array if uploadedImageNames is null or empty

@@ -27,6 +27,27 @@ public class AddRestaurant : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
+    double latitude;//fb
+    double longitude;//fb
+
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -63,6 +84,9 @@ public class AddRestaurant : MonoBehaviour
         nameCounter.text = name.text.Length + "/" + name.characterLimit;
         cuisineCounter.text = cuisineType.text.Length + "/" + cuisineType.characterLimit;
         locationCounter.text = location.text.Length + "/" + location.characterLimit;
+
+        LatitudeCounter.text = Latitude.text.Length + "/" + Latitude.characterLimit;
+        LongitudeCounter.text = Longitude.text.Length + "/" + Longitude.characterLimit;
     }
     public void Validation()
     {
@@ -136,8 +160,93 @@ public class AddRestaurant : MonoBehaviour
             errorText.text = "";
             inputField.image.color = Color.gray;
         }
-    }
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            Latitude.image.color = Color.red;
+            isValid = false;
 
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            Longitude.image.color = Color.red;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
+
+    }
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90.";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180.";
+        }
+
+        return "Valid";
+    }
     public async Task<List<string>> UploadImages(List<string> imagePaths, string name)
     {
         if (imagePaths == null) return null;
@@ -214,6 +323,8 @@ public class AddRestaurant : MonoBehaviour
         {
             {"Name", name.text},
             {"Location", location.text},
+            {"Latitude", Latitude.text},
+            {"Longitude", Longitude.text},
             {"CuisineType", cuisineType.text},
             // Add an empty array if uploadedImageNames is null or empty
             {"Picture", uploadedImageNames ?? new List<string>()}
@@ -230,6 +341,8 @@ public class AddRestaurant : MonoBehaviour
             if (restaurants_root == null) Debug.LogError("attractions_root is null!");
             restaurants_root.Name = name.text;
             restaurants_root.Location = location.text;
+            restaurants_root.Latitude = latitude;
+            restaurants_root.Longitude = longitude;
             restaurants_root.CuisineType = cuisineType.text;
             restaurants_root.Picture = uploadedImageNames;
             restaurants_root.ID = newRestaurantId;

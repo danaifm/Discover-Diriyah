@@ -33,6 +33,24 @@ public class AddAttraction : MonoBehaviour
     public TMP_Text locationError;
     public TMP_Text locationCounter;
     public TMP_Text picturesError;
+
+    [Header("Latitude Data")]
+    public TMP_InputField Latitude;
+    public TMP_Text LatitudeError;
+    public TMP_Text LatitudeCounter;
+
+    [Header("Longitude Data")]
+    public TMP_InputField Longitude;
+    public TMP_Text LongitudeError;
+    public TMP_Text LongitudeCounter;
+
+    private const float MinLatitude = -90f;
+    private const float MaxLatitude = 90f;
+    private const float MinLongitude = -180f;
+    private const float MaxLongitude = 180f;
+    private const int MinInputLength = 6; // Adjust as needed
+    private string ValidationResponce;
+
     // UnityEvent to be invoked on button click
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -58,6 +76,8 @@ public class AddAttraction : MonoBehaviour
     string endTime;
     string workingHours; //fb
     string attractionId;
+    double latitude;//fb
+    double longitude;//fb
 
     private AttractionsRoot attractions_root = new AttractionsRoot();
     //object to upload in nuhas array
@@ -87,7 +107,7 @@ public class AddAttraction : MonoBehaviour
         //    }
         //    else
         //    {
-        //        LoadData();
+                //LoadData();
         //    }
         //}
         //else
@@ -100,6 +120,9 @@ public class AddAttraction : MonoBehaviour
         nameCounter.text = name.text.Length + "/" + name.characterLimit;
         locationCounter.text = location.text.Length + "/" + location.characterLimit;
         descriptionCounter.text = description.text.Length + "/" + description.characterLimit;
+
+        LatitudeCounter.text = Latitude.text.Length + "/" + Latitude.characterLimit;
+        LongitudeCounter.text = Longitude.text.Length + "/" + Longitude.characterLimit;
     }
 
     public void ValidateInput(TMP_InputField inputField, TMP_Text errorText, string pattern = null)
@@ -160,8 +183,90 @@ public class AddAttraction : MonoBehaviour
             errorText.text = "";
             inputField.image.color = Color.gray;
         }
-    }
+        ////////
+        ValidationResponce = ValidateLatitudeInput(Latitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LatitudeError.text = ValidationResponce;
+            LatitudeError.color = Color.red;
+            LatitudeError.fontSize = 3;
+            isValid = false;
 
+        }
+        else
+        {
+            latitude = double.Parse(Latitude.text);
+            LatitudeError.text = "";
+        }
+        ValidationResponce = ValidateLongitudeInput(Longitude.text);
+        if (ValidationResponce != "Valid")
+        {
+            LongitudeError.text = ValidationResponce;
+            LongitudeError.color = Color.red;
+            LongitudeError.fontSize = 3;
+            isValid = false;
+
+        }
+        else
+        {
+            longitude = double.Parse(Longitude.text);
+            LongitudeError.text = "";
+        }
+    }
+    public string ValidateLatitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //Latitude.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Latitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLatitude || value > MaxLatitude)
+        {
+            Latitude.text = "";
+            return "Latitude must be between -90 and 90.";
+        }
+
+        return "Valid";
+    }
+    public string ValidateLongitudeInput(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+        {
+            return "This field cannot be empty";
+        }
+
+        if (input.Length < MinInputLength)
+        {
+            //longitudeInputField.text = input.Substring(0, MaxInputLength);
+            return "Must contain at least 6 characters";
+        }
+
+        if (!float.TryParse(input, out float value))
+        {
+            Longitude.text = "";
+            return "Must be a floating number";
+        }
+
+        if (value < MinLongitude || value > MaxLongitude)
+        {
+            Longitude.text = "";
+            return "Longitude must be between -180 and 180.";
+        }
+
+        return "Valid";
+    }
     public void ValidateTime()
     {
         //START TIME VALIDATION
@@ -345,6 +450,8 @@ public class AddAttraction : MonoBehaviour
         {
             {"Name", name.text},
             {"Location", location.text},
+            {"Latitude", latitude},
+            {"Longitude", longitude},
             {"WorkingHours", workingHours},
             {"Description", description.text},
             {"Picture", uploadedImageNames ?? new List<string>()},
@@ -363,6 +470,8 @@ public class AddAttraction : MonoBehaviour
                 attractions_root.Name = name.text;
                 attractions_root.Description = description.text;
                 attractions_root.Location = location.text;
+                attractions_root.Latitude = latitude;
+                attractions_root.Longitude = longitude;
                 //working hours !!!!
                 attractions_root.Picture = uploadedImageNames;
                 attractions_root.ID = newAttractionId;
