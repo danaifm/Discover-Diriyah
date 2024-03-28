@@ -120,9 +120,9 @@ public class ResManagerFav : MonoBehaviour
                     Debug.Log("here 3");
                 }
 
-                isFav = true;
-                restaurantData.Add("ID", favoriteDocument.Id);
-                restaurantData.Add("userFavorite", isFav);
+                //isFav = true;
+                restaurantData.Add("ID", restaurantIDObject.ToString());
+                restaurantData.Add("userFavorite", true);
                 string json = JsonConvert.SerializeObject(restaurantData);
                 RestaurantsRoot EventsRoot = JsonUtility.FromJson<RestaurantsRoot>(json);
                 RestaurantsData.Add(EventsRoot);
